@@ -1,4 +1,4 @@
-package frc.robot.subsystem.interfaces;
+package frc.robot.subsystems.interfaces;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
