@@ -1,4 +1,4 @@
-package frc.robot.subsystems.interfaces;
+package frc.robot.subsystem.interfaces;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -8,10 +8,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants;
 import frc.robot.lib.util.LimelightHelpers;
 import frc.robot.lib.util.LimelightHelpers.LimelightResults;
-import frc.robot.lib.util.TrajectoryLib;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,51 +19,30 @@ public class Limelight {
 
   private static Pose3d known_pose_blue_left =
       new Pose3d(new Translation3d(1.252857, 5.547879, 0.0), new Rotation3d(0, 0, Math.PI));
-  private static Pose3d known_pose_blue_right =
-      new Pose3d(new Translation3d(1.252857, 5.547879, 0.0), new Rotation3d(0, 0, 0));
-  private static Pose3d known_pose_blue_up =
-      new Pose3d(new Translation3d(1.252857, 5.547879, 0.0), new Rotation3d(0, 0, Math.PI / 2.0));
-  private static Pose3d known_pose_blue_down =
-      new Pose3d(new Translation3d(1.252857, 5.547879, 0.0), new Rotation3d(0, 0, -Math.PI / 2.0));
-
-  private static Pose3d known_pose_red_right =
-      new Pose3d(new Translation3d(15.326485, 5.547879, 0.0), new Rotation3d(0, 0, 0));
-  private static Pose3d known_pose_red_left =
-      new Pose3d(new Translation3d(15.326485, 5.547879, 0.0), new Rotation3d(0, 0, Math.PI));
-  private static Pose3d known_pose_red_up =
-      new Pose3d(new Translation3d(15.326485, 5.547879, 0.0), new Rotation3d(0, 0, Math.PI / 2.0));
-  private static Pose3d known_pose_red_down =
-      new Pose3d(new Translation3d(15.326485, 5.547879, 0.0), new Rotation3d(0, 0, -Math.PI / 2.0));
-
+      
   private static final Map<String, Double> last_timestamps = new HashMap<String, Double>();
   public static boolean enabled = true;
-  private static final String coral_name = Constants.LIMELIGHT.BACK;
-  public static boolean ignoreCoral = false;
 
   public static void init() {}
 
   public static void periodic() {
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
-      LimelightHelpers.setCameraPose_RobotSpace(Constants.LIMELIGHT.LEFT, 0.379, 0.097, 0, 0, 0, 0);
-      LimelightHelpers.setCameraPose_RobotSpace(Constants.LIMELIGHT.RIGHT, 0.52, 0.223, 0, 0, 0, 0);
-      LimelightHelpers.setCameraPose_RobotSpace(Constants.LIMELIGHT.BACK, 0, 0.0, 0, 0, 0, 180);
+      LimelightHelpers.setCameraPose_RobotSpace("Constants.LIMELIGHT.LEFT", 0.379, 0.097, 0, 0, 0, 0);
     } else { // blue
-      LimelightHelpers.setCameraPose_RobotSpace(Constants.LIMELIGHT.LEFT, 0.599, -0.267, 0, 0, 0, 0);
-      LimelightHelpers.setCameraPose_RobotSpace(Constants.LIMELIGHT.RIGHT, 0.456, 0.1, 0, 0, 0, 0);
-      LimelightHelpers.setCameraPose_RobotSpace(Constants.LIMELIGHT.BACK, 0, 0, 0, 0, 0, 180);
+      
     }
+
     if (Limelight.enabled) {
-      Limelight.updateSwervePoseLimelight(Constants.LIMELIGHT.LEFT, 5);
-      Limelight.updateSwervePoseLimelight(Constants.LIMELIGHT.RIGHT, 4);
-      TrajectoryLib.AngleToNote();
+      Limelight.updateSwervePoseLimelight("Constants.LIMELIGHT.LEFT", 5);
     }
   }
 
   public static void updateSwervePoseLimelight(String limelight_name, double yawOffset) {
-    double adjustedYaw = Swerve.p2CompensatedYaw - yawOffset;
+    double adjustedYaw = 0 - yawOffset; //TODO: Fix this
+    double yawRate = 0;
 
-    double base_time = Logger.getRealTimestamp() / 1000000.0;
+    double base_time = Logger.getTimestamp() / 1000000.0;
     LimelightResults results = LimelightHelpers.getLatestResults(limelight_name);
     var num_targets = results.targets_Fiducials.length;
     double ts = results.timestamp_LIMELIGHT_publish;
@@ -89,7 +66,7 @@ public class Limelight {
     }
 
     LimelightHelpers.SetRobotOrientation(
-        limelight_name, adjustedYaw, Swerve.m_p2yawRate.refresh().getValue(), 0, 0, 0, 0);
+        limelight_name, adjustedYaw, yawRate, 0, 0, 0, 0);
     LimelightHelpers.PoseEstimate megaTagPose =
         LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelight_name);
 
@@ -167,42 +144,22 @@ public class Limelight {
 
     double angleStdDev = 0.5;
 
-    double distanceStdDev = 0.5 * Swerve.m_p2yawRate.getValue() + 3.0;
+    double distanceStdDev = 0.5 * yawRate + 3.0;
 
     Logger.recordOutput(limelight_name + "/PoseEstimateFiltered", botPose);
 
     boolean doRejectUpdate = false;
 
-    if (Math.abs(Swerve.m_p2yawRate.getValue()) > 720) {
+    if (Math.abs(yawRate) > 720) {
       doRejectUpdate = true;
     }
 
     if (!doRejectUpdate) {
-      Swerve.addVisionMeasurement(
-          megaTagPose.pose,
-          base_time - (tl / 1000.0) - (tc / 1000.0) - (tj / 1000.0),
-          VecBuilder.fill(distanceStdDev, distanceStdDev, angleStdDev));
+      // Swerve.addVisionMeasurement(
+      //     megaTagPose.pose,
+      //     base_time - (tl / 1000.0) - (tc / 1000.0) - (tj / 1000.0),
+      //     VecBuilder.fill(distanceStdDev, distanceStdDev, angleStdDev));
     }
-  }
-
-  /** Gives the coral's returned x and y values from the note.
-    * 
-    * @param limelight_name Literally just the name of the limelight, should be all found above.
-    * 
-    */
-  public static double[] coralReturns() {
-    double tx = LimelightHelpers.getTX(coral_name);
-    double ty = LimelightHelpers.getTY(coral_name);
-    double num_targets = LimelightHelpers.getTargetCount(coral_name);
-    double ta = LimelightHelpers.getTA(coral_name);
-    double[] corners = LimelightHelpers.getPythonScriptData(coral_name); // make sure the python script is correctly configured.
-
-    double[] values = {tx, ty, num_targets, ta, corners[0], corners[1], corners[2], corners[3]};
-
-    Logger.recordOutput(coral_name + "tx", tx);
-    Logger.recordOutput(coral_name + "ty", ty);
-    Logger.recordOutput(coral_name + "number of Targets", num_targets);
-    return values;
   }
 
   public static Pose3d toPose3D(double[] inData) {

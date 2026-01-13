@@ -156,7 +156,7 @@ public class LimelightHelpers {
         private double[] robotPose_TargetSpace;
 
         @JsonProperty("t6t_cs")
-        private double[] targetPose_CameraSpace;
+        public double[] targetPose_CameraSpace;
 
         @JsonProperty("t6t_rs")
         private double[] targetPose_RobotSpace;
@@ -1313,6 +1313,22 @@ public class LimelightHelpers {
     public static PoseEstimate getBotPoseEstimate_wpiBlue_MegaTag2(String limelightName) {
         return getBotPoseEstimate(limelightName, "botpose_orb_wpiblue", true);
     }
+
+    /**
+    * This not part of LimelightLib! When repasting LimelightLib do not forget to repaste this
+    * specific method! This converts a MegaTag2 array into a Pose3d so that we can use it to derive
+    * our pysical limelight Camera Offsets. /
+    *
+    * <p>/** Gets the Pose2d for easy use with Odometry vision pose estimator (addVisionMeasurement)
+    *
+    * @param limelightName
+    * @return
+    */
+    public static Pose3d getMT2BotPose3d(String limelightName) {
+        double[] array = getLimelightNTDoubleArray(limelightName, "botpose_orb_wpiblue");
+        return toPose3D(array);
+    }
+
 
     /**
      * Gets the Pose2d for easy use with Odometry vision pose estimator
