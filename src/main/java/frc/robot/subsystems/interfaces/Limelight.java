@@ -1,4 +1,4 @@
-package frc.robot.subsystem.interfaces;
+package frc.robot.subsystems.interfaces;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
