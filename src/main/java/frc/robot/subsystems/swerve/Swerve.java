@@ -10,6 +10,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -45,9 +46,6 @@ public class Swerve {
         private static final SwerveRequest.FieldCentric teleopDrive = new SwerveRequest.FieldCentric()
                 .withDeadband(SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-        
-        private static final SwerveRequest.FieldCentric autoDrive = new SwerveRequest.FieldCentric()
-                .withDriveRequestType(DriveRequestType.Velocity);
             
         private static SwerveRequest.ApplyFieldSpeeds m_ApplyFieldSpeeds = new SwerveRequest.ApplyFieldSpeeds();
         private static PIDController xController = new PIDController(0, 0, 0);
@@ -185,4 +183,8 @@ public class Swerve {
 		TelemetryObjects.elasticPose.setRobotPose(getPose());
 		SmartDashboard.putData("Elastic Field 2D", TelemetryObjects.elasticPose);
 	}
+
+    public static void addLimelightMeasurement(Pose2d inputPose, double timestampSeconds, Vector<N3> standardDeviations) {
+        SwerveObjects.Swerve.addVisionMeasurement(inputPose, timestampSeconds, standardDeviations);
+    }
 }

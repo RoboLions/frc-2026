@@ -8,32 +8,44 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants;
 import frc.robot.lib.util.LimelightHelpers;
 import frc.robot.lib.util.LimelightHelpers.LimelightResults;
+import frc.robot.subsystems.swerve.Swerve;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Limelight {
-
-  private static Pose3d known_pose_blue_left =
-      new Pose3d(new Translation3d(1.252857, 5.547879, 0.0), new Rotation3d(0, 0, Math.PI));
-      
-  private static final Map<String, Double> last_timestamps = new HashMap<String, Double>();
   public static boolean enabled = true;
 
-  public static void init() {}
+  public static void init() {
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+
+    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+      LimelightHelpers.setCameraPose_RobotSpace("Constants.LIMELIGHT.LEFT",
+                                                0.379, 
+                                                0.097, 
+                                                0, 
+                                                0, 
+                                                0, 
+                                                0);
+    } else { // blue
+      LimelightHelpers.setCameraPose_RobotSpace("Constants.LIMELIGHT.LEFT",
+                                                0.379, 
+                                                0.097, 
+                                                0, 
+                                                0, 
+                                                0, 
+                                                0);
+    }
+  }
 
   public static void periodic() {
-    var alliance = DriverStation.getAlliance();
-    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
-      LimelightHelpers.setCameraPose_RobotSpace("Constants.LIMELIGHT.LEFT", 0.379, 0.097, 0, 0, 0, 0);
-    } else { // blue
-      
-    }
-
-    if (Limelight.enabled) {
+    if (enabled) {
+      //TODO: Need to make this all a unified function for all 3 limelights
       Limelight.updateSwervePoseLimelight("Constants.LIMELIGHT.LEFT", 5);
     }
   }
@@ -50,12 +62,12 @@ public class Limelight {
     double tc = results.latency_capture;
     double tj = results.latency_jsonParse;
 
-    Double last_timestamp = last_timestamps.get(limelight_name);
+    Double last_timestamp = Constants.LimeLight.last_timestamps.get(limelight_name);
     if (last_timestamp != null && last_timestamp == ts) {
       return;
     }
 
-    last_timestamps.put(limelight_name, ts);
+    Constants.LimeLight.last_timestamps.put(limelight_name, ts);
 
     if (!results.valid) {
       return;
@@ -80,7 +92,7 @@ public class Limelight {
      */
     Pose3d limelightPose3d = LimelightHelpers.getMT2BotPose3d(limelight_name);
 
-    var known_pose = known_pose_blue_left;
+    var known_pose = Constants.LimeLight.known_pose_blue_left;
 
     Translation3d limelightTranslation =
         known_pose.getTranslation().minus(limelightPose3d.getTranslation());
@@ -155,10 +167,10 @@ public class Limelight {
     }
 
     if (!doRejectUpdate) {
-      // Swerve.addVisionMeasurement(
-      //     megaTagPose.pose,
-      //     base_time - (tl / 1000.0) - (tc / 1000.0) - (tj / 1000.0),
-      //     VecBuilder.fill(distanceStdDev, distanceStdDev, angleStdDev));
+      Swerve.addLimelightMeasurement(
+          megaTagPose.pose,
+          base_time - (tl / 1000.0) - (tc / 1000.0) - (tj / 1000.0),
+          VecBuilder.fill(distanceStdDev, distanceStdDev, angleStdDev));
     }
   }
 
