@@ -183,6 +183,6 @@ public class Shooter {
       double angleRadians = Math.atan(numerator / denominator);
       double o = Math.toDegrees(angleRadians);
 
-      return o;
+      return Constants.Hood.THETA_ANGLE_FROM_SHOOTER - o;
   }
 }
