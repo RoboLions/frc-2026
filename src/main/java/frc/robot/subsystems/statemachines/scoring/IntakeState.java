@@ -4,5 +4,31 @@
 
 package frc.robot.subsystems.statemachines.scoring;
 
+import frc.robot.Constants;
+import frc.robot.RobotMap;
+import frc.robot.lib.statemachine.State;
+import frc.robot.lib.statemachine.Transition;
+
 /** Add your docs here. */
-public class IntakeState {}
+public class IntakeState extends State {
+
+  @Override
+  public void build() {
+    addTransition(
+        new Transition(
+            () -> {
+              return false;
+            },
+            ScoringStateMachine.idleState));
+  }
+
+  @Override
+  public void init(State prevState) {
+  }
+
+  @Override
+  public void execute() {}
+
+  @Override
+  public void exit(State nextState) {}
+}

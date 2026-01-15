@@ -5,4 +5,11 @@
 package frc.robot.subsystems.statemachines.scoring;
 
 /** Add your docs here. */
-public class ScoringStateMachine {}
+public class ScoringStateMachine {
+
+    public static IdleState idleState = new IdleState();
+
+    public ScoringStateMachine() {
+        idleState.build();
+    }
+}
