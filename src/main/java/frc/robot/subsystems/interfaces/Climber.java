@@ -5,4 +5,4 @@
 package frc.robot.subsystems.interfaces;
 
 /** Add your docs here. */
-public class index {}
+public class Climber {}

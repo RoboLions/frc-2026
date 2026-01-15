@@ -5,4 +5,4 @@
 package frc.robot.subsystems.statemachines.scoring;
 
 /** Add your docs here. */
-public class IdleState {}
+public class IntakeState {}
