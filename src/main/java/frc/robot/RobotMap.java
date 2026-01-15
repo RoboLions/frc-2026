@@ -1,15 +1,14 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.lib.auto.AutoSubsystem;
 import frc.robot.subsystems.interfaces.Limelight;
 import frc.robot.subsystems.interfaces.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class RobotMap {
 
-  private static SendableChooser<Command> autoChooser;
+  private static final AutoSubsystem autoSubsystem = new AutoSubsystem(Swerve.createAutoFactory());
 
   /* state machine instances */
   // public static final DrivetrainStateMachine drivetrainStateMachine = new DrivetrainStateMachine();
@@ -20,9 +19,6 @@ public class RobotMap {
 
   /* Auto objects */
 
-  public static Command getAutonomousCommand() {
-    return autoChooser.getSelected();
-  }
 
   public static void init() {
     Shooter.init();
@@ -32,13 +28,8 @@ public class RobotMap {
     // drivetrainStateMachine.init();
   }
 
-  public static void simulationCalls() {
-    Swerve.teleopDrive();
-    Swerve.simulationPeriodic();
-
-    if (driverController.getXButtonPressed()) {
-      Swerve.resetOdometry();
-    }
+  public static void simulationAuto() {
+    autoSubsystem.scheduleAutoSimulation();
   }
 }
 // initiate bomb sequence

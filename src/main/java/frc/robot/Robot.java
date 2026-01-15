@@ -11,8 +11,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.swerve.Swerve;
 
 /**
@@ -21,11 +20,6 @@ import frc.robot.subsystems.swerve.Swerve;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends LoggedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -47,9 +41,6 @@ public class Robot extends LoggedRobot {
 
     Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
 
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
 
     RobotMap.init();
   }
@@ -75,24 +66,12 @@ public class Robot extends LoggedRobot {
    * chooser code above as well.
    */
   @Override
-  public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
-  }
+  public void autonomousInit() {}
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
+    CommandScheduler.getInstance().run();
   }
 
   /** This function is called once when teleop is enabled. */
@@ -122,12 +101,19 @@ public class Robot extends LoggedRobot {
   /** This function is called once when the robot is first started up. */
   @Override
   public void simulationInit() {
-    System.out.println("Is simulating");
+    RobotMap.simulationAuto();
   }
 
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {
-    RobotMap.simulationCalls();
+    // Swerve.teleopDrive();
+    Swerve.simulationPeriodic();
+
+    Logger.recordOutput("Swerve Pose", Swerve.getPose());
+
+    // if (RobotMap.driverController.getXButtonPressed()) {
+    //   Swerve.resetOdometry();
+    // }
   }
 }

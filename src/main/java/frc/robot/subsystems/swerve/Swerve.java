@@ -6,6 +6,9 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+
+import choreo.auto.AutoFactory;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.Matrix;
@@ -21,6 +24,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
@@ -35,6 +40,7 @@ public class Swerve {
     }
 
     private class SwerveObjects{
+        public static Pose2d lastEnabledPose = new Pose2d();
 
         public static final CommandSwerveDrivetrain Swerve = 
             GeneratedConstants.createDrivetrain();
@@ -65,12 +71,23 @@ public class Swerve {
 
     public static void periodic() {
         SwerveObjects.Swerve.periodic(); // look at the function comment and see that this is actually just a reorientation tool
+
+        if (DriverStation.isEnabled()) {
+            SwerveObjects.lastEnabledPose = getPose();
+        }
     }
 
     public static void simulationPeriodic() {
-        SwerveObjects.Swerve.updateSimState(0.005, 0);
+        SwerveObjects.Swerve.updateSimState(0.005, RobotController.getBatteryVoltage());
         SwerveObjects.Swerve.simulationPeriodic();  
 
+        if (DriverStation.isEnabled()) {
+            SwerveObjects.lastEnabledPose = getPose();
+        }
+    }
+
+    public static AutoFactory createAutoFactory() {
+        return SwerveObjects.Swerve.createAutoFactory();
     }
 
     public static CommandSwerveDrivetrain getGeneratedDrive() {
