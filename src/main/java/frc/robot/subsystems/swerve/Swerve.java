@@ -132,8 +132,6 @@ public class Swerve {
                 .withVelocityY(vy * SwerveConstants.MaxSpeed)
                 .withRotationalRate(omega * SwerveConstants.MaxAngularRate));
 
-        Logger.recordOutput("In TeleopDrive?", true);
-
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
 
         Logger.recordOutput("CTRE Pose-Estimate", Swerve.getPose());
@@ -148,8 +146,6 @@ public class Swerve {
             SwerveObjects.teleopDrive.withVelocityX(vx * SwerveConstants.MaxSpeed)
                 .withVelocityY(vy * SwerveConstants.MaxSpeed)
                 .withRotationalRate(omega * SwerveConstants.MaxAngularRate));
-
-        Logger.recordOutput("In AutomaticDrive?", true);
 
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
 
