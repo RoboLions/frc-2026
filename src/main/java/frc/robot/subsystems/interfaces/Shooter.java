@@ -129,32 +129,5 @@ public class Shooter {
   }
 
 
-  /** 
-   * 
-   * @param v The velocity as the piece exits the robot's shooter.
-   * @param d The distance from the exit point to the target.
-   * @param h The height from the exit point to the target.
-   * @return angle in degrees that the robot should aim at.
-   */
-  public static double calculateHoodAngle(double v, double d, double h) {
-    final double g = Constants.Hood.G;
 
-    double v2 = v * v;
-    double v4 = v * v * v * v;
-    double d2 = d * d;
-
-      double discriminant = v4 - g * (g * d2 + 2.0 * h * v2);
-
-      if (discriminant < 0.0 || d == 0.0) {
-        return Double.NaN; //No physical solution
-      }
-
-      double numerator = v2 + Math.sqrt(discriminant);
-      double denominator = g * d;
-
-      double angleRadians = Math.atan(numerator / denominator);
-      double o = Math.toDegrees(angleRadians);
-
-      return Constants.Hood.THETA_ANGLE_FROM_SHOOTER - o;
-  }
 }
