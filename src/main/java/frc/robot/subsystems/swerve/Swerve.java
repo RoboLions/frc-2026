@@ -8,10 +8,8 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -47,10 +45,6 @@ public class Swerve {
                 .withDeadband(SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
             
-        private static SwerveRequest.ApplyFieldSpeeds m_ApplyFieldSpeeds = new SwerveRequest.ApplyFieldSpeeds();
-        private static PIDController xController = new PIDController(0, 0, 0);
-        private static PIDController yController = new PIDController(0, 0, 0);
-        private static PIDController thetaController = new PIDController(0, 0, 0);
     }
 
     private class TelemetryObjects{
@@ -73,6 +67,12 @@ public class Swerve {
         SwerveObjects.Swerve.periodic(); // look at the function comment and see that this is actually just a reorientation tool
     }
 
+    public static void simulationPeriodic() {
+        SwerveObjects.Swerve.updateSimState(0.005, 0);
+        SwerveObjects.Swerve.simulationPeriodic();  
+
+    }
+
     public static CommandSwerveDrivetrain getGeneratedDrive() {
 		return SwerveObjects.Swerve;
 	}
@@ -92,6 +92,13 @@ public class Swerve {
 	public static void resetPose(Pose2d pose) {
 		SwerveObjects.Swerve.resetPose(pose);
 	}
+
+    public static void resetOdometry() {
+        resetPose(
+            new Pose2d(
+                getPose().getTranslation(), 
+                new Rotation2d(0))); 
+    }
 
     public static void zeroPose() {
         Pose2d pose = new Pose2d(new Translation2d(0, 0), new Rotation2d(0));
@@ -115,36 +122,8 @@ public class Swerve {
         return 0.0; // TODO: do this
     }
 
-    /**
-     * Follows the given field-centric path sample with PID.
-     *
-     * @param sample Sample along the path to follow
-     */
-    public void followPath(SwerveSample sample) {
-        SwerveObjects.thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-        var pose = getState().Pose;
-
-        var targetSpeeds = sample.getChassisSpeeds();
-        targetSpeeds.vxMetersPerSecond += SwerveObjects.xController.calculate(
-            pose.getX(), sample.x
-        );
-        targetSpeeds.vyMetersPerSecond += SwerveObjects.yController.calculate(
-            pose.getY(), sample.y
-        );
-        targetSpeeds.omegaRadiansPerSecond += SwerveObjects.thetaController.calculate(
-            pose.getRotation().getRadians(), sample.heading
-        );
-
-        SwerveObjects.Swerve.setControl(
-            SwerveObjects.m_ApplyFieldSpeeds.withSpeeds(targetSpeeds)
-                .withWheelForceFeedforwardsX(sample.moduleForcesX())
-                .withWheelForceFeedforwardsY(sample.moduleForcesY())
-        );
-    }
-
     public static void teleopDrive() {
-        double vx = -RobotMap.driverController.getLeftX();
+        double vx = RobotMap.driverController.getLeftX();
         double vy = -RobotMap.driverController.getLeftY();
         double omega = -RobotMap.driverController.getRightX();
 
