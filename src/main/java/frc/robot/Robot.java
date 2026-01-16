@@ -11,6 +11,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -43,6 +44,8 @@ public class Robot extends LoggedRobot {
 
 
     RobotMap.init();
+
+    Logger.recordOutput("Zero-Pose", new Pose3d());
   }
 
   /**

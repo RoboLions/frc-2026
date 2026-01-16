@@ -30,7 +30,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.RobotMap;
+import frc.robot.subsystems.interfaces.Hood;
 
 public class Swerve {
 
@@ -88,6 +90,7 @@ public class Swerve {
 
         if (DriverStation.isEnabled()) {
             SwerveObjects.lastEnabledPose = getPose();
+            Hood.simulateTurretAngle(getPose(), Constants.Hood.TARGET_POSE, -getYawAsRadians());
         }
     }
 
@@ -106,6 +109,18 @@ public class Swerve {
 	public static Pose2d getPose() {
 		return SwerveObjects.Swerve.getState().Pose;
 	}
+
+    public static double getYawAsDegrees() {
+        return Swerve.getPose().getRotation().getDegrees();
+    }
+
+    public static double getYawAsRotations() {
+        return Swerve.getPose().getRotation().getRotations();
+    }
+
+    public static double getYawAsRadians() {
+        return Swerve.getPose().getRotation().getRadians();
+    }
 
     public static Pose3d getPose3d() {
         Translation3d translation = new Translation3d(getPose().getX(), getPose().getY(), 0);

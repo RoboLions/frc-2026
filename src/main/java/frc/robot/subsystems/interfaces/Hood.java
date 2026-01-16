@@ -1,5 +1,7 @@
 package frc.robot.subsystems.interfaces;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -7,9 +9,12 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.Constants;
+import frc.robot.subsystems.swerve.Swerve;
 
 public class Hood {
     
@@ -90,4 +95,12 @@ public class Hood {
 
         return Constants.Hood.THETA_ANGLE_FROM_SHOOTER - o;
     } 
+
+    // reminder that this is field relative, not robot relative like the actual turret must be.
+    public static void simulateTurretAngle(Pose2d currPose, Translation2d targetPose, double robotFieldRelativeYaw) {
+      double dx = targetPose.getX() - currPose.getX();
+      double dy = targetPose.getY() - currPose.getY();
+
+      Logger.recordOutput("Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, Math.atan2(dy, dx) + robotFieldRelativeYaw)));
+    }
 }
