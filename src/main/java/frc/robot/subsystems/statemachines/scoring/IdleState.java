@@ -17,9 +17,44 @@ public class IdleState extends State {
     addTransition(
         new Transition(
             () -> {
-              return false;
+              return RobotMap.driverController.getRightTriggerAxis() > 0.25;
             },
-            ScoringStateMachine.idleState));
+            ScoringStateMachine.hubAimState));
+    addTransition(
+            new Transition(
+                () -> {
+                return RobotMap.driverController.getRightBumper();
+                },
+                ScoringStateMachine.intakeState));
+    addTransition(
+        new Transition(
+            () -> {
+              return RobotMap.manipulatorController.getXButton();
+            },
+            ScoringStateMachine.presetState));
+            
+            
+               addTransition(
+            new Transition(
+                () -> {
+                return RobotMap.driverController.getLeftBumper();
+                },
+                ScoringStateMachine.outtakeState));
+
+                    addTransition(
+            new Transition(
+                () -> {
+                return RobotMap.driverController.getLeftTriggerAxis() > 0.25;
+                },
+                ScoringStateMachine.passAimState));
+
+                
+
+
+            
+
+            
+            
   }
 
   @Override

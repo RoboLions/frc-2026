@@ -10,32 +10,41 @@ import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 
 /** Add your docs here. */
-public class IntakeState extends State {
+public class PassAimState extends State {
 
   @Override
   public void build() {
-    addTransition(
-        new Transition(
-            () -> {
-              return RobotMap.driverController.getLeftBumper();
-            },
-            ScoringStateMachine.outtakeState));
+
   
 
-      addTransition(
+    addTransition(
         new Transition(
             () -> {
               return RobotMap.driverController.getBButton();
             },
             ScoringStateMachine.idleState));
+
+
+                addTransition(
+        new Transition(
+            () -> {
+              return RobotMap.driverController.getRightTriggerAxis() > 0.25;
+            },
+            ScoringStateMachine.shootState));
   }
+
   @Override
   public void init(State prevState) {
+
   }
 
   @Override
-  public void execute() {}
+  public void execute() {
+
+  }
 
   @Override
-  public void exit(State nextState) {}
+  public void exit(State nextState) {
+
+  }
 }
