@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.lib.auto.AutoSubsystem;
 import frc.robot.subsystems.interfaces.Limelight;
@@ -30,6 +31,10 @@ public class RobotMap {
 
   public static void subsystemPeriodics() {
     Swerve.periodic();
+
+    if (DriverStation.isTeleopEnabled()) {
+      Swerve.simulationDrive();
+    }
   }
 
   public static void simulationAuto() {

@@ -174,6 +174,19 @@ public class Swerve {
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
 
+    public static void simulationDrive() {
+        double vy = -RobotMap.driverController.getLeftX();
+        double vx = -RobotMap.driverController.getLeftY();
+        double omega = -RobotMap.driverController.getRightX();
+
+        SwerveObjects.Swerve.setControl(
+            SwerveObjects.teleopDrive.withVelocityX(vx * SwerveConstants.MaxSpeed)
+                .withVelocityY(vy * SwerveConstants.MaxSpeed)
+                .withRotationalRate(omega * SwerveConstants.MaxAngularRate));
+
+        SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
+    }
+
     public static void automaticDrive(double velocity, Rotation2d heading) {
         double vx = velocity * heading.getCos();
         double vy = velocity * heading.getSin();
