@@ -53,7 +53,9 @@ public class Robot extends LoggedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    RobotMap.subsystemPeriodics();
+  }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
@@ -109,8 +111,6 @@ public class Robot extends LoggedRobot {
   public void simulationPeriodic() {
     // Swerve.teleopDrive();
     Swerve.simulationPeriodic();
-
-    Logger.recordOutput("Swerve Pose", Swerve.getPose());
 
     // if (RobotMap.driverController.getXButtonPressed()) {
     //   Swerve.resetOdometry();

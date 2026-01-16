@@ -16,7 +16,9 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -66,7 +68,7 @@ public class Swerve {
     }
     
     public static void init() {
-
+        Swerve.resetPose(new Pose2d(new Translation2d(3.65, 0.72), new Rotation2d(0)));
     }
 
     public static void periodic() {
@@ -75,6 +77,9 @@ public class Swerve {
         if (DriverStation.isEnabled()) {
             SwerveObjects.lastEnabledPose = getPose();
         }
+
+        Logger.recordOutput("CTRE Pose-Estimate", Swerve.getPose());
+        Logger.recordOutput("3D Swerve Pose", Swerve.getPose3d());
     }
 
     public static void simulationPeriodic() {
@@ -102,6 +107,16 @@ public class Swerve {
 		return SwerveObjects.Swerve.getState().Pose;
 	}
 
+    public static Pose3d getPose3d() {
+        Translation3d translation = new Translation3d(getPose().getX(), getPose().getY(), 0);
+        Rotation3d rotation = new Rotation3d(getState().Pose.getRotation());
+        return new Pose3d(translation, rotation);
+    }
+
+    public static double getDistToPoseAsDouble(Pose2d pose) {
+        return getPose().getTranslation().getDistance(pose.getTranslation());
+    }
+
 	public static void addVisionUpdate(Pose2d pose, Time timestamp, Matrix<N3, N1> stdDevs) {
 		SwerveObjects.Swerve.addVisionMeasurement(pose, timestamp.in(Units.Seconds), stdDevs);
 	}
@@ -121,6 +136,13 @@ public class Swerve {
         Pose2d pose = new Pose2d(new Translation2d(0, 0), new Rotation2d(0));
 		SwerveObjects.Swerve.resetPose(pose);
 	}
+
+    public static void zeroCommand() {
+        SwerveObjects.Swerve.setControl(SwerveObjects.teleopDrive
+                                        .withVelocityX(0)
+                                        .withVelocityY(0)
+                                        .withRotationalRate(0));
+    }
 
     /**
      * @return Absolute value positive Meters per second of robot-centric speed.
@@ -150,8 +172,6 @@ public class Swerve {
                 .withRotationalRate(omega * SwerveConstants.MaxAngularRate));
 
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
-
-        Logger.recordOutput("CTRE Pose-Estimate", Swerve.getPose());
     }
 
     public static void automaticDrive(double velocity, Rotation2d heading) {
@@ -165,8 +185,6 @@ public class Swerve {
                 .withRotationalRate(omega * SwerveConstants.MaxAngularRate));
 
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
-
-        Logger.recordOutput("CTRE Pose-Estimate", Swerve.getPose());
     }
 
     public void outputTelemetry() {

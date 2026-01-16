@@ -28,6 +28,10 @@ public class RobotMap {
     // drivetrainStateMachine.init();
   }
 
+  public static void subsystemPeriodics() {
+    Swerve.periodic();
+  }
+
   public static void simulationAuto() {
     autoSubsystem.scheduleAutoSimulation();
   }
