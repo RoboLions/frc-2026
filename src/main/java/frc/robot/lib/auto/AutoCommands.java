@@ -1,7 +1,13 @@
 package frc.robot.lib.auto;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -10,7 +16,7 @@ import frc.robot.subsystems.interfaces.Hood;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.swerve.Swerve;
 
-public class AutoCommnads {
+public class AutoCommands {
 
     public static Trigger exampleTrigger() {
         return new Trigger(() -> false);
@@ -51,8 +57,52 @@ public class AutoCommnads {
         return Commands.runOnce(() -> Logger.recordOutput("IntakeIn", false));
     }
 
+    // public static Command methodUntil(double time) {
+    //     Timer timer = new Timer();
+    //     timer.start();
+
+    //     return Commands.run(() -> method()).until(timerDone(time, timer));
+    // }
+
+    public static BooleanSupplier timerDone(double time, Timer timer) {
+        return (() -> timer.hasElapsed(time));
+    }
+
     // i need a function that only triggers once, that runs this only at the waypoint for the first time.
     public static void triggerOnce() {
 
+    }
+
+    //all 5000 log item commands
+    public static Command LogItem(String key, String data) {
+        return Commands.runOnce(() -> Logger.recordOutput(key, data));
+    }
+
+    public static Command LogItem(String key, Double data) {
+        return Commands.runOnce(() -> Logger.recordOutput(key, data));
+    }
+
+    public static Command LogItem(String key, Boolean data) {
+        return Commands.runOnce(() -> Logger.recordOutput(key, data));
+    }
+
+    public static Command LogItem(String key, Integer data) {
+        return Commands.runOnce(() -> Logger.recordOutput(key, data));
+    }
+
+    public static Command LogItem(String key, Pose2d data) {
+        return Commands.runOnce(() -> Logger.recordOutput(key, data));
+    }
+
+    public static Command LogItem(String key, Translation2d data) {
+        return Commands.runOnce(() -> Logger.recordOutput(key, data));
+    }
+
+    public static Command LogItem(String key, Command command) {
+        return Commands.runOnce(() -> Logger.recordOutput(key, command.getName()));
+    }
+
+    public static Command LogItem(String key, Timer timer) {
+        return Commands.runOnce(() -> Logger.recordOutput(key, timer.get()));
     }
 }
