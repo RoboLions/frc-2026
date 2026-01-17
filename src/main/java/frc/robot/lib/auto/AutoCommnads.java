@@ -50,4 +50,9 @@ public class AutoCommnads {
     public static Command simulationIntakeStop() {
         return Commands.runOnce(() -> Logger.recordOutput("IntakeIn", false));
     }
+
+    // i need a function that only triggers once, that runs this only at the waypoint for the first time.
+    public static void triggerOnce() {
+
+    }
 }
