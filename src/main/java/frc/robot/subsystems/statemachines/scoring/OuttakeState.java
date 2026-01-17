@@ -8,6 +8,7 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
+import frc.robot.subsystems.interfaces.Intake;
 
 /** Add your docs here. */
 public class OuttakeState extends State {
@@ -35,7 +36,8 @@ public class OuttakeState extends State {
 
   @Override
   public void init(State prevState) {
-
+    Intake.intakeDown();
+    Intake.allRollersOut();
   }
 
   @Override

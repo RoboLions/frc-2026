@@ -8,6 +8,7 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
+import frc.robot.subsystems.interfaces.Shooter;
 
 /** Add your docs here. */
 public class HubAimState extends State {
@@ -30,7 +31,7 @@ public class HubAimState extends State {
 
   @Override
   public void init(State prevState) {
-
+    Shooter.setShootSpeed(0);
   }
 
   @Override

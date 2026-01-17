@@ -17,7 +17,7 @@ public class ScoringStateMachine extends StateMachine{
     public static ShootState shootState = new ShootState();
     public static PresetState presetState = new PresetState();
     public static HubCycleState hubCycleState = new HubCycleState();
-    public static CycleState passCycleState = new CycleState();
+    public static CycleState CycleState = new CycleState();
 
     
 
@@ -29,6 +29,6 @@ public class ScoringStateMachine extends StateMachine{
         shootState.build();
         presetState.build();
         hubCycleState.build();
-        passCycleState.build();
+        CycleState.build();
     }
 }

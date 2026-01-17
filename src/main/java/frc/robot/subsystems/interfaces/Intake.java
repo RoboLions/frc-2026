@@ -168,4 +168,16 @@ public class Intake {
     Logger.recordOutput("Intake Component 1", new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)));
     Logger.recordOutput("Intake Component 2", new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)));
   }
+  public static void allRollersIn() {
+    intake();
+    IndexIn();
+    FeedIn();
+  }
+
+  public static void allRollersOut() {
+    outtake();
+    IndexOut();
+    FeedOut();
+  }
+
 }

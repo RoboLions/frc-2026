@@ -9,6 +9,7 @@ import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
+import frc.robot.subsystems.interfaces.Shooter;
 
 /** Add your docs here. */
 public class IdleState extends State {
@@ -60,12 +61,18 @@ public class IdleState extends State {
 
   @Override
   public void init(State prevState) {
+    Intake.set(0);
+    Intake.setFeed(0);
+    Intake.setIndex(0);
+    Shooter.stopAll();
     Intake.simulateIntakeUp();
   }
 
   @Override
   public void execute() {
-
+    if (RobotMap.driverController.getYButton()) {
+      Intake.intakeUp();
+    }
   }
 
   @Override
