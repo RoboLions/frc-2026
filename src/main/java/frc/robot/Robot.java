@@ -12,7 +12,9 @@ import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -108,6 +110,9 @@ public class Robot extends LoggedRobot {
   @Override
   public void simulationInit() {
     RobotMap.simulationAuto();
+    
+    Logger.recordOutput("Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, 0)));
+
     RobotMap.scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);
   }
 
@@ -116,9 +121,5 @@ public class Robot extends LoggedRobot {
   public void simulationPeriodic() {
     // Swerve.teleopDrive();
     Swerve.simulationPeriodic();
-
-    // if (RobotMap.driverController.getXButtonPressed()) {
-    //   Swerve.resetOdometry();
-    // }
   }
 }

@@ -9,6 +9,7 @@ import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Hood;
+import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.swerve.Swerve;
 
 /** Add your docs here. */
@@ -33,11 +34,12 @@ public class IntakeState extends State {
   }
   @Override
   public void init(State prevState) {
+    Intake.simulateIntakeDown();
   }
 
   @Override
   public void execute() {
-    Hood.simulateTurretAngle(Swerve.getPose(), Constants.Hood.TARGET_POSE, Swerve.getYawAsRadians(), Swerve.getYawRateAsRad());
+    Hood.simulateTurretAngle(Swerve.getPose(), Constants.Hood.HUB_POSE, Swerve.getYawAsRadians(), Swerve.getYawRateAsRad());
   }
 
   @Override

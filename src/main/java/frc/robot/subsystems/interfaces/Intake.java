@@ -1,5 +1,7 @@
 package frc.robot.subsystems.interfaces;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -8,7 +10,9 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.wpilibj.DigitalInput;
+
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import frc.robot.Constants;
 
 public class Intake {
@@ -155,4 +159,13 @@ public class Intake {
     setFeed(-0.7);
   }
 
+  public static void simulateIntakeUp() {
+    Logger.recordOutput("Intake Component 1", new Pose3d(0.1225, 0, -0.0825, new Rotation3d(0, -30 * Math.PI / 180, 0)));
+    Logger.recordOutput("Intake Component 2", new Pose3d(-0.3675, 0, 0.5025, new Rotation3d(0, 40 * Math.PI / 180, 0)));
+  }
+
+  public static void simulateIntakeDown() {
+    Logger.recordOutput("Intake Component 1", new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)));
+    Logger.recordOutput("Intake Component 2", new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)));
+  }
 }

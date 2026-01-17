@@ -6,9 +6,6 @@ import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -31,14 +28,9 @@ public class AutoSubsystem {
     }
 
     private Supplier<AutoRoutine> simulationRoutine() {
-
-        //MANUAL EVENT MARKERS
-        Pose2d startTurret1 = new Pose2d(new Translation2d(0.6369214057922363, 6.62243747711181), new Rotation2d(-1.269176983105683));
-        Pose2d stopTurret1 = new Pose2d(new Translation2d(3.599396228790283, 7.41448783874511), new Rotation2d(0));
+        AutoRoutine routine = autoFactory.newRoutine("SIMULATION AUTO 1 (FAST PATH)");
 
         return () -> {
-            AutoRoutine routine = autoFactory.newRoutine("simulation");
-
             AutoTrajectory simPath = routine.trajectory("FastPath");
  
             routine.active().onTrue(
@@ -48,8 +40,8 @@ public class AutoSubsystem {
                 )
             );
 
-            simPath.atTime(0.5).onTrue(AutoCommnads.setTurretTrack());
-            
+            simPath.atTime(0.25).onTrue(AutoCommnads.setTurretTrack());
+
             simPath.atPose(simPath.getFinalPose().get(), 0.1, 0.05)
                    .onTrue(AutoCommnads.PrintItem("within-tolerance"));
 
