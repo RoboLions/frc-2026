@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.lib.auto.AutoSubsystem;
 import frc.robot.subsystems.interfaces.Limelight;
 import frc.robot.subsystems.interfaces.Shooter;
+import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class RobotMap {
@@ -13,6 +14,7 @@ public class RobotMap {
 
   /* state machine instances */
   // public static final DrivetrainStateMachine drivetrainStateMachine = new DrivetrainStateMachine();
+  public static final ScoringStateMachine scoringStateMachine = new ScoringStateMachine();
 
   /* Xbox controllers */
   public static final XboxController manipulatorController = new XboxController(1);
@@ -34,6 +36,7 @@ public class RobotMap {
 
     if (DriverStation.isTeleopEnabled()) {
       Swerve.simulationDrive();
+      scoringStateMachine.setNextState();
     }
   }
 

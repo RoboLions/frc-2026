@@ -31,10 +31,15 @@ public class AutoSubsystem {
     }
 
     private Supplier<AutoRoutine> simulationRoutine() {
+
+        //MANUAL EVENT MARKERS
+        Pose2d startTurret1 = new Pose2d(new Translation2d(0.6369214057922363, 6.62243747711181), new Rotation2d(-1.269176983105683));
+        Pose2d stopTurret1 = new Pose2d(new Translation2d(3.599396228790283, 7.41448783874511), new Rotation2d(0));
+
         return () -> {
             AutoRoutine routine = autoFactory.newRoutine("simulation");
 
-            AutoTrajectory simPath = routine.trajectory("longSimulationPath");
+            AutoTrajectory simPath = routine.trajectory("FastPath");
  
             routine.active().onTrue(
                 Commands.sequence(
@@ -43,9 +48,8 @@ public class AutoSubsystem {
                 )
             );
 
-            simPath.atPose(new Pose2d(new Translation2d(1.356, 6.94597053527832), new Rotation2d(-0.73866)), 0.2, 3)
-                   .onTrue(AutoCommnads.PrintItem("within-tolerance, shooting turret"));
-                   
+            simPath.atTime(0.5).onTrue(AutoCommnads.setTurretTrack());
+            
             simPath.atPose(simPath.getFinalPose().get(), 0.1, 0.05)
                    .onTrue(AutoCommnads.PrintItem("within-tolerance"));
 

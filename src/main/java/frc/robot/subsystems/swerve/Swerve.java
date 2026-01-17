@@ -70,7 +70,7 @@ public class Swerve {
     }
     
     public static void init() {
-        Swerve.resetPose(new Pose2d(new Translation2d(3.65, 0.72), new Rotation2d(0)));
+        Swerve.resetPose(new Pose2d(new Translation2d(3.445100784301758, 4.781177043914795), new Rotation2d(-0.7399750751354299)));
     }
 
     public static void periodic() {
@@ -90,7 +90,6 @@ public class Swerve {
 
         if (DriverStation.isEnabled()) {
             SwerveObjects.lastEnabledPose = getPose();
-            Hood.simulateTurretAngle(getPose(), Constants.Hood.TARGET_POSE, getYawAsRadians(), getYawRateAsRad());
         }
     }
 

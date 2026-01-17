@@ -3,6 +3,8 @@ package frc.robot.lib.auto;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
+import frc.robot.subsystems.interfaces.Hood;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class AutoCommnads {
@@ -12,7 +14,7 @@ public class AutoCommnads {
     }
 
     public static Command exampleCommand() {
-        return Commands.run(() -> System.out.println("Hello World!"));
+        return Commands.runOnce(() -> System.out.println("Hello World!"));
     }
     
     public static Command SwerveStop() {
@@ -21,5 +23,12 @@ public class AutoCommnads {
 
     public static Command PrintItem(String string) {
         return Commands.runOnce(() -> System.out.println(string));
+    }
+
+    public static Command setTurretTrack() {
+        return Commands.run(() -> Hood.simulateTurretAngle(Swerve.getPose(), 
+                                                           Constants.Hood.TARGET_POSE, 
+                                                           Swerve.getYawAsRadians(), 
+                                                           Swerve.getYawRateAsRad()));
     }
 }

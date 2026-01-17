@@ -8,6 +8,8 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
+import frc.robot.subsystems.interfaces.Hood;
+import frc.robot.subsystems.swerve.Swerve;
 
 /** Add your docs here. */
 public class IntakeState extends State {
@@ -34,7 +36,9 @@ public class IntakeState extends State {
   }
 
   @Override
-  public void execute() {}
+  public void execute() {
+    Hood.simulateTurretAngle(Swerve.getPose(), Constants.Hood.TARGET_POSE, Swerve.getYawAsRadians(), Swerve.getYawRateAsRad());
+  }
 
   @Override
   public void exit(State nextState) {}

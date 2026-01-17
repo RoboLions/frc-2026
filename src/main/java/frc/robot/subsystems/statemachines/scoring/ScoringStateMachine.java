@@ -4,8 +4,10 @@
 
 package frc.robot.subsystems.statemachines.scoring;
 
+import frc.robot.lib.statemachine.StateMachine;
+
 /** Add your docs here. */
-public class ScoringStateMachine {
+public class ScoringStateMachine extends StateMachine{
 
     public static IdleState idleState = new IdleState();
     public static IntakeState intakeState = new IntakeState();
