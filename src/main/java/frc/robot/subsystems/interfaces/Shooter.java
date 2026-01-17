@@ -17,11 +17,11 @@ import frc.robot.lib.util.Conversions;
 public class Shooter {
 
   private static final TalonFX mBackShooterMotor =
-      new TalonFX(Constants.Shooter.BACK_FLYWHEEL_MOTOR);
+      new TalonFX(Constants.CAN_IDS.BACK_FLYWHEEL_MOTOR);
   private static final TalonFX mFrontMasterShooterMotor =
-      new TalonFX(Constants.Shooter.FRONT_MASTER_FLYWHEEL_MOTOR);  
+      new TalonFX(Constants.CAN_IDS.FRONT_MASTER_FLYWHEEL_MOTOR);  
   private static final TalonFX mFrontFollowerShooterMotor =
-      new TalonFX(Constants.Shooter.FRONT_FOLLOWER_FLYWHEEL_MOTOR);
+      new TalonFX(Constants.CAN_IDS.FRONT_FOLLOWER_FLYWHEEL_MOTOR);
 
   public static final StatusSignal<AngularVelocity> mBackMotorVelo = mBackShooterMotor.getVelocity();
   public static final StatusSignal<AngularVelocity> mFrontMotorVelo = mFrontMasterShooterMotor.getVelocity();
@@ -113,7 +113,7 @@ public class Shooter {
         .withEnableFOC(true));
     mFrontFollowerShooterMotor.setControl(
       new Follower(
-        Constants.Shooter.FRONT_FOLLOWER_FLYWHEEL_MOTOR, 
+        Constants.CAN_IDS.FRONT_FOLLOWER_FLYWHEEL_MOTOR, 
         MotorAlignmentValue.Aligned));  
   }
 

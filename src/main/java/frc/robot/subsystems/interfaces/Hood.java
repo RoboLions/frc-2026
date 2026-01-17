@@ -19,9 +19,9 @@ import frc.robot.Constants;
 public class Hood {
     
     private static final TalonFX mFollowerPivotMotor =
-      new TalonFX(Constants.Shooter.BACK_FLYWHEEL_MOTOR);
+      new TalonFX(Constants.CAN_IDS.BACK_FLYWHEEL_MOTOR);
     private static final TalonFX mMasterPivotMotor =
-      new TalonFX(Constants.Shooter.FRONT_MASTER_FLYWHEEL_MOTOR);  
+      new TalonFX(Constants.CAN_IDS.FRONT_MASTER_FLYWHEEL_MOTOR);  
 
     public static final StatusSignal<Angle> mBackMotorVelo = mFollowerPivotMotor.getPosition();
     public static final StatusSignal<Angle> mFrontMotorVelo = mMasterPivotMotor.getPosition();

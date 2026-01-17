@@ -12,20 +12,20 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class Constants {
 
     public class Hood {
-        public static final int FRONT_PIVOT_MOTOR = 0;
-        public static final int BACK_PIVOT_MOTOR = 0;
 
         public static final double G = 9.807;
         public static final double THETA_ANGLE_FROM_SHOOTER = 90; //this is measured angled which the ball exits the shooter
         public static final double FUEL_VELOCITY = 15;
 
-        public static final Translation2d TARGET_POSE =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation2d(4.62744, 4.03648) : new Translation2d(11.91642, 4.03814);
+        public static final Translation2d HUB_POSE =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation2d(4.62744, 4.03648) : new Translation2d(11.91642, 4.03814);
+        public static final Translation2d REF_POSE =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation2d(4, 4) : new Translation2d(12.5, 4);
+        public static final Translation2d TOP_PASS =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation2d(4.62744, 4.03648) : new Translation2d(11.91642, 4.03814);
+        public static final Translation2d BOT_PASS =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation2d(4.62744, 4.03648) : new Translation2d(11.91642, 4.03814);
+
     }
 
     public class Shooter {
-        public static final int FRONT_MASTER_FLYWHEEL_MOTOR = 0;
-        public static final int FRONT_FOLLOWER_FLYWHEEL_MOTOR = 0;
-        public static final int BACK_FLYWHEEL_MOTOR = 0;
+
     }
 
     public class LimeLight {
@@ -35,4 +35,24 @@ public class Constants {
         public static final Map<String, Double> last_timestamps = new HashMap<String, Double>();
     }
     
+    public class CAN_IDS {
+
+        public static final int FRONT_MASTER_FLYWHEEL_MOTOR = 0;
+        public static final int FRONT_FOLLOWER_FLYWHEEL_MOTOR = 0;
+        public static final int BACK_FLYWHEEL_MOTOR = 0;
+
+        public static final int FRONT_PIVOT_MOTOR = 0;
+        public static final int BACK_PIVOT_MOTOR = 0;
+
+        public static final int MASTER_INTAKE_MOTOR = 0;
+        public static final int FOLLOWER_INTAKE_MOTOR = 0;
+        public static final int INDEX_MOTOR = 0;
+        public static final int FEED_MOTOR = 0;
+        public static final int INT_PIVOT_MOTOR = 0;
+
+        public static final int LEFT_CLIMB_MOTOR = 0;
+        public static final int RIGHT_CLIMB_MOTOR = 0;
+
+
+    }
 }

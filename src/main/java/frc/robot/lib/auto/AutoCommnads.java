@@ -27,7 +27,7 @@ public class AutoCommnads {
 
     public static Command setTurretTrack() {
         return Commands.run(() -> Hood.simulateTurretAngle(Swerve.getPose(), 
-                                                           Constants.Hood.TARGET_POSE, 
+                                                           Constants.Hood.HUB_POSE, 
                                                            Swerve.getYawAsRadians(), 
                                                            Swerve.getYawRateAsRad()));
     }
