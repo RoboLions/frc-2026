@@ -28,10 +28,10 @@ public class AutoSubsystem {
     }
 
     private Supplier<AutoRoutine> simulationRoutine() {
-        AutoRoutine routine = autoFactory.newRoutine("SIMULATION AUTO 1 (FAST PATH)");
+        AutoRoutine routine = autoFactory.newRoutine("SIMULATION AUTO (Depot_2Trip_Climb)");
 
         return () -> {
-            AutoTrajectory simPath = routine.trajectory("FastPath");
+            AutoTrajectory simPath = routine.trajectory("Depot_2Trip_Climb");
  
             routine.active().onTrue(
                 Commands.sequence(
@@ -40,7 +40,27 @@ public class AutoSubsystem {
                 )
             );
 
-            simPath.atTime(0.25).onTrue(AutoCommnads.setTurretTrack());
+            simPath.atTime(0.25).onTrue(AutoCommnads.simulationSetTurretTrack());
+
+            simPath.atTranslation("2", 0.5)
+                   .onTrue(AutoCommnads.simulationIntakeDown()
+                   .alongWith(AutoCommnads.simulationIntakeIn()));
+
+            simPath.atTranslation("3", 0.5)
+                   .onTrue(AutoCommnads.simulationIntakeUp()
+                   .alongWith(AutoCommnads.simulationIntakeStop()));
+
+            simPath.atTranslation("7", 0.5)
+                   .onTrue(AutoCommnads.simulationIntakeDown()
+                   .alongWith(AutoCommnads.simulationIntakeIn()));
+
+            simPath.atTranslation("9", 0.5)
+                   .onTrue(AutoCommnads.simulationIntakeUp()
+                   .alongWith(AutoCommnads.simulationIntakeStop()));
+
+            simPath.atTranslation("12", 0.5)
+                   .onTrue(AutoCommnads.simulationIntakeDown()
+                   .alongWith(AutoCommnads.simulationIntakeIn()));       
 
             simPath.atPose(simPath.getFinalPose().get(), 0.1, 0.05)
                    .onTrue(AutoCommnads.PrintItem("within-tolerance"));
