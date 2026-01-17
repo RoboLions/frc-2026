@@ -90,7 +90,7 @@ public class Swerve {
 
         if (DriverStation.isEnabled()) {
             SwerveObjects.lastEnabledPose = getPose();
-            Hood.simulateTurretAngle(getPose(), Constants.Hood.TARGET_POSE, -getYawAsRadians());
+            Hood.simulateTurretAngle(getPose(), Constants.Hood.TARGET_POSE, getYawAsRadians(), getYawRateAsRad());
         }
     }
 
@@ -114,12 +114,16 @@ public class Swerve {
         return Swerve.getPose().getRotation().getDegrees();
     }
 
-    public static double getYawAsRotations() {
-        return Swerve.getPose().getRotation().getRotations();
+    public static Rotation2d getYawAsRotations() {
+        return Swerve.getPose().getRotation();
     }
 
     public static double getYawAsRadians() {
         return Swerve.getPose().getRotation().getRadians();
+    }
+
+    public static double getYawRateAsRad() {
+        return Swerve.getState().Speeds.omegaRadiansPerSecond;
     }
 
     public static Pose3d getPose3d() {
@@ -171,6 +175,10 @@ public class Swerve {
         ChassisSpeeds ChassisSpeeds = SwerveObjects.Swerve.getState().Speeds;
            return ChassisSpeeds.vyMetersPerSecond;
    }
+
+    public static ChassisSpeeds getFieldSpeeds() {
+        return ChassisSpeeds.fromRobotRelativeSpeeds(getState().Speeds, getYawAsRotations());
+    }
 
     public static double getDistToPose(Pose2d pose) {
         return 0.0; // TODO: do this

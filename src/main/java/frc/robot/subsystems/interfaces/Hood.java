@@ -8,13 +8,13 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.Constants;
-import frc.robot.subsystems.swerve.Swerve;
 
 public class Hood {
     
@@ -25,6 +25,11 @@ public class Hood {
 
     public static final StatusSignal<Angle> mBackMotorVelo = mFollowerPivotMotor.getPosition();
     public static final StatusSignal<Angle> mFrontMotorVelo = mMasterPivotMotor.getPosition();
+
+    //PID for simulation hood
+    private static final PIDController simulationTurretController = new PIDController(0.15, 0, 0.0, 0.025);
+    private static double desiredTurretAngleFieldRel;
+    private static double simulationTurretAngle;
 
     public static void init() {
         TalonFXConfiguration frontPivotConfig = new TalonFXConfiguration();
@@ -59,48 +64,57 @@ public class Hood {
 
         mMasterPivotMotor.getConfigurator().apply(frontPivotConfig);
         mFollowerPivotMotor.getConfigurator().apply(frontPivotConfig);
-    }
+  }
 
-    public static double calculateTurretAngle(Pose2d currPose, Pose2d targetPose, Translation2d currentVelocity) {
-        // TODO: do this math
+  public static double calculateTurretAngle(Pose2d currPose, Pose2d targetPose, Translation2d currentVelocity) {
+    double dx = targetPose.getX() - currPose.getX();
+    double dy = targetPose.getY() - currPose.getY();
 
-        return 0.0;
-    }
+    return Math.atan2(dy, dx);
+  }
 
-    /** 
-    * 
-    * @param v The velocity as the piece exits the robot's shooter.
-    * @param d The distance from the exit point to the target.
-    * @param h The height from the exit point to the target.
-    * @return angle in degrees that the robot should aim at.
-    */
-    public static double calculateHoodAngle(double v, double d, double h) {
-        final double g = Constants.Hood.G;
+  /** 
+  * 
+  * @param v The velocity as the piece exits the robot's shooter.
+  * @param d The distance from the exit point to the target.
+  * @param h The height from the exit point to the target.
+  * @return angle in degrees that the robot should aim at.
+  */
+  public static double calculateHoodAngle(double v, double d, double h) {
+    final double g = Constants.Hood.G;
+    double v2 = v * v;
+    double v4 = v * v * v * v;
+    double d2 = d * d;
+    
+        double discriminant = v4 - g * (g * d2 + 2.0 * h * v2);
+        if (discriminant < 0.0 || d == 0.0) {
+            return Double.NaN; //No physical solution
+        }
+      double numerator = v2 + Math.sqrt(discriminant);
+      double denominator = g * d;
+      double angleRadians = Math.atan(numerator / denominator);
+      double o = Math.toDegrees(angleRadians);
+    return Constants.Hood.THETA_ANGLE_FROM_SHOOTER - o;
+  } 
 
-        double v2 = v * v;
-        double v4 = v * v * v * v;
-        double d2 = d * d;
-        
-            double discriminant = v4 - g * (g * d2 + 2.0 * h * v2);
+  // reminder that this is field relative, not robot relative like the actual turret must be.
+  public static void simulateTurretAngle(Pose2d currPose, 
+                                         Translation2d targetPose, 
+                                         double robotFieldYaw,
+                                         double robotYawRate) 
+  {
+    double dx = targetPose.getX() - currPose.getX();
+    double dy = targetPose.getY() - currPose.getY();
+    double r2 = dx * dx + dy * dy;
+    double timeOFlight = Math.sqrt(r2) / Constants.Hood.FUEL_VELOCITY;
 
-            if (discriminant < 0.0 || d == 0.0) {
-                return Double.NaN; //No physical solution
-            }
+    double rotationalLead = robotYawRate * timeOFlight; //the amount of radians lead that the rotational component requires
+    double totalLeadOffsets = -(rotationalLead);
 
-          double numerator = v2 + Math.sqrt(discriminant);
-          double denominator = g * d;
+    desiredTurretAngleFieldRel = Math.atan2(dy, dx) - robotFieldYaw + totalLeadOffsets;
+    simulationTurretController.setSetpoint(desiredTurretAngleFieldRel);
 
-          double angleRadians = Math.atan(numerator / denominator);
-          double o = Math.toDegrees(angleRadians);
-
-        return Constants.Hood.THETA_ANGLE_FROM_SHOOTER - o;
-    } 
-
-    // reminder that this is field relative, not robot relative like the actual turret must be.
-    public static void simulateTurretAngle(Pose2d currPose, Translation2d targetPose, double robotFieldRelativeYaw) {
-      double dx = targetPose.getX() - currPose.getX();
-      double dy = targetPose.getY() - currPose.getY();
-
-      Logger.recordOutput("Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, Math.atan2(dy, dx) + robotFieldRelativeYaw)));
-    }
+    simulationTurretAngle += simulationTurretController.calculate(simulationTurretAngle);
+    Logger.recordOutput("Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, simulationTurretAngle)));
+  }
 }

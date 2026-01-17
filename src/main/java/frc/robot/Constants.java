@@ -17,6 +17,7 @@ public class Constants {
 
         public static final double G = 9.807;
         public static final double THETA_ANGLE_FROM_SHOOTER = 90; //this is measured angled which the ball exits the shooter
+        public static final double FUEL_VELOCITY = 15;
 
         public static final Translation2d TARGET_POSE =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation2d(4.62744, 4.03648) : new Translation2d(11.91642, 4.03814);
     }
