@@ -12,7 +12,9 @@ import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
 import frc.robot.subsystems.swerve.Swerve;
 
 /**
@@ -107,6 +109,10 @@ public class Robot extends LoggedRobot {
   @Override
   public void simulationInit() {
     RobotMap.simulationAuto();
+
+    if (DriverStation.isEnabled()) {
+      RobotMap.scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);
+    }
   }
 
   /** This function is called periodically whilst in simulation. */
@@ -118,5 +124,6 @@ public class Robot extends LoggedRobot {
     // if (RobotMap.driverController.getXButtonPressed()) {
     //   Swerve.resetOdometry();
     // }
+    RobotMap.scoringStateMachine.setNextState();
   }
 }

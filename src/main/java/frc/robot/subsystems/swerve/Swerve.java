@@ -90,7 +90,6 @@ public class Swerve {
 
         if (DriverStation.isEnabled()) {
             SwerveObjects.lastEnabledPose = getPose();
-            Hood.simulateTurretAngle(getPose(), Constants.Hood.TARGET_POSE, getYawAsRadians(), getYawRateAsRad());
         }
     }
 

@@ -8,6 +8,8 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
+import frc.robot.subsystems.interfaces.Hood;
+import frc.robot.subsystems.swerve.Swerve;
 
 /** Add your docs here. */
 public class IdleState extends State {
@@ -46,25 +48,18 @@ public class IdleState extends State {
                 () -> {
                 return RobotMap.driverController.getLeftTriggerAxis() > 0.25;
                 },
-                ScoringStateMachine.passAimState));
-
-                
-
-
-            
-
-            
-            
+                ScoringStateMachine.passAimState));                
   }
 
   @Override
   public void init(State prevState) {
-
+    System.out.println("HI im in idle state");
   }
 
   @Override
   public void execute() {
-
+    Hood.simulateTurretAngle(Swerve.getPose(), Constants.Hood.TARGET_POSE, Swerve.getYawAsRadians(), Swerve.getYawRateAsRad()); 
+    // this is the function that moves the turret
   }
 
   @Override
