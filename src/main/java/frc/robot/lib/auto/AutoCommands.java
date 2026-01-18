@@ -1,8 +1,6 @@
 package frc.robot.lib.auto;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -57,20 +55,8 @@ public class AutoCommands {
         return Commands.runOnce(() -> Logger.recordOutput("IntakeIn", false));
     }
 
-    // public static Command methodUntil(double time) {
-    //     Timer timer = new Timer();
-    //     timer.start();
-
-    //     return Commands.run(() -> method()).until(timerDone(time, timer));
-    // }
-
-    public static BooleanSupplier timerDone(double time, Timer timer) {
-        return (() -> timer.hasElapsed(time));
-    }
-
-    // i need a function that only triggers once, that runs this only at the waypoint for the first time.
-    public static void triggerOnce() {
-
+    public static BooleanSupplier timerAt(double time, Timer timer) {
+        return (() -> true);
     }
 
     //all 5000 log item commands
@@ -104,5 +90,10 @@ public class AutoCommands {
 
     public static Command LogItem(String key, Timer timer) {
         return Commands.runOnce(() -> Logger.recordOutput(key, timer.get()));
+    }
+
+    public static Command waitAndStopSwerve(double waitSeconds) {
+        return Commands.waitSeconds(waitSeconds).alongWith(Commands.runOnce(() -> Swerve.zeroCommand()));
+
     }
 }

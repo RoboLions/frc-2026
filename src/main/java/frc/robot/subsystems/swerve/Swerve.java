@@ -30,9 +30,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
 import frc.robot.RobotMap;
-import frc.robot.subsystems.interfaces.Hood;
 
 public class Swerve {
 
@@ -70,7 +68,7 @@ public class Swerve {
     }
     
     public static void init() {
-        Swerve.resetPose(new Pose2d(new Translation2d(3.445100784301758, 4.781177043914795), new Rotation2d(-0.7399750751354299)));
+        Swerve.resetPose(new Pose2d(new Translation2d(3.445100784301758, 4.781177043914795), new Rotation2d(2.0760863861141203)));
     }
 
     public static void periodic() {
