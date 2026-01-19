@@ -36,7 +36,8 @@ public class AutoCommands {
         return Commands.run(() -> Hood.simulateTurretAngle(Swerve.getPose(), 
                                                            Constants.Hood.HUB_POSE, 
                                                            Swerve.getYawAsRadians(), 
-                                                           Swerve.getYawRateAsRad()));
+                                                           Swerve.getYawRateAsRad(),
+                                                           Swerve.getFieldSpeeds()));
     }
 
     public static Command simulationIntakeUp() {

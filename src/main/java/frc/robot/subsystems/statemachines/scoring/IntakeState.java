@@ -41,8 +41,12 @@ public class IntakeState extends State {
 
   @Override
   public void execute() {
-    Hood.simulateTurretAngle(Swerve.getPose(), Constants.Hood.HUB_POSE, Swerve.getYawAsRadians(), Swerve.getYawRateAsRad());
-  }
+    Hood.simulateTurretAngle(Swerve.getPose(), 
+                                 Constants.Hood.HUB_POSE, 
+                                 Swerve.getYawAsRadians(), 
+                                 Swerve.getYawRateAsRad(),
+                                 Swerve.getFieldSpeeds());
+  } 
 
   @Override
   public void exit(State nextState) {}
