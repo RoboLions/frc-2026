@@ -19,22 +19,32 @@ import org.littletonrobotics.junction.Logger;
 
 public class Limelight {
   private static ArrayList<LimeLightObject> cameras;
+  private static LimeLightObject FRONT_CAMERA_MODEL4; // TODO: RENAME CAMERAS;
+  private static LimeLightObject SIDE_CAMERA_MODEL3G; // TODO: RENAME CAMERAS
 
   public static void init() {
     cameras = new ArrayList<>();
 
-    LimeLightObject FRONT_CAMERA_MODEL4 = new LimeLightObject("LL4", 0); // TODO: RENAME CAMERAS
+    FRONT_CAMERA_MODEL4 = new LimeLightObject("LL4", 0); // TODO: RENAME CAMERAS;
+    SIDE_CAMERA_MODEL3G = new LimeLightObject("LL_LEFT", 0); // TODO: RENAME CAMERAS
+
     FRONT_CAMERA_MODEL4.usePigeon = false; // IMPORTANT TO DISABLE THE YAW CORRECTION FROM PIGEON
     LimelightHelpers.SetIMUMode(FRONT_CAMERA_MODEL4.cameraName, 3);
     LimelightHelpers.SetIMUAssistAlpha(FRONT_CAMERA_MODEL4.cameraName, 0.002);
-    cameras.add(FRONT_CAMERA_MODEL4);
 
-    LimeLightObject SIDE_CAMERA_MODEL3G = new LimeLightObject("LL_LEFT", 0); // TODO: RENAME CAMERAS
+    cameras.add(FRONT_CAMERA_MODEL4);
     cameras.add(SIDE_CAMERA_MODEL3G);
 
     LimelightHelpers.setCameraPose_RobotSpace(FRONT_CAMERA_MODEL4.cameraName,
-                                              0.379, 
-                                              0.097, 
+                                              0.0, 
+                                              0.0, 
+                                              0, 
+                                              0, 
+                                              0, 
+                                              0);
+    LimelightHelpers.setCameraPose_RobotSpace(SIDE_CAMERA_MODEL3G.cameraName,
+                                              0.0, 
+                                              0.0, 
                                               0, 
                                               0, 
                                               0, 
@@ -45,7 +55,16 @@ public class Limelight {
    * THIS SHOULD NEVER BE USED TO INIT THE PIGEON. THIS IS ONLY FOR PERIODIC UPDATE AND NOT PIGEON FEED.
    */
   public static void periodic() {
+    if (DriverStation.isDisabled()) {
+      disabledPoseSetup(FRONT_CAMERA_MODEL4);
+      Logger.recordOutput("LIMELIGHTS /IS ENABLED?", false);
+      return;
+    } else {
+      Logger.recordOutput("LIMELIGHTS /IS ENABLED?", true);
+    }
+
     for (LimeLightObject camera : cameras) {
+
       camera.results = updateCameraResults(camera, camera.yawOffset, Swerve.getYawAsDegrees(), Swerve.getYawRateAsDeg());
 
       if (camera.results == null) {
@@ -147,7 +166,7 @@ public class Limelight {
 
     LogForPositionTuning(limelightPose3d, Constants.LimeLight.known_pose_blue_left, limelight_name, false);
 
-    double angleStdDev = 0.5;
+    double angleStdDev = 10000;
     double distanceStdDev = 0.5 * Math.abs(yawRate) + 10.0;
 
     Logger.recordOutput(limelight_name + "/Distance Deviation", distanceStdDev);
@@ -159,8 +178,9 @@ public class Limelight {
                                  megaTagPoseEstimate.timestampSeconds);
   }
 
-  private void updatePigeon() {
-
+  private static void disabledPoseSetup(LimeLightObject limeLight) {
+    var poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(limeLight.cameraName);
+    Swerve.addLimelightMeasurement(poseEstimate.pose, poseEstimate.timestampSeconds, VecBuilder.fill(10, 10, 5));
   }
 
   public static Pose3d toPose3D(double[] inData) {
