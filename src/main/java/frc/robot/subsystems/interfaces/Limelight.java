@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -15,6 +16,7 @@ import frc.robot.lib.util.LimelightHelpers.LimelightResults;
 import frc.robot.subsystems.swerve.Swerve;
 
 import java.util.Optional;
+import java.util.Vector;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -50,7 +52,7 @@ public class Limelight {
     }
   }
 
-  public static void updateSwervePoseLimelight(String limelight_name, double yawOffset) {
+  public static PosewithDeviation updateSwervePoseLimelight(String limelight_name, double yawOffset) {
     double adjustedYaw = 0 - yawOffset; //TODO: Fix this
     double yawRate = 0;
 
@@ -62,27 +64,48 @@ public class Limelight {
     double tc = results.latency_capture;
     double tj = results.latency_jsonParse;
 
+    double shortestDistance = Double.POSITIVE_INFINITY;
+    int shortest_fidx = -1;
+    for (int fidx = 0; fidx < num_targets; fidx++) {
+      double tag_distance =
+          distanceToTag(toPose3D(results.targets_Fiducials[fidx].targetPose_CameraSpace));
+      if (tag_distance < shortestDistance) {
+        shortestDistance = tag_distance;
+        shortest_fidx = fidx;
+      }
+    }
+
     Double last_timestamp = Constants.LimeLight.last_timestamps.get(limelight_name);
     if (last_timestamp != null && last_timestamp == ts) {
-      return;
+      return null;
+    }    
+
+    if (shortest_fidx == -1) {
+      return null;
+    }
+
+    if (shortestDistance > 5 && DriverStation.isAutonomous()) {
+      return null;
     }
 
     Constants.LimeLight.last_timestamps.put(limelight_name, ts);
 
     if (!results.valid) {
-      return;
+      return null;
     }
 
     if (num_targets < 1) {
-      return;
+      return null;
     }
+
+
 
     LimelightHelpers.SetRobotOrientation(
         limelight_name, adjustedYaw, yawRate, 0, 0, 0, 0);
-    LimelightHelpers.PoseEstimate megaTagPose =
+    LimelightHelpers.PoseEstimate megaTagPoseEstimate =
         LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelight_name);
 
-    Pose2d botPose = megaTagPose.pose;
+    Pose2d botPose = megaTagPoseEstimate.pose;
 
     /**
      * This not part of LimelightLib! When repasting LimelightLib, do not forget to repaste this
@@ -125,31 +148,7 @@ public class Limelight {
         || botPose.getX() <= 0.0
         || botPose.getY() >= 8.21
         || botPose.getY() <= 0.0) {
-      return;
-    }
-
-    double shortestDistance = Double.POSITIVE_INFINITY;
-    int shortest_fidx = -1;
-    for (int fidx = 0; fidx < num_targets; fidx++) {
-      double tag_distance =
-          distanceToTag(toPose3D(results.targets_Fiducials[fidx].targetPose_CameraSpace));
-      if (tag_distance < shortestDistance) {
-        shortestDistance = tag_distance;
-        shortest_fidx = fidx;
-      }
-    }
-
-    if (shortest_fidx == -1) {
-      return;
-    }
-
-    if (shortestDistance > 5 && DriverStation.isAutonomous()) {
-      return;
-    }
-
-    if ((shortest_fidx == 1 || shortest_fidx == 2 || shortest_fidx == 11)
-        && DriverStation.isAutonomous()) {
-      return;
+      return null;
     }
 
     Logger.recordOutput("Shortest Distance", shortestDistance);
@@ -160,18 +159,21 @@ public class Limelight {
 
     Logger.recordOutput(limelight_name + "/PoseEstimateFiltered", botPose);
 
-    boolean doRejectUpdate = false;
 
     if (Math.abs(yawRate) > 720) {
-      doRejectUpdate = true;
+      //something
     }
 
-    if (!doRejectUpdate) {
-      Swerve.addLimelightMeasurement(
-          megaTagPose.pose,
-          base_time - (tl / 1000.0) - (tc / 1000.0) - (tj / 1000.0),
-          VecBuilder.fill(distanceStdDev, distanceStdDev, angleStdDev));
-    }
+
+      // Swerve.addLimelightMeasurement(
+      //     megaTagPoseEstimate.pose,
+      //     base_time - (tl / 1000.0) - (tc / 1000.0) - (tj / 1000.0),
+      //     VecBuilder.fill(distanceStdDev, distanceStdDev, angleStdDev));
+    
+    return new PosewithDeviation(megaTagPoseEstimate.pose, 
+                                 distanceStdDev, 
+                                 angleStdDev, 
+                                 base_time - (tl / 1000.0) - (tc / 1000.0) - (tj / 1000.0));
   }
 
   public static Pose3d toPose3D(double[] inData) {
@@ -193,9 +195,27 @@ public class Limelight {
     return tag_pose.getTranslation().getDistance(new Translation3d(0, 0, 0));
   }
 
-  public static double angleToTag(Pose3d tag_pose) {
-    double distanceZTargetToCam = tag_pose.getZ();
-    double distanceTargetToCam = distanceToTag(tag_pose);
-    return 180 / Math.PI * Math.acos(distanceZTargetToCam / distanceTargetToCam);
+  public static class LimeLightObject {
+    String cameraName;
+    PosewithDeviation results;
+    boolean resultValid = false;
+
+    LimeLightObject(String cameraName) {
+      this.cameraName = cameraName;
+    }
+  }
+
+  public static class PosewithDeviation {
+    Pose2d latestReadPose;
+    double timeStamp;
+    double distanceStdDev;
+    double angleStdDev;
+
+    PosewithDeviation(Pose2d resultPose, double distanceStdDev, double angleStdDev, double timeStamp) {
+      this.latestReadPose = resultPose;
+      this.distanceStdDev = distanceStdDev;
+      this.angleStdDev = angleStdDev;
+      this.timeStamp = timeStamp;
+    }
   }
 }
