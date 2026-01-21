@@ -58,6 +58,7 @@ public class Limelight {
     if (DriverStation.isDisabled()) {
       disabledPoseSetup(FRONT_CAMERA_MODEL4);
       Logger.recordOutput("LIMELIGHTS /IS ENABLED?", false);
+      
       return;
     } else {
       Logger.recordOutput("LIMELIGHTS /IS ENABLED?", true);

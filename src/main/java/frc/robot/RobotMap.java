@@ -24,15 +24,21 @@ public class RobotMap {
 
 
   public static void init() {
-    Shooter.init();
-    Limelight.init();
+    //FIRST SUBSYSTEMS
     Swerve.init();
+
+    Limelight.init();
+
+    Shooter.init();
+
+    //THEN STATEMACHINES
 
     // drivetrainStateMachine.init();
   }
 
   public static void subsystemPeriodics() {
     Swerve.periodic();
+    Limelight.periodic();
 
     if (DriverStation.isTeleopEnabled()) {
       Swerve.simulationDrive();

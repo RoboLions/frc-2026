@@ -14,7 +14,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -44,7 +43,6 @@ public class Robot extends LoggedRobot {
     }
 
     Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
-
 
     RobotMap.init();
 
