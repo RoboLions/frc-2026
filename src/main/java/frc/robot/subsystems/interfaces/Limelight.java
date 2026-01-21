@@ -6,66 +6,77 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
 import frc.robot.lib.util.LimelightHelpers;
 import frc.robot.lib.util.LimelightHelpers.LimelightResults;
 import frc.robot.subsystems.swerve.Swerve;
 
-import java.util.Optional;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import org.littletonrobotics.junction.Logger;
 
 public class Limelight {
-  public static boolean enabled = true;
+  private static ArrayList<LimeLightObject> cameras;
 
   public static void init() {
-    Optional<Alliance> alliance = DriverStation.getAlliance();
+    cameras = new ArrayList<>();
 
-    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
-      LimelightHelpers.setCameraPose_RobotSpace("Constants.LIMELIGHT.LEFT",
-                                                0.379, 
-                                                0.097, 
-                                                0, 
-                                                0, 
-                                                0, 
-                                                0);
-    } else { // blue
-      LimelightHelpers.setCameraPose_RobotSpace("Constants.LIMELIGHT.LEFT",
-                                                0.379, 
-                                                0.097, 
-                                                0, 
-                                                0, 
-                                                0, 
-                                                0);
-    }
+    LimeLightObject FRONT_CAMERA_MODEL4 = new LimeLightObject("LL4", 0); // TODO: RENAME CAMERAS
+    FRONT_CAMERA_MODEL4.usePigeon = false; // IMPORTANT TO DISABLE THE YAW CORRECTION FROM PIGEON
+    LimelightHelpers.SetIMUMode(FRONT_CAMERA_MODEL4.cameraName, 3);
+    LimelightHelpers.SetIMUAssistAlpha(FRONT_CAMERA_MODEL4.cameraName, 0.002);
+    cameras.add(FRONT_CAMERA_MODEL4);
+
+    LimeLightObject SIDE_CAMERA_MODEL3G = new LimeLightObject("LL_LEFT", 0); // TODO: RENAME CAMERAS
+    cameras.add(SIDE_CAMERA_MODEL3G);
+
+    LimelightHelpers.setCameraPose_RobotSpace(FRONT_CAMERA_MODEL4.cameraName,
+                                              0.379, 
+                                              0.097, 
+                                              0, 
+                                              0, 
+                                              0, 
+                                              0);
   }
 
+  /**
+   * THIS SHOULD NEVER BE USED TO INIT THE PIGEON. THIS IS ONLY FOR PERIODIC UPDATE AND NOT PIGEON FEED.
+   */
   public static void periodic() {
-    if (enabled) {
-      //TODO: Need to make this all a unified function for all 3 limelights
-      Limelight.updateSwervePoseLimelight("Constants.LIMELIGHT.LEFT", 5);
+    for (LimeLightObject camera : cameras) {
+      camera.results = updateCameraResults(camera, camera.yawOffset, Swerve.getYawAsDegrees(), Swerve.getYawRateAsDeg());
+
+      if (camera.results == null) {
+        continue;
+      }
+
+      double distStdDev = camera.results.distanceStdDev;
+      double angleStdDev = camera.results.angleStdDev;
+      
+      Swerve.addLimelightMeasurement(camera.results.latestReadPose, 
+                                     camera.results.timeStamp, 
+                                     VecBuilder.fill(distStdDev, distStdDev, angleStdDev));
     }
   }
 
-  public static PosewithDeviation updateSwervePoseLimelight(String limelight_name, double yawOffset) {
-    double adjustedYaw = 0 - yawOffset; //TODO: Fix this
-    double yawRate = 0;
+  private static PosewithDeviation updateCameraResults(LimeLightObject limeLight, double yawOffset, double yawDeg, double yawRate) {
+    String limelight_name = limeLight.cameraName;
+    
+    if (limeLight.usePigeon) {
+      double adjustedYaw = yawDeg - yawOffset;
 
-    double base_time = Logger.getTimestamp() / 1000000.0;
-    LimelightResults results = LimelightHelpers.getLatestResults(limelight_name);
-    var num_targets = results.targets_Fiducials.length;
-    double ts = results.timestamp_LIMELIGHT_publish;
-    double tl = results.latency_pipeline;
-    double tc = results.latency_capture;
-    double tj = results.latency_jsonParse;
+      LimelightHelpers.SetRobotOrientation(
+        limelight_name, adjustedYaw, 0, 0, 0, 0, 0);
+    }
 
     double shortestDistance = Double.POSITIVE_INFINITY;
     int shortest_fidx = -1;
+
+    LimelightResults results = LimelightHelpers.getLatestResults(limelight_name);
+    var num_targets = results.targets_Fiducials.length;
+
     for (int fidx = 0; fidx < num_targets; fidx++) {
       double tag_distance =
           distanceToTag(toPose3D(results.targets_Fiducials[fidx].targetPose_CameraSpace));
@@ -73,39 +84,58 @@ public class Limelight {
         shortestDistance = tag_distance;
         shortest_fidx = fidx;
       }
-    }
-
-    Double last_timestamp = Constants.LimeLight.last_timestamps.get(limelight_name);
-    if (last_timestamp != null && last_timestamp == ts) {
-      return null;
-    }    
+    }   
 
     if (shortest_fidx == -1) {
+      Logger.recordOutput(limelight_name + " ERROR STATUS", "SHORTEST FIDX UNDETECTED");
       return null;
     }
 
     if (shortestDistance > 5 && DriverStation.isAutonomous()) {
+      Logger.recordOutput(limelight_name + " ERROR STATUS", "SHORTEST DISTANCE IN AUTO THRESHOLD: " + shortestDistance);
       return null;
     }
 
-    Constants.LimeLight.last_timestamps.put(limelight_name, ts);
-
     if (!results.valid) {
+      Logger.recordOutput(limelight_name + " ERROR STATUS", "INVALID RESULTS");
       return null;
     }
 
     if (num_targets < 1) {
+      Logger.recordOutput(limelight_name + " ERROR STATUS", "NO TARGETS BUT FIDX DETECTED, NUM TARGETS");
+      return null;
+    }
+    
+    if (Math.abs(yawRate) > 720) {
+      Logger.recordOutput(limelight_name + " ERROR STATUS", "ROTATION TOO FAST: " + yawRate);
       return null;
     }
 
-
-
-    LimelightHelpers.SetRobotOrientation(
-        limelight_name, adjustedYaw, yawRate, 0, 0, 0, 0);
     LimelightHelpers.PoseEstimate megaTagPoseEstimate =
         LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelight_name);
-
     Pose2d botPose = megaTagPoseEstimate.pose;
+
+    
+    if (megaTagPoseEstimate.tagCount < 1) {
+      Logger.recordOutput(limelight_name + " ERROR STATUS", "NO TARGETS BUT FIDX DETECTED, FROM MT2");
+      return null;
+    }
+
+    if (megaTagPoseEstimate.pose == null) {
+      Logger.recordOutput(limelight_name + " ERROR STATUS", "NULLED POSE MT2");
+      return null;
+    }
+
+    if (botPose.getX() >= 17 // TODO: GET A NEW FIELD RANGE
+        || botPose.getY() >= 9
+        || botPose.getX() <= -0.5
+        || botPose.getY() <= -0.5) {
+      Logger.recordOutput(limelight_name + " ERROR STATUS", "POSE OUT OF FIELD");
+      return null;
+    }
+
+    Logger.recordOutput(limelight_name + "/Last Raw-Pose", botPose);
+    Logger.recordOutput(limelight_name + "/Shortest Distance", shortestDistance);
 
     /**
      * This not part of LimelightLib! When repasting LimelightLib, do not forget to repaste this
@@ -115,65 +145,22 @@ public class Limelight {
      */
     Pose3d limelightPose3d = LimelightHelpers.getMT2BotPose3d(limelight_name);
 
-    var known_pose = Constants.LimeLight.known_pose_blue_left;
-
-    Translation3d limelightTranslation =
-        known_pose.getTranslation().minus(limelightPose3d.getTranslation());
-    Rotation3d limelightRotation = known_pose.getRotation().minus(limelightPose3d.getRotation());
-
-    Logger.recordOutput("Known Pose", known_pose);
-    Logger.recordOutput(limelight_name + "/pose", limelightPose3d);
-    Logger.recordOutput(limelight_name + "/XDiff", limelightTranslation.getX());
-    Logger.recordOutput(limelight_name + "/YDiff", limelightTranslation.getY());
-    Logger.recordOutput(limelight_name + "/ZDiff", limelightTranslation.getZ());
-
-    Logger.recordOutput(
-        limelight_name + "/RollDiff",
-        Rotation2d.fromRadians(limelightRotation.getX()).getDegrees());
-    Logger.recordOutput(
-        limelight_name + "/PitchDiff",
-        Rotation2d.fromRadians(limelightRotation.getY()).getDegrees());
-    Logger.recordOutput(
-        limelight_name + "/YawDiff", Rotation2d.fromRadians(limelightRotation.getZ()).getDegrees());
-
-    // Logger.recordOutput(limelight_name + "/botpose", results.getBotPose2d());
-    // Logger.recordOutput(
-    //     limelight_name + "/botpose_wpiblue", results.getBotPose2d_wpiBlue());
-    // Logger.recordOutput(
-    // limelight_name + "/botpose_wpire", results.getBotPose2d_wpiRed());
-
-    Logger.recordOutput(limelight_name + "/PoseEstimate", botPose);
-
-    if (botPose.getX() >= 16.54
-        || botPose.getX() <= 0.0
-        || botPose.getY() >= 8.21
-        || botPose.getY() <= 0.0) {
-      return null;
-    }
-
-    Logger.recordOutput("Shortest Distance", shortestDistance);
+    LogForPositionTuning(limelightPose3d, Constants.LimeLight.known_pose_blue_left, limelight_name, false);
 
     double angleStdDev = 0.5;
+    double distanceStdDev = 0.5 * Math.abs(yawRate) + 10.0;
 
-    double distanceStdDev = 0.5 * yawRate + 3.0;
-
-    Logger.recordOutput(limelight_name + "/PoseEstimateFiltered", botPose);
-
-
-    if (Math.abs(yawRate) > 720) {
-      //something
-    }
-
-
-      // Swerve.addLimelightMeasurement(
-      //     megaTagPoseEstimate.pose,
-      //     base_time - (tl / 1000.0) - (tc / 1000.0) - (tj / 1000.0),
-      //     VecBuilder.fill(distanceStdDev, distanceStdDev, angleStdDev));
+    Logger.recordOutput(limelight_name + "/Distance Deviation", distanceStdDev);
+    Logger.recordOutput(limelight_name + "/Angle Deviation", angleStdDev);
     
-    return new PosewithDeviation(megaTagPoseEstimate.pose, 
+    return new PosewithDeviation(botPose, 
                                  distanceStdDev, 
                                  angleStdDev, 
-                                 base_time - (tl / 1000.0) - (tc / 1000.0) - (tj / 1000.0));
+                                 megaTagPoseEstimate.timestampSeconds);
+  }
+
+  private void updatePigeon() {
+
   }
 
   public static Pose3d toPose3D(double[] inData) {
@@ -195,13 +182,42 @@ public class Limelight {
     return tag_pose.getTranslation().getDistance(new Translation3d(0, 0, 0));
   }
 
-  public static class LimeLightObject {
-    String cameraName;
-    PosewithDeviation results;
-    boolean resultValid = false;
+  public static void LogForPositionTuning(Pose3d limelightPose3d, Pose3d knownPose, String limelight_name, boolean enabled) {
+    if (!enabled) {
+      return;
+    }
 
-    LimeLightObject(String cameraName) {
+    Translation3d limelightTranslation =
+        knownPose.getTranslation().minus(limelightPose3d.getTranslation());
+    Rotation3d limelightRotation = knownPose.getRotation().minus(limelightPose3d.getRotation());
+
+    Logger.recordOutput("Known Pose", knownPose);
+    Logger.recordOutput(limelight_name + "/pose", limelightPose3d);
+    Logger.recordOutput(limelight_name + "/XDiff", limelightTranslation.getX());
+    Logger.recordOutput(limelight_name + "/YDiff", limelightTranslation.getY());
+    Logger.recordOutput(limelight_name + "/ZDiff", limelightTranslation.getZ());
+
+    Logger.recordOutput(
+        limelight_name + "/RollDiff",
+        Rotation2d.fromRadians(limelightRotation.getX()).getDegrees());
+
+    Logger.recordOutput(
+        limelight_name + "/PitchDiff",
+        Rotation2d.fromRadians(limelightRotation.getY()).getDegrees());
+
+    Logger.recordOutput(
+        limelight_name + "/YawDiff", Rotation2d.fromRadians(limelightRotation.getZ()).getDegrees());
+  }
+
+  public static class LimeLightObject {
+    final String cameraName;
+    final double yawOffset;
+    PosewithDeviation results;
+    boolean usePigeon = true;
+
+    LimeLightObject(String cameraName, double yawOffset) {
       this.cameraName = cameraName;
+      this.yawOffset = yawOffset;
     }
   }
 

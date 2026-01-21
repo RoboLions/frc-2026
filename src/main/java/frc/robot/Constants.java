@@ -28,7 +28,6 @@ public class Constants {
         public static final Pose3d known_pose_blue_left =
             new Pose3d(new Translation3d(1.252857, 5.547879, 0.0), new Rotation3d(0, 0, Math.PI));
       
-        public static final Map<String, Double> last_timestamps = new HashMap<String, Double>();
     }
     
     public class CAN_IDS {

@@ -104,7 +104,7 @@ public class Swerve {
 	}
 
 	public static Pose2d getPose() {
-		return SwerveObjects.Swerve.getState().Pose;
+		return getState().Pose;
 	}
 
     public static double getYawAsDegrees() {
@@ -121,6 +121,10 @@ public class Swerve {
 
     public static double getYawRateAsRad() {
         return Swerve.getState().Speeds.omegaRadiansPerSecond;
+    }
+
+    public static double getYawRateAsDeg() {
+        return Math.toDegrees(Swerve.getState().Speeds.omegaRadiansPerSecond);
     }
 
     public static Pose3d getPose3d() {
