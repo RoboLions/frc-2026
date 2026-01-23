@@ -1,8 +1,15 @@
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.lib.auto.AutoSubsystem;
+import frc.robot.lib.util.FuelSim;
+import frc.robot.subsystems.interfaces.Hood;
+import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Limelight;
 import frc.robot.subsystems.interfaces.Shooter;
 import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
@@ -48,6 +55,22 @@ public class RobotMap {
 
   public static void simulationAuto() {
     autoSubsystem.scheduleAutoSimulation();
+  }
+
+  public static void simulateFuelInit() {
+
+  }
+
+  public static void simulateFuelPeriodics() {
+    if (Hood.SimulationObjects.isSimulationShooting) {
+      Hood.launchFuel();
+    }
+
+    // FuelSim.getInstance().clearFuel(); // clears all fuel from the field
+
+    Logger.recordOutput("BLUE SCORE", FuelSim.Hub.BLUE_HUB.getScore()); // get number of fuel scored in blue hub
+    // FuelSim.Hub.RED_HUB.getScore(); // get number of fuel scored in red hub
+    // FuelSim.Hub.[BLUE/RED]_HUB.resetScore(); // resets the score of the blue/red hub
   }
 }
 // initiate bomb sequence

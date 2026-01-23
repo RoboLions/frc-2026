@@ -14,6 +14,9 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.lib.util.FuelSim;
+import frc.robot.subsystems.interfaces.Hood;
+import frc.robot.subsystems.interfaces.Hood.SimulationObjects;
 import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -82,7 +85,9 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    RobotMap.scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);
+  }
 
   /** This function is called periodically during operator control. */
   @Override
@@ -108,8 +113,9 @@ public class Robot extends LoggedRobot {
   @Override
   public void simulationInit() {
     RobotMap.simulationAuto();
+    RobotMap.simulateFuelInit();
     
-    Logger.recordOutput("Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, 0)));
+    Logger.recordOutput("Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleFieldRel)));
 
     RobotMap.scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);
   }
@@ -117,7 +123,10 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {
-    // Swerve.teleopDrive();
+    Hood.SimulationObjects.isSimulationShooting = false; //set false always and then change if shooting
     Swerve.simulationPeriodic();
+
+    RobotMap.simulateFuelPeriodics();
+    FuelSim.getInstance().updateSim();
   }
 }

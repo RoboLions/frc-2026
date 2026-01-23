@@ -15,7 +15,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.Constants;
+import frc.robot.lib.util.FuelSim;
+import frc.robot.subsystems.swerve.Swerve;
 
 public class Hood {
   private static final TalonFX mFollowerPivotMotor =
@@ -33,8 +36,11 @@ public class Hood {
     private static double currentDistToTarget = 0.0; // this should only be used for estimating the TOF
   }
   
-  private class SimulationObjects {
-    private static double desiredTurretAngleFieldRel;
+  public class SimulationObjects {
+    public static double desiredTurretAngleFieldRel;
+    public static double desiredHoodAngleRobotRel;
+    public static double totalShotVelocity;
+    public static boolean isSimulationShooting;
   }
   
   public static void init() {
@@ -162,30 +168,59 @@ public class Hood {
     double dy = transformedTarget.getY() - currPose.getY();
     double r2 = dx * dx + dy * dy;
     double r = Math.sqrt(r2);
-    Logger.recordOutput("Pre-emptive Distance to Goal", r);
+    Logger.recordOutput("Turret Sim/ Pre-emptive Distance to Goal", r);
 
     double preliminaryV = sampleVelocity(r, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
-    Logger.recordOutput("Pre-emptive Estimated Velocity", preliminaryV);
+    Logger.recordOutput("Turret Sim/ Pre-emptive Estimated Velocity", preliminaryV);
 
     double preliminaryTheta = calculateLaunchAngleRad(preliminaryV, r, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
-    Logger.recordOutput("Pre-emptive Estimated Launch Angle", Math.toDegrees(preliminaryTheta));
+    Logger.recordOutput("Turret Sim/ Pre-emptive Estimated Launch Angle", Math.toDegrees(preliminaryTheta));
 
     double timeOFlight = Math.sqrt(r2) / (preliminaryV);
 
     // This is a tuning line in order to avoid weird behaviors with the estimation line due to inecomplete estimations.
     timeOFlight *= Constants.Hood.TIME_OF_FLIGHT_SCALE; 
 
-    Logger.recordOutput("Pre-emptive Estimated TOF", timeOFlight);
+    Logger.recordOutput("Turret Sim/ Pre-emptive Estimated TOF", timeOFlight);
 
-    double x = fieldRobotSpeeds.vxMetersPerSecond;
-    double y = fieldRobotSpeeds.vyMetersPerSecond;
+    double xSpeeds = fieldRobotSpeeds.vxMetersPerSecond;
+    double ySpeeds = fieldRobotSpeeds.vyMetersPerSecond;
 
-    Translation2d imaginaryTarget = transformedTarget.minus(new Translation2d(x, y).times(timeOFlight));
+    Translation2d imaginaryTarget = transformedTarget.minus(new Translation2d(xSpeeds, ySpeeds).times(timeOFlight));
     Pose3d FAKEPOSE = new Pose3d(new Translation3d(imaginaryTarget).plus(new Translation3d(0, 0, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET)), new Rotation3d());
     
-    Logger.recordOutput("Fake Target", FAKEPOSE);
+    Logger.recordOutput("Turret Sim/ Fake Target", FAKEPOSE);
 
-    SimulationObjects.desiredTurretAngleFieldRel = Math.atan2(dy, dx) - robotFieldYaw;
-    Logger.recordOutput("Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleFieldRel)));
+    double newDX = FAKEPOSE.getX() - currPose.getX();
+    double newDY = FAKEPOSE.getY() - currPose.getY();
+    double newR2 = newDX * newDX + newDY * newDY;
+    double newR = Math.sqrt(newR2);
+
+    SimulationObjects.desiredTurretAngleFieldRel = Math.atan2(newDY, newDX) - robotFieldYaw;
+    Logger.recordOutput("Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleFieldRel)));
+
+    SimulationObjects.totalShotVelocity= sampleVelocity(newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
+    Logger.recordOutput("Turret Sim/ Shot Velocity", preliminaryV);
+
+    SimulationObjects.desiredHoodAngleRobotRel = calculateHoodAngle(SimulationObjects.totalShotVelocity, newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
+    Logger.recordOutput("Turret Sim/ Hood Angle", SimulationObjects.desiredHoodAngleRobotRel);
+
+    SimulationObjects.isSimulationShooting = true;
+  }
+
+  public static void launchFuel() {
+    // Pose3d robot = Swerve.getPose3d();
+
+    // double theta = Hood.SimulationObjects.desiredHoodAngleRobotRel;     // robot or turret yaw
+    // double alpha = Hood.SimulationObjects.desiredTurretAngleFieldRel; // vertical slice angle
+
+    // double xFac = Math.cos(alpha) * Math.cos(theta);
+    // double yFac = Math.cos(alpha) * Math.sin(theta);
+    // double zFac = Math.sin(alpha);
+
+    // Translation3d shotVector = new Translation3d(xFac * Hood.SimulationObjects.totalShotVelocity, yFac * Hood.SimulationObjects.totalShotVelocity, zFac * Hood.SimulationObjects.totalShotVelocity );
+
+    // Translation3d initialPosition = robot.getTranslation();
+    // FuelSim.getInstance().spawnFuel(initialPosition, shotVector);
   }
 }

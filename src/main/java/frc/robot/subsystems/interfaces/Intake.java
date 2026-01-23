@@ -17,6 +17,8 @@ import frc.robot.Constants;
 
 public class Intake {
 
+  private static boolean isRunning;
+
   public static final TalonFX mMasterIntakeMotor =
       new TalonFX(Constants.CAN_IDS.MASTER_INTAKE_MOTOR, "CANivore");
   public static final TalonFX mFollowIntakeMotor =
@@ -37,6 +39,7 @@ public class Intake {
 
 //when you want to make a follow motor, you need to set the master motor to follow the follower motor. This is done by calling the setControl method on the master motor and passing in a Follower object with the follower motor's device ID and a boolean indicating whether the follower motor should be inverted or not.
   public static void init() {
+    isRunning = false;
     
     TalonFXConfiguration masterIntakeMotorConfiguration = new TalonFXConfiguration();
     masterIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
@@ -149,6 +152,12 @@ public class Intake {
 
     public static void setFeed(double speed) {
     mFeedMotor.set(speed);
+
+    if (speed != 0) {
+      isRunning = true;
+    } else {
+      isRunning = false;
+    }
   }
 
   public static void FeedIn() {
@@ -180,4 +189,7 @@ public class Intake {
     FeedOut();
   }
 
+  public static boolean isRunning() {
+    return isRunning;
+  }
 }
