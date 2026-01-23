@@ -73,8 +73,8 @@ public class Hood {
    */
   private static double sampleVelocity(double d, double h) {
     double velocity = Math.sqrt(
-      Constants.Hood.G * (Math.sqrt(d * d + h * h) + h)) // the minimum line, DO NOT TOUCH YOU IDOTS.
-        + Math.pow(Math.E, -2 * d) + (d / 2); // the offset line, adjust as desired
+      Constants.Hood.G * (Math.sqrt(d * d + h * h) + h)) // the minimum line. go below this velocity and we will hit the SIDE.
+        + Math.pow(Math.E, -2 * d) + (d / 3) + 1; // the offset line, adjust as desired
         
     return velocity;
   }
@@ -126,6 +126,29 @@ public class Hood {
     return angleRadians;
   } 
 
+  /**
+  * Offsets the target position along the line from the robot to the target.
+  *
+  * This is used to intentionally aim *behind* the hub's center rather than directly at
+  * its center. By shifting the target point backward along the robot-to-hub
+  * bearing, the shot contacts the back of the hub at a slight angle instead of
+  * squaring up in the middle. This promotes more consistent backspin interaction
+  * with the hub and improves shot forgiveness and accuracy.
+  *
+  * A positive transformation distance moves the target farther away from the
+  * robot (past the hub), while a negative value pulls the aim point closer.
+  *
+  * @param currPose Current robot pose on the field
+  * @param targetPose Original target position (hub center)
+  * @param transformationInMeters Distance to shift the target along the bearing
+  * @return Transformed target translation used for aiming
+  */
+  public static Translation2d transformTarget(Pose2d currPose, Translation2d targetPose, double transformationInMeters) {
+    Translation2d deltaTranslation = targetPose.minus(currPose.getTranslation());
+    double radAngle = Math.atan2(deltaTranslation.getY(), deltaTranslation.getX());
+    return new Translation2d(targetPose.getX() + transformationInMeters * Math.cos(radAngle), targetPose.getY() + transformationInMeters * Math.sin(radAngle));
+  }
+
   // reminder that this is field relative, not robot relative like the actual turret must be.
   public static void simulateTurretAngle(Pose2d currPose, 
                                          Translation2d targetPose, 
@@ -133,25 +156,31 @@ public class Hood {
                                          double robotYawRate,
                                          ChassisSpeeds fieldRobotSpeeds) 
   {
-    double dx = targetPose.getX() - currPose.getX();
-    double dy = targetPose.getY() - currPose.getY();
+    Translation2d transformedTarget = transformTarget(currPose, targetPose, 0.25);
+
+    double dx = transformedTarget.getX() - currPose.getX();
+    double dy = transformedTarget.getY() - currPose.getY();
     double r2 = dx * dx + dy * dy;
     double r = Math.sqrt(r2);
-    Logger.recordOutput("Distance to Goal", r);
+    Logger.recordOutput("Pre-emptive Distance to Goal", r);
 
     double preliminaryV = sampleVelocity(r, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
-    Logger.recordOutput("Estimated Velocity", preliminaryV);
+    Logger.recordOutput("Pre-emptive Estimated Velocity", preliminaryV);
 
-    double prelimiaryTheta = calculateLaunchAngleRad(preliminaryV, r, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
-    Logger.recordOutput("Estimated Launch Angle", Math.toDegrees(prelimiaryTheta));
+    double preliminaryTheta = calculateLaunchAngleRad(preliminaryV, r, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
+    Logger.recordOutput("Pre-emptive Estimated Launch Angle", Math.toDegrees(preliminaryTheta));
 
-    double timeOFlight = Math.sqrt(r2) / (preliminaryV * Math.sin(prelimiaryTheta));
-    Logger.recordOutput("Estimated TOF", timeOFlight);
+    double timeOFlight = Math.sqrt(r2) / (preliminaryV);
+
+    // This is a tuning line in order to avoid weird behaviors with the estimation line due to inecomplete estimations.
+    timeOFlight *= Constants.Hood.TIME_OF_FLIGHT_SCALE; 
+
+    Logger.recordOutput("Pre-emptive Estimated TOF", timeOFlight);
 
     double x = fieldRobotSpeeds.vxMetersPerSecond;
     double y = fieldRobotSpeeds.vyMetersPerSecond;
 
-    Translation2d imaginaryTarget = Constants.Hood.HUB_POSE.minus(new Translation2d(x, y).times(timeOFlight));
+    Translation2d imaginaryTarget = transformedTarget.minus(new Translation2d(x, y).times(timeOFlight));
     Pose3d FAKEPOSE = new Pose3d(new Translation3d(imaginaryTarget).plus(new Translation3d(0, 0, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET)), new Rotation3d());
     
     Logger.recordOutput("Fake Target", FAKEPOSE);

@@ -181,6 +181,42 @@ public class Limelight {
 
   private static void disabledPoseSetup(LimeLightObject limeLight) {
     var poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(limeLight.cameraName);
+    
+    double shortestDistance = Double.POSITIVE_INFINITY;
+    int shortest_fidx = -1;
+
+    LimelightResults results = LimelightHelpers.getLatestResults(limeLight.cameraName);
+    var num_targets = results.targets_Fiducials.length;
+
+    for (int fidx = 0; fidx < num_targets; fidx++) {
+      double tag_distance =
+          distanceToTag(toPose3D(results.targets_Fiducials[fidx].targetPose_CameraSpace));
+      if (tag_distance < shortestDistance) {
+        shortestDistance = tag_distance;
+        shortest_fidx = fidx;
+      }
+    }   
+
+    if (shortest_fidx == -1) {
+      Logger.recordOutput("DISABLED ERROR STATUS", "SHORTEST FIDX UNDETECTED");
+      return;
+    }
+
+    if (shortestDistance > 5 && DriverStation.isAutonomous()) {
+      Logger.recordOutput("DISABLED ERROR STATUS", "SHORTEST DISTANCE IN AUTO THRESHOLD: " + shortestDistance);
+      return;
+    }
+
+    if (!results.valid) {
+      Logger.recordOutput("DISABLED ERROR STATUS", "INVALID RESULTS");
+      return;
+    }
+
+    if (num_targets < 1) {
+      Logger.recordOutput("DISABLED ERROR STATUS", "NO TARGETS BUT FIDX DETECTED, NUM TARGETS");
+      return;
+    }
+
     Swerve.addLimelightMeasurement(poseEstimate.pose, poseEstimate.timestampSeconds, VecBuilder.fill(10, 10, 5));
   }
 
