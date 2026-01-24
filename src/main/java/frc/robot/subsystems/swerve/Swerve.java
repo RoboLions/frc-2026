@@ -78,8 +78,8 @@ public class Swerve {
             SwerveObjects.lastEnabledPose = getPose();
         }
 
-        Logger.recordOutput("CTRE Pose-Estimate", Swerve.getPose());
-        Logger.recordOutput("3D Swerve Pose", Swerve.getPose3d());
+        Logger.recordOutput("Swerve/ 2D CTRE Pose-Estimate", Swerve.getPose());
+        Logger.recordOutput("Swerve/ 3D Swerve Pose", Swerve.getPose3d());
     }
 
     public static void simulationPeriodic() {

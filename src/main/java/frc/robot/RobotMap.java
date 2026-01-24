@@ -1,11 +1,16 @@
 package frc.robot;
 
+import java.time.Duration;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.lib.auto.AutoSubsystem;
 import frc.robot.lib.util.FuelSim;
 import frc.robot.subsystems.interfaces.Hood;
@@ -50,6 +55,10 @@ public class RobotMap {
     if (DriverStation.isTeleopEnabled()) {
       Swerve.simulationDrive();
       scoringStateMachine.setNextState();
+
+      if (driverController.getXButtonPressed()) {
+        FuelSim.getInstance().clearFuel();
+      }
     }
   }
 
@@ -57,20 +66,39 @@ public class RobotMap {
     autoSubsystem.scheduleAutoSimulation();
   }
 
-  public static void simulateFuelInit() {
-
-  }
-
   public static void simulateFuelPeriodics() {
-    if (Hood.SimulationObjects.isSimulationShooting) {
+    if (scoringStateMachine.getCurrentState().equals(ScoringStateMachine.shootState)) {
       Hood.launchFuel();
     }
 
-    // FuelSim.getInstance().clearFuel(); // clears all fuel from the field
+    Logger.recordOutput("Fuel Sim/ BLUE SCORE", FuelSim.Hub.BLUE_HUB.getScore()); // get number of fuel scored in blue hub
+    Logger.recordOutput("Fuel Sim/ RED SCORE",FuelSim.Hub.RED_HUB.getScore()); // get number of fuel scored in red hub
+  }
 
-    Logger.recordOutput("BLUE SCORE", FuelSim.Hub.BLUE_HUB.getScore()); // get number of fuel scored in blue hub
-    // FuelSim.Hub.RED_HUB.getScore(); // get number of fuel scored in red hub
-    // FuelSim.Hub.[BLUE/RED]_HUB.resetScore(); // resets the score of the blue/red hub
+  public static void configureFuelSim() {
+    FuelSim instance = FuelSim.getInstance();
+    instance.spawnStartingFuel();
+    instance.registerRobot(
+            0.25,
+            0.25,
+            0.1,
+            Swerve::getPose,
+            Swerve::getFieldSpeeds);
+    instance.registerIntake(
+            0.3429,
+            0.8429,
+            -0.3429,
+            0.3429);
+
+    instance.start();
+
+    SmartDashboard.putData(Commands.runOnce(() -> {
+                FuelSim.getInstance().clearFuel();
+                FuelSim.getInstance().spawnStartingFuel();
+            })
+            .withName("Reset Fuel")
+            .ignoringDisable(true));
   }
 }
+
 // initiate bomb sequence

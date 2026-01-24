@@ -107,27 +107,27 @@ public class Limelight {
     }   
 
     if (shortest_fidx == -1) {
-      Logger.recordOutput(limelight_name + " ERROR STATUS", "SHORTEST FIDX UNDETECTED");
+      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "SHORTEST FIDX UNDETECTED");
       return null;
     }
 
     if (shortestDistance > 5 && DriverStation.isAutonomous()) {
-      Logger.recordOutput(limelight_name + " ERROR STATUS", "SHORTEST DISTANCE IN AUTO THRESHOLD: " + shortestDistance);
+      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "SHORTEST DISTANCE IN AUTO THRESHOLD: " + shortestDistance);
       return null;
     }
 
     if (!results.valid) {
-      Logger.recordOutput(limelight_name + " ERROR STATUS", "INVALID RESULTS");
+      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "INVALID RESULTS");
       return null;
     }
 
     if (num_targets < 1) {
-      Logger.recordOutput(limelight_name + " ERROR STATUS", "NO TARGETS BUT FIDX DETECTED, NUM TARGETS");
+      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "NO TARGETS BUT FIDX DETECTED, NUM TARGETS");
       return null;
     }
     
     if (Math.abs(yawRate) > 720) {
-      Logger.recordOutput(limelight_name + " ERROR STATUS", "ROTATION TOO FAST: " + yawRate);
+      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "ROTATION TOO FAST: " + yawRate);
       return null;
     }
 
@@ -137,12 +137,12 @@ public class Limelight {
 
     
     if (megaTagPoseEstimate.tagCount < 1) {
-      Logger.recordOutput(limelight_name + " ERROR STATUS", "NO TARGETS BUT FIDX DETECTED, FROM MT2");
+      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "NO TARGETS BUT FIDX DETECTED, FROM MT2");
       return null;
     }
 
     if (megaTagPoseEstimate.pose == null) {
-      Logger.recordOutput(limelight_name + " ERROR STATUS", "NULLED POSE MT2");
+      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "NULLED POSE MT2");
       return null;
     }
 
@@ -150,12 +150,12 @@ public class Limelight {
         || botPose.getY() >= 9
         || botPose.getX() <= -0.5
         || botPose.getY() <= -0.5) {
-      Logger.recordOutput(limelight_name + " ERROR STATUS", "POSE OUT OF FIELD");
+      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "POSE OUT OF FIELD");
       return null;
     }
 
-    Logger.recordOutput(limelight_name + "/Last Raw-Pose", botPose);
-    Logger.recordOutput(limelight_name + "/Shortest Distance", shortestDistance);
+    Logger.recordOutput(limelight_name + "RETURNS/ "  + "/Last Raw-Pose", botPose);
+    Logger.recordOutput(limelight_name + "RETURNS/ "  + "/Shortest Distance", shortestDistance);
 
     /**
      * This not part of LimelightLib! When repasting LimelightLib, do not forget to repaste this
@@ -170,8 +170,8 @@ public class Limelight {
     double angleStdDev = 10000;
     double distanceStdDev = 0.5 * Math.abs(yawRate) + 10.0;
 
-    Logger.recordOutput(limelight_name + "/Distance Deviation", distanceStdDev);
-    Logger.recordOutput(limelight_name + "/Angle Deviation", angleStdDev);
+    Logger.recordOutput(limelight_name + "RETURNS/ "  + "/Distance Deviation", distanceStdDev);
+    Logger.recordOutput(limelight_name + "RETURNS/ "  + "/Angle Deviation", angleStdDev);
     
     return new PosewithDeviation(botPose, 
                                  distanceStdDev, 
@@ -198,22 +198,22 @@ public class Limelight {
     }   
 
     if (shortest_fidx == -1) {
-      Logger.recordOutput("DISABLED ERROR STATUS", "SHORTEST FIDX UNDETECTED");
+      Logger.recordOutput(limeLight.cameraName + "RETURNS/ " + "DISABLED ERROR STATUS", "SHORTEST FIDX UNDETECTED");
       return;
     }
 
     if (shortestDistance > 5 && DriverStation.isAutonomous()) {
-      Logger.recordOutput("DISABLED ERROR STATUS", "SHORTEST DISTANCE IN AUTO THRESHOLD: " + shortestDistance);
+      Logger.recordOutput(limeLight.cameraName + "RETURNS/ " + "DISABLED ERROR STATUS", "SHORTEST DISTANCE IN AUTO THRESHOLD: " + shortestDistance);
       return;
     }
 
     if (!results.valid) {
-      Logger.recordOutput("DISABLED ERROR STATUS", "INVALID RESULTS");
+      Logger.recordOutput(limeLight.cameraName + "RETURNS/ " + "DISABLED ERROR STATUS", "INVALID RESULTS");
       return;
     }
 
     if (num_targets < 1) {
-      Logger.recordOutput("DISABLED ERROR STATUS", "NO TARGETS BUT FIDX DETECTED, NUM TARGETS");
+      Logger.recordOutput(limeLight.cameraName + "RETURNS/ " + "DISABLED ERROR STATUS", "NO TARGETS BUT FIDX DETECTED, NUM TARGETS");
       return;
     }
 

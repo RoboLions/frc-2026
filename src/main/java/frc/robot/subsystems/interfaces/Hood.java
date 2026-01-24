@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.lib.util.FuelSim;
 import frc.robot.subsystems.swerve.Swerve;
@@ -37,10 +38,11 @@ public class Hood {
   }
   
   public class SimulationObjects {
-    public static double desiredTurretAngleFieldRel;
+    public static double desiredTurretAngleRootRelRad;
     public static double desiredHoodAngleRobotRel;
     public static double totalShotVelocity;
-    public static boolean isSimulationShooting;
+    public static double literalShotHoodRad;
+    private static Timer timer = new Timer();
   }
   
   public static void init() {
@@ -80,7 +82,7 @@ public class Hood {
   private static double sampleVelocity(double d, double h) {
     double velocity = Math.sqrt(
       Constants.Hood.G * (Math.sqrt(d * d + h * h) + h)) // the minimum line. go below this velocity and we will hit the SIDE.
-        + Math.pow(Math.E, -2 * d) + (d / 3) + 1; // the offset line, adjust as desired
+        + Math.pow(Math.E, -d / 3) + 1.5; // the offset line, adjust as desired
         
     return velocity;
   }
@@ -176,7 +178,7 @@ public class Hood {
     double preliminaryTheta = calculateLaunchAngleRad(preliminaryV, r, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
     Logger.recordOutput("Turret Sim/ Pre-emptive Estimated Launch Angle", Math.toDegrees(preliminaryTheta));
 
-    double timeOFlight = Math.sqrt(r2) / (preliminaryV);
+    double timeOFlight = Math.sqrt(r2) / (preliminaryV * Math.cos(preliminaryTheta));
 
     // This is a tuning line in order to avoid weird behaviors with the estimation line due to inecomplete estimations.
     timeOFlight *= Constants.Hood.TIME_OF_FLIGHT_SCALE; 
@@ -196,8 +198,8 @@ public class Hood {
     double newR2 = newDX * newDX + newDY * newDY;
     double newR = Math.sqrt(newR2);
 
-    SimulationObjects.desiredTurretAngleFieldRel = Math.atan2(newDY, newDX) - robotFieldYaw;
-    Logger.recordOutput("Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleFieldRel)));
+    SimulationObjects.desiredTurretAngleRootRelRad = Math.atan2(newDY, newDX) - robotFieldYaw;
+    Logger.recordOutput("Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRootRelRad)));
 
     SimulationObjects.totalShotVelocity= sampleVelocity(newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
     Logger.recordOutput("Turret Sim/ Shot Velocity", preliminaryV);
@@ -205,22 +207,38 @@ public class Hood {
     SimulationObjects.desiredHoodAngleRobotRel = calculateHoodAngle(SimulationObjects.totalShotVelocity, newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
     Logger.recordOutput("Turret Sim/ Hood Angle", SimulationObjects.desiredHoodAngleRobotRel);
 
-    SimulationObjects.isSimulationShooting = true;
+    SimulationObjects.literalShotHoodRad = calculateLaunchAngleRad(SimulationObjects.totalShotVelocity, newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
+    Logger.recordOutput("Turret Sim/ Shot-Angle (Adjusted)", Math.toDegrees(SimulationObjects.literalShotHoodRad));
+
+    Logger.recordOutput("Turret Sim/ Turret Angle Field Relative", SimulationObjects.desiredTurretAngleRootRelRad + Swerve.getPose().getRotation().getDegrees());
   }
 
   public static void launchFuel() {
-    // Pose3d robot = Swerve.getPose3d();
+    SimulationObjects.timer.start();
 
-    // double theta = Hood.SimulationObjects.desiredHoodAngleRobotRel;     // robot or turret yaw
-    // double alpha = Hood.SimulationObjects.desiredTurretAngleFieldRel; // vertical slice angle
+    if (!SimulationObjects.timer.hasElapsed(0.5)) {
+      return;
+    }
 
-    // double xFac = Math.cos(alpha) * Math.cos(theta);
-    // double yFac = Math.cos(alpha) * Math.sin(theta);
-    // double zFac = Math.sin(alpha);
+    Pose3d robot = Swerve.getPose3d();
+    Translation3d initialPosition = robot.getTranslation().plus(new Translation3d(0, 0, 0.3));
+    FuelSim.getInstance().spawnFuel(initialPosition, launchVectorSim().plus(
+      new Translation3d(Swerve.getFieldSpeeds().vxMetersPerSecond, Swerve.getFieldSpeeds().vyMetersPerSecond, 0)));
 
-    // Translation3d shotVector = new Translation3d(xFac * Hood.SimulationObjects.totalShotVelocity, yFac * Hood.SimulationObjects.totalShotVelocity, zFac * Hood.SimulationObjects.totalShotVelocity );
+    SimulationObjects.timer.reset();
+  }
 
-    // Translation3d initialPosition = robot.getTranslation();
-    // FuelSim.getInstance().spawnFuel(initialPosition, shotVector);
+  private static Translation3d launchVectorSim() {
+    double hoodAngleRad = SimulationObjects.literalShotHoodRad;
+    double turretThetaRad = SimulationObjects.desiredTurretAngleRootRelRad + Swerve.getYawAsRadians(); // make this field relative again
+
+    double z = SimulationObjects.totalShotVelocity * Math.sin(hoodAngleRad);
+    double x = SimulationObjects.totalShotVelocity * Math.cos (hoodAngleRad) * Math.cos(turretThetaRad);
+    double y = SimulationObjects.totalShotVelocity * Math.cos (hoodAngleRad) * Math.sin(turretThetaRad);
+
+    Translation3d shotVec = new Translation3d(x, y, z);
+
+    Logger.recordOutput("Turret Sim/ Shot Vector", shotVec);
+    return shotVec;
   }
 }

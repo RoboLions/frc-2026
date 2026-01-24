@@ -49,11 +49,11 @@ public class AutoCommands {
     }
 
     public static Command simulationIntakeIn() {
-        return Commands.runOnce(() -> Logger.recordOutput("IntakeIn", true));
+        return Commands.runOnce(() -> Logger.recordOutput("Intake Sim/ IntakeIn", true));
     }
 
     public static Command simulationIntakeStop() {
-        return Commands.runOnce(() -> Logger.recordOutput("IntakeIn", false));
+        return Commands.runOnce(() -> Logger.recordOutput("Intake Sim/ IntakeIn", false));
     }
 
     public static BooleanSupplier timerAt(double time, Timer timer) {

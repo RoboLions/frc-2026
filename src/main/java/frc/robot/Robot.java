@@ -49,7 +49,7 @@ public class Robot extends LoggedRobot {
 
     RobotMap.init();
 
-    Logger.recordOutput("Zero-Pose", new Pose3d());
+    Logger.recordOutput("Swerve/ Zero-Pose", new Pose3d());
   }
 
   /**
@@ -113,9 +113,9 @@ public class Robot extends LoggedRobot {
   @Override
   public void simulationInit() {
     RobotMap.simulationAuto();
-    RobotMap.simulateFuelInit();
+    RobotMap.configureFuelSim();
     
-    Logger.recordOutput("Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleFieldRel)));
+    Logger.recordOutput("Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRootRelRad)));
 
     RobotMap.scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);
   }
@@ -123,7 +123,6 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {
-    Hood.SimulationObjects.isSimulationShooting = false; //set false always and then change if shooting
     Swerve.simulationPeriodic();
 
     RobotMap.simulateFuelPeriodics();
