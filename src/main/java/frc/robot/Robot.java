@@ -115,7 +115,7 @@ public class Robot extends LoggedRobot {
     RobotMap.simulationAuto();
     RobotMap.configureFuelSim();
     
-    Logger.recordOutput("Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRootRelRad)));
+    Logger.recordOutput("Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));
 
     RobotMap.scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);
   }

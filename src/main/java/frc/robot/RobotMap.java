@@ -52,14 +52,15 @@ public class RobotMap {
     Swerve.periodic();
     Limelight.periodic();
 
-    if (DriverStation.isTeleopEnabled()) {
+    if (DriverStation.isTeleopEnabled() && Robot.isSimulation()) {
       Swerve.simulationDrive();
-      scoringStateMachine.setNextState();
 
       if (driverController.getXButtonPressed()) {
         FuelSim.getInstance().clearFuel();
       }
     }
+
+    scoringStateMachine.setNextState();
   }
 
   public static void simulationAuto() {

@@ -31,13 +31,9 @@ public class ShootState extends State {
 
   @Override
   public void execute() {
-    Hood.simulateTurretAngle(Swerve.getPose(), 
-                                 Constants.Hood.HUB_POSE, 
-                                 Swerve.getYawAsRadians(), 
-                                 Swerve.getYawRateAsRad(),
-                                 Swerve.getFieldSpeeds());
+    Hood.turretTrack();
   }
-
+  
   @Override
   public void exit(State nextState) {
 

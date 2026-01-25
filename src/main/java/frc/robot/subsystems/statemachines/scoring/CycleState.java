@@ -46,11 +46,7 @@ public class CycleState extends State {
             TURRET_TARGET = Constants.Hood.BOT_PASS;
         }
         
-        Hood.simulateTurretAngle(Swerve.getPose(), 
-                                 TURRET_TARGET, 
-                                 Swerve.getYawAsRadians(), 
-                                 Swerve.getYawRateAsRad(),
-                                 Swerve.getFieldSpeeds());
+        Hood.turretTrack();
   }
 
   @Override

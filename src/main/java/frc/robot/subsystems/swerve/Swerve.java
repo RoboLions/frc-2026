@@ -26,8 +26,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Time;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
@@ -42,12 +42,15 @@ public class Swerve {
     }
 
     private class SwerveObjects{
-        public static Pose2d lastEnabledPose = new Pose2d();
-
         public static final CommandSwerveDrivetrain Swerve = 
             GeneratedConstants.createDrivetrain();
 
-        private static SwerveDriveState lastReadState;
+        private static SwerveDriveState lastReadState = new SwerveDriveState();
+
+        private static ChassisSpeeds lastSpeeds = new ChassisSpeeds();
+        private static ChassisSpeeds accelerationSpeeds = new ChassisSpeeds();
+        private static double lastTimestamp;
+        private static double loopLatencySec;
 
         private static final SwerveRequest.FieldCentric teleopDrive = new SwerveRequest.FieldCentric()
                 .withDeadband(SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
@@ -73,22 +76,15 @@ public class Swerve {
 
     public static void periodic() {
         SwerveObjects.Swerve.periodic(); // look at the function comment and see that this is actually just a reorientation tool
-
-        if (DriverStation.isEnabled()) {
-            SwerveObjects.lastEnabledPose = getPose();
-        }
+        updateChassisAcceleration(Swerve.getFieldSpeeds()); // used for moving shots estimation
 
         Logger.recordOutput("Swerve/ 2D CTRE Pose-Estimate", Swerve.getPose());
-        Logger.recordOutput("Swerve/ 3D Swerve Pose", Swerve.getPose3d());
+        Logger.recordOutput("Swerve/ 3D CTRE Swerve Pose", Swerve.getPose3d());
     }
 
     public static void simulationPeriodic() {
         SwerveObjects.Swerve.updateSimState(0.005, RobotController.getBatteryVoltage());
         SwerveObjects.Swerve.simulationPeriodic();  
-
-        if (DriverStation.isEnabled()) {
-            SwerveObjects.lastEnabledPose = getPose();
-        }
     }
 
     public static AutoFactory createAutoFactory() {
@@ -125,6 +121,32 @@ public class Swerve {
 
     public static double getYawRateAsDeg() {
         return Math.toDegrees(Swerve.getState().Speeds.omegaRadiansPerSecond);
+    }
+
+    private static void updateChassisAcceleration(ChassisSpeeds currentSpeeds) {
+        double now = Timer.getFPGATimestamp();
+        double dt = now - SwerveObjects.lastTimestamp;
+
+        if (dt <= 0.0) return;
+
+        ChassisSpeeds accel = new ChassisSpeeds(
+            (currentSpeeds.vxMetersPerSecond - SwerveObjects.lastSpeeds.vxMetersPerSecond) / dt,
+            (currentSpeeds.vyMetersPerSecond - SwerveObjects.lastSpeeds.vyMetersPerSecond) / dt,
+            (currentSpeeds.omegaRadiansPerSecond - SwerveObjects.lastSpeeds.omegaRadiansPerSecond) / dt
+        );
+
+        SwerveObjects.lastSpeeds = currentSpeeds;
+        SwerveObjects.lastTimestamp = now;
+        SwerveObjects.loopLatencySec = dt;
+        SwerveObjects.accelerationSpeeds = accel;
+    }
+
+    public static ChassisSpeeds getChassisAcceleration() {
+        return SwerveObjects.accelerationSpeeds;
+    }
+
+    public static double getLoopLatencySec() {
+        return SwerveObjects.loopLatencySec;
     }
 
     public static Pose3d getPose3d() {

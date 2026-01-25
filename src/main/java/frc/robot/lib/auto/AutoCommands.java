@@ -33,11 +33,7 @@ public class AutoCommands {
     }
 
     public static Command simulationSetTurretTrack() {
-        return Commands.run(() -> Hood.simulateTurretAngle(Swerve.getPose(), 
-                                                           Constants.Hood.HUB_POSE, 
-                                                           Swerve.getYawAsRadians(), 
-                                                           Swerve.getYawRateAsRad(),
-                                                           Swerve.getFieldSpeeds()));
+        return Commands.run(() -> Hood.turretTrack());
     }
 
     public static Command simulationIntakeUp() {
