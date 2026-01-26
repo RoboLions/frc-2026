@@ -10,7 +10,7 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
-import frc.robot.subsystems.interfaces.Hood;
+import frc.robot.subsystems.interfaces.Turret;
 import frc.robot.subsystems.swerve.Swerve;
 
 /** Add your docs here. */
@@ -46,7 +46,7 @@ public class CycleState extends State {
             TURRET_TARGET = Constants.Hood.BOT_PASS;
         }
         
-        Hood.turretTrack();
+        Turret.turretTrack();
   }
 
   @Override

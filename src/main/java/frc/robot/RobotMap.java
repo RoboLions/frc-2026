@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.lib.auto.AutoSubsystem;
 import frc.robot.lib.util.FuelSim;
-import frc.robot.subsystems.interfaces.Hood;
+import frc.robot.subsystems.interfaces.Turret;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Limelight;
 import frc.robot.subsystems.interfaces.Shooter;
@@ -69,7 +69,7 @@ public class RobotMap {
 
   public static void simulateFuelPeriodics() {
     if (scoringStateMachine.getCurrentState().equals(ScoringStateMachine.shootState)) {
-      Hood.launchFuel();
+      Turret.launchFuel();
     }
 
     Logger.recordOutput("Fuel Sim/ BLUE SCORE", FuelSim.Hub.BLUE_HUB.getScore()); // get number of fuel scored in blue hub

@@ -20,7 +20,7 @@ import frc.robot.Constants;
 import frc.robot.lib.util.FuelSim;
 import frc.robot.subsystems.swerve.Swerve;
 
-public class Hood {
+public class Turret {
   private static final TalonFX mFollowerPivotMotor =
     new TalonFX(Constants.CAN_IDS.BACK_FLYWHEEL_MOTOR);
   private static final TalonFX mMasterPivotMotor =
@@ -70,7 +70,7 @@ public class Hood {
    * Call to update the turret position.
    */
   public static void turretTrack() {
-    Hood.simulateTurretAngle(Swerve.getPose(), 
+    Turret.simulateTurretAngle(Swerve.getPose(), 
                              Constants.Hood.HUB_POSE, 
                              Swerve.getYawAsRadians(), 
                              Swerve.getYawRateAsRad(),
@@ -223,6 +223,7 @@ public class Hood {
     double preliminaryTheta = calculateLaunchAngleRad(preliminaryV, r, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
     double timeOFlight = Math.sqrt(r2) / (preliminaryV * Math.cos(preliminaryTheta));
 
+    //iteration 1, culminating to the TOF estimation.
     Logger.recordOutput("Turret Sim/ Pre-emptive Distance to Goal", r);
     Logger.recordOutput("Turret Sim/ Pre-emptive Estimated Velocity", preliminaryV);
     Logger.recordOutput("Turret Sim/ Pre-emptive Estimated Launch Angle", Math.toDegrees(preliminaryTheta));
@@ -245,6 +246,7 @@ public class Hood {
     SimulationObjects.desiredHoodAngleRobotRel = calculateHoodAngle(SimulationObjects.totalShotVelocity, newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
     SimulationObjects.literalShotHoodRad = calculateLaunchAngleRad(SimulationObjects.totalShotVelocity, newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
 
+    //iteration 2, the actual target using iteration 1's TOF estimation.
     Logger.recordOutput("Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));
     Logger.recordOutput("Turret Sim/ Shot Velocity", preliminaryV);
     Logger.recordOutput("Turret Sim/ Hood Angle", SimulationObjects.desiredHoodAngleRobotRel);
@@ -252,6 +254,9 @@ public class Hood {
     Logger.recordOutput("Turret Sim/ Turret Angle Field Relative", SimulationObjects.desiredTurretAngleRobotRelRad + Swerve.getPose().getRotation().getDegrees());
   }
 
+  /**
+   * These two methods are only used for simulation. Can be deleted afterwards.
+   */
   public static void launchFuel() {
     SimulationObjects.timer.start();
 
@@ -267,6 +272,9 @@ public class Hood {
     SimulationObjects.timer.reset();
   }
 
+  /**
+   * These two methods are only used for simulation. Can be deleted afterwards.
+   */
   private static Translation3d launchVectorSim() {
     double hoodAngleRad = SimulationObjects.literalShotHoodRad;
     double turretThetaRad = SimulationObjects.desiredTurretAngleRobotRelRad + Swerve.getYawAsRadians(); // make this field relative again
