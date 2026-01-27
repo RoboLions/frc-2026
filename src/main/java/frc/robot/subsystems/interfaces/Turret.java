@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -21,12 +22,18 @@ import frc.robot.lib.util.FuelSim;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class Turret {
-  private static final TalonFX mFollowerPivotMotor =
-    new TalonFX(Constants.CAN_IDS.BACK_FLYWHEEL_MOTOR);
-  private static final TalonFX mMasterPivotMotor =
-    new TalonFX(Constants.CAN_IDS.FRONT_MASTER_FLYWHEEL_MOTOR);  
-  public static final StatusSignal<Angle> mBackMotorVelo = mFollowerPivotMotor.getPosition();
-  public static final StatusSignal<Angle> mFrontMotorVelo = mMasterPivotMotor.getPosition();
+  private static final TalonFX mHoodPivotMotor =
+    new TalonFX(Constants.CAN_IDS.HOOD_PIVOT_MOTOR);
+  private static final TalonFX mAzimuthTurretMotor = 
+    new TalonFX(Constants.CAN_IDS.TURRET_AZIMUTH_MOTOR);
+
+  public static final StatusSignal<Angle> mBackMotorVelo = mHoodPivotMotor.getPosition();
+  public static final StatusSignal<Angle> mFrontMotorVelo = mAzimuthTurretMotor.getPosition();
+
+  private class TurretConstants {
+    private static final double maxPositiveTurnAngle = 180;
+    private static final double maxNegaitveTurnAngle = -180;
+  }
   
   public class SimulationObjects {
     public static double desiredTurretAngleRobotRelRad;
@@ -34,35 +41,85 @@ public class Turret {
     public static double totalShotVelocity;
     public static double literalShotHoodRad;
 
-    private static Timer timer = new Timer();
+    private static Timer simTimer = new Timer();
   }
   
   public static void init() {
-      TalonFXConfiguration frontPivotConfig = new TalonFXConfiguration();
-      frontPivotConfig.CurrentLimits.StatorCurrentLimitEnable = false;
-      frontPivotConfig.CurrentLimits.SupplyCurrentLimit = 60;
-      frontPivotConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-      frontPivotConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
-      frontPivotConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5;
-      frontPivotConfig.TorqueCurrent.PeakForwardTorqueCurrent = 100;
-      frontPivotConfig.TorqueCurrent.PeakReverseTorqueCurrent = -100;
-      frontPivotConfig.Slot0.kS = 0;
-      frontPivotConfig.Slot0.kV = 0;
-      frontPivotConfig.Slot0.kA = 0;
-      frontPivotConfig.Slot0.kP = 0;
-      frontPivotConfig.Slot0.kI = 0;
-      frontPivotConfig.Slot0.kD = 0;
-      frontPivotConfig.MotionMagic.MotionMagicAcceleration = 1;
-      frontPivotConfig.Feedback.SensorToMechanismRatio = 1 / 1;
-      frontPivotConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-      frontPivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-      frontPivotConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-      frontPivotConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-      frontPivotConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 1;
-      frontPivotConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -1;
-      frontPivotConfig.ClosedLoopGeneral.ContinuousWrap = false;
-      mMasterPivotMotor.getConfigurator().apply(frontPivotConfig);
-      mFollowerPivotMotor.getConfigurator().apply(frontPivotConfig);
+    TalonFXConfiguration hoodPivotConfig = new TalonFXConfiguration();
+    hoodPivotConfig.CurrentLimits.StatorCurrentLimitEnable = false;
+    hoodPivotConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+    hoodPivotConfig.CurrentLimits.SupplyCurrentLimit = 60;
+    hoodPivotConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
+    hoodPivotConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5;
+
+    hoodPivotConfig.Slot0.kS = 0;
+    hoodPivotConfig.Slot0.kV = 0;
+    hoodPivotConfig.Slot0.kA = 0;
+    hoodPivotConfig.Slot0.kP = 0;
+    hoodPivotConfig.Slot0.kI = 0;
+    hoodPivotConfig.Slot0.kD = 0;
+
+    hoodPivotConfig.MotionMagic.MotionMagicAcceleration = 1;
+    hoodPivotConfig.Feedback.SensorToMechanismRatio = 1 / 1;
+    hoodPivotConfig.Feedback.FeedbackRotorOffset = 0.0;
+
+    hoodPivotConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    hoodPivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+    hoodPivotConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    hoodPivotConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    hoodPivotConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 30;
+    hoodPivotConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+
+    hoodPivotConfig.ClosedLoopGeneral.ContinuousWrap = false;
+
+    mHoodPivotMotor.getConfigurator().apply(hoodPivotConfig);
+
+    TalonFXConfiguration turretAzimuthConfig = new TalonFXConfiguration();
+    turretAzimuthConfig.CurrentLimits.StatorCurrentLimitEnable = false;
+    turretAzimuthConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+    turretAzimuthConfig.CurrentLimits.SupplyCurrentLimit = 60;
+    turretAzimuthConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
+    turretAzimuthConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5;
+
+    turretAzimuthConfig.Slot0.kS = 0;
+    turretAzimuthConfig.Slot0.kV = 0;
+    turretAzimuthConfig.Slot0.kA = 0;
+    turretAzimuthConfig.Slot0.kP = 0;
+    turretAzimuthConfig.Slot0.kI = 0;
+    turretAzimuthConfig.Slot0.kD = 0;
+
+    turretAzimuthConfig.MotionMagic.MotionMagicAcceleration = 1;
+    turretAzimuthConfig.Feedback.SensorToMechanismRatio = 1 / 1;
+
+    turretAzimuthConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    turretAzimuthConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+    turretAzimuthConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    turretAzimuthConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    turretAzimuthConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = TurretConstants.maxPositiveTurnAngle;
+    turretAzimuthConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = TurretConstants.maxNegaitveTurnAngle;
+
+    turretAzimuthConfig.ClosedLoopGeneral.ContinuousWrap = false;
+
+    mAzimuthTurretMotor.getConfigurator().apply(turretAzimuthConfig);
+  }
+
+  private static void setHoodAngle() {
+    mHoodPivotMotor.setControl(new MotionMagicVoltage(SimulationObjects.desiredHoodAngleRobotRel));
+  }
+
+  /**
+   * Should always be a robot-relative angle.
+   */
+  private static void setAzimuthAngle() {
+    mHoodPivotMotor.setControl(new MotionMagicVoltage(SimulationObjects.desiredTurretAngleRobotRelRad));
+  }
+
+  private static double getAzimuthAngle() {
+    return mAzimuthTurretMotor.getPosition().getValueAsDouble();
   }
 
   /** 
@@ -79,6 +136,30 @@ public class Turret {
                              Swerve.getLoopLatencySec());
   }
 
+  /** Calculates the optimal target angle closest to the current position 
+   * that respects the physical soft limits of the turret. Right now it
+   * is set to respect [-180, 180].
+   * 
+   * @param inputAngle The desired robot-relative angle in degrees.
+   * @return The optimized motor setpoint in degrees.
+   */
+  public static double wrapAngle(double inputAngle) {
+    if (inputAngle > TurretConstants.maxPositiveTurnAngle) {
+      inputAngle -= 360;
+    } else if (inputAngle < TurretConstants.maxNegaitveTurnAngle) {
+      inputAngle += 360;
+    }
+
+    // safetyclamp
+    if (inputAngle > TurretConstants.maxPositiveTurnAngle) {
+      inputAngle = TurretConstants.maxPositiveTurnAngle;
+    } else if (inputAngle < TurretConstants.maxNegaitveTurnAngle) {
+      inputAngle = TurretConstants.maxNegaitveTurnAngle;
+    }
+
+    return inputAngle;
+  }
+  
   /**
    * Calculates the required launch velocity (m/s) for a projectile to reach a target 
    * at a given distance and height, accounting for gravity and robot motion.
@@ -241,7 +322,7 @@ public class Turret {
     double newR2 = newDX * newDX + newDY * newDY;
     double newR = Math.sqrt(newR2);
 
-    SimulationObjects.desiredTurretAngleRobotRelRad = Math.atan2(newDY, newDX) - robotFieldYaw;
+    SimulationObjects.desiredTurretAngleRobotRelRad = wrapAngle(Math.atan2(newDY, newDX) - robotFieldYaw);
     SimulationObjects.totalShotVelocity= sampleVelocity(newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET, xSpeeds, ySpeeds);
     SimulationObjects.desiredHoodAngleRobotRel = calculateHoodAngle(SimulationObjects.totalShotVelocity, newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
     SimulationObjects.literalShotHoodRad = calculateLaunchAngleRad(SimulationObjects.totalShotVelocity, newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
@@ -258,9 +339,9 @@ public class Turret {
    * These two methods are only used for simulation. Can be deleted afterwards.
    */
   public static void launchFuel() {
-    SimulationObjects.timer.start();
+    SimulationObjects.simTimer.start();
 
-    if (!SimulationObjects.timer.hasElapsed(0.5)) {
+    if (!SimulationObjects.simTimer.hasElapsed(0.5)) {
       return;
     }
 
@@ -269,7 +350,7 @@ public class Turret {
     FuelSim.getInstance().spawnFuel(initialPosition, launchVectorSim().plus(
       new Translation3d(Swerve.getFieldSpeeds().vxMetersPerSecond, Swerve.getFieldSpeeds().vyMetersPerSecond, 0)));
 
-    SimulationObjects.timer.reset();
+    SimulationObjects.simTimer.reset();
   }
 
   /**

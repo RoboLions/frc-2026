@@ -16,15 +16,13 @@ import frc.robot.lib.util.Conversions;
 
 public class Shooter {
 
-  private static final TalonFX mBackShooterMotor =
-      new TalonFX(Constants.CAN_IDS.BACK_FLYWHEEL_MOTOR);
-  private static final TalonFX mFrontMasterShooterMotor =
-      new TalonFX(Constants.CAN_IDS.FRONT_MASTER_FLYWHEEL_MOTOR);  
-  private static final TalonFX mFrontFollowerShooterMotor =
-      new TalonFX(Constants.CAN_IDS.FRONT_FOLLOWER_FLYWHEEL_MOTOR);
+  private static final TalonFX mFollowerFlywheelMotor =
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_MASTER);
+  private static final TalonFX mMasterFlywheelMotor =
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER);  
 
-  public static final StatusSignal<AngularVelocity> mBackMotorVelo = mBackShooterMotor.getVelocity();
-  public static final StatusSignal<AngularVelocity> mFrontMotorVelo = mFrontMasterShooterMotor.getVelocity();
+  public static final StatusSignal<AngularVelocity> mBackMotorVelo = mFollowerFlywheelMotor.getVelocity();
+  public static final StatusSignal<AngularVelocity> mFrontMotorVelo = mMasterFlywheelMotor.getVelocity();
 
   public static final double WHEEL_DIAMETER = Units.inchesToMeters(3.0);
   public static final double AMP_DUTY_CYCLE = -0.5;
@@ -58,44 +56,18 @@ public class Shooter {
     frontShooterMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     frontShooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-    mFrontMasterShooterMotor.getConfigurator().apply(frontShooterMotorConfig);
-    mFrontFollowerShooterMotor.getConfigurator().apply(frontShooterMotorConfig);
-
-    TalonFXConfiguration backShooterMotorConfig = new TalonFXConfiguration();
-
-    backShooterMotorConfig.CurrentLimits.StatorCurrentLimitEnable = false;
-    backShooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 60;
-    backShooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    backShooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
-    backShooterMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5;
-    backShooterMotorConfig.TorqueCurrent.PeakForwardTorqueCurrent = 100;
-    backShooterMotorConfig.TorqueCurrent.PeakReverseTorqueCurrent = -100;
-
-    backShooterMotorConfig.Slot0.kS = 7.8;
-    backShooterMotorConfig.Slot0.kV = 0.134;
-    backShooterMotorConfig.Slot0.kA = 0.288;
-    backShooterMotorConfig.Slot0.kP = 6.0;
-    backShooterMotorConfig.Slot0.kI = 0.0;
-    backShooterMotorConfig.Slot0.kD = 0.0;
-
-    backShooterMotorConfig.MotionMagic.MotionMagicAcceleration = 300.0;
-
-    backShooterMotorConfig.Feedback.SensorToMechanismRatio = 24.0 / 36.0;
-
-    backShooterMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    backShooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-
-    mBackShooterMotor.getConfigurator().apply(backShooterMotorConfig);
+    mMasterFlywheelMotor.getConfigurator().apply(frontShooterMotorConfig);
+    mFollowerFlywheelMotor.getConfigurator().apply(frontShooterMotorConfig);
   }
 
   public static double getfrontSpeed() {
     return Conversions.rotationalSpeedToLinearSpeed(
-        mFrontMasterShooterMotor.getVelocity().getValueAsDouble(), (WHEEL_DIAMETER / 2.0));
+        mMasterFlywheelMotor.getVelocity().getValueAsDouble(), (WHEEL_DIAMETER / 2.0));
   }
 
   public static double getbackSpeed() {
     return Conversions.rotationalSpeedToLinearSpeed(
-        mBackShooterMotor.getVelocity().getValueAsDouble(), (WHEEL_DIAMETER / 2.0));
+        mMasterFlywheelMotor.getVelocity().getValueAsDouble(), (WHEEL_DIAMETER / 2.0));
   }
 
   // speed in meters per second
@@ -103,24 +75,19 @@ public class Shooter {
     // https://en.wikipedia.org/wiki/Angular_velocity
     double back = Conversions.linearSpeedToRotationalSpeed(speed * 0.5, (WHEEL_DIAMETER / 2.0));
     double front = Conversions.linearSpeedToRotationalSpeed(speed, (WHEEL_DIAMETER / 2.0));
-    mBackShooterMotor.setControl(
+    mMasterFlywheelMotor.setControl(
         new MotionMagicVelocityVoltage(back)
             .withUpdateFreqHz(1000.0)
             .withEnableFOC(true));
-    mFrontMasterShooterMotor.setControl(
-        new MotionMagicVelocityVoltage(front)
-        .withUpdateFreqHz(1000.0)
-        .withEnableFOC(true));
-    mFrontFollowerShooterMotor.setControl(
+    mFollowerFlywheelMotor.setControl(
       new Follower(
-        Constants.CAN_IDS.FRONT_FOLLOWER_FLYWHEEL_MOTOR, 
+        Constants.CAN_IDS.FLYWHEEL_MOTOR_MASTER, 
         MotorAlignmentValue.Aligned));  
   }
 
   public static void stopAll() {
-    mBackShooterMotor.setControl(new DutyCycleOut(0));
-    mFrontMasterShooterMotor.setControl(new DutyCycleOut(0));
-    mFrontFollowerShooterMotor.setControl(new DutyCycleOut(0)); 
+    mMasterFlywheelMotor.setControl(new DutyCycleOut(0));
+    mFollowerFlywheelMotor.setControl(new DutyCycleOut(0)); 
   }
 
   public static boolean readyToShoot() {

@@ -7,9 +7,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class Constants {
-
     public class Hood {
-
         public static final double G = 9.80665;
         public static final double THETA_ANGLE_FROM_SHOOTER = 90; //this is measured angled which the ball exits the shooter
         public static final double TIME_OF_FLIGHT_SCALE = 1.0;
@@ -24,14 +22,13 @@ public class Constants {
     public class LimeLight {
         public static final Pose3d known_pose_blue_left =
             new Pose3d(new Translation3d(1.252857, 5.547879, 0.0), new Rotation3d(0, 0, Math.PI));
-      
     }
     
     public class CAN_IDS {
-
-        public static final int FRONT_MASTER_FLYWHEEL_MOTOR = 0;
-        public static final int FRONT_FOLLOWER_FLYWHEEL_MOTOR = 0;
-        public static final int BACK_FLYWHEEL_MOTOR = 0;
+        public static final int HOOD_PIVOT_MOTOR = 0;
+        public static final int FLYWHEEL_MOTOR_MASTER = 0;
+        public static final int FLYWHEEL_MOTOR_FOLLOWER = 0;
+        public static final int TURRET_AZIMUTH_MOTOR = 0;
 
         public static final int FRONT_PIVOT_MOTOR = 0;
         public static final int BACK_PIVOT_MOTOR = 0;
