@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.lib.util.FuelSim;
@@ -326,6 +327,25 @@ public class Turret {
     SimulationObjects.totalShotVelocity= sampleVelocity(newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET, xSpeeds, ySpeeds);
     SimulationObjects.desiredHoodAngleRobotRel = calculateHoodAngle(SimulationObjects.totalShotVelocity, newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
     SimulationObjects.literalShotHoodRad = calculateLaunchAngleRad(SimulationObjects.totalShotVelocity, newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
+
+    /* Aidan AP CSA code, can be removed afterwards*/
+    String filePath = "Aidan" + " Project/ ";
+    Logger.recordOutput(filePath + "hi", "hi");
+
+    boolean isBLUEALLIANCE = (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue);
+    Logger.recordOutput(filePath + "is Blue?", isBLUEALLIANCE);
+
+    int yawInt = (int) robotFieldYaw;
+    Logger.recordOutput(filePath + "int casted Yaw", yawInt);
+
+    int yawModulus = yawInt;
+      yawModulus %=  90;
+    Logger.recordOutput(filePath + "int Modulus Yaw", yawModulus);
+
+    yawModulus++;
+    Logger.recordOutput(filePath + "incremented Int Yaw", yawModulus);
+
+    Logger.recordOutput(filePath + "another Mod", 3 % 1);
 
     //iteration 2, the actual target using iteration 1's TOF estimation.
     Logger.recordOutput("Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));
