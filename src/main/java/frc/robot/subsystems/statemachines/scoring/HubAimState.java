@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems.statemachines.scoring;
 
-import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
@@ -21,12 +20,12 @@ public class HubAimState extends State {
               return RobotMap.driverController.getBButton();
             },
             ScoringStateMachine.idleState));
-    addTransition(
-        new Transition(
-            () -> {
-              return RobotMap.driverController.getRightTriggerAxis() > 0.25;
-            },
-            ScoringStateMachine.shootState));
+    // addTransition(
+    //     new Transition(
+    //         () -> {
+    //           return RobotMap.driverController.getRightTriggerAxis() > 0.25;
+    //         },
+    //         ScoringStateMachine.shootState));
   }
 
   @Override

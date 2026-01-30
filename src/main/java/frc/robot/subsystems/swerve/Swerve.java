@@ -179,6 +179,11 @@ public class Swerve {
 		SwerveObjects.Swerve.resetPose(pose);
 	}
 
+    public static void zeroGyro() {
+        Pose2d pose = Swerve.getPose();
+		SwerveObjects.Swerve.resetPose(new Pose2d(pose.getTranslation(), new Rotation2d(0)));
+	}
+
     public static void zeroCommand() {
         SwerveObjects.Swerve.setControl(SwerveObjects.teleopDrive
                                         .withVelocityX(0)
@@ -208,8 +213,8 @@ public class Swerve {
     }
 
     public static void teleopDrive() {
-        double vx = RobotMap.driverController.getLeftX();
-        double vy = -RobotMap.driverController.getLeftY();
+        double vy = -RobotMap.driverController.getLeftX();
+        double vx = -RobotMap.driverController.getLeftY();
         double omega = -RobotMap.driverController.getRightX();
 
         SwerveObjects.Swerve.setControl(

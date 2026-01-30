@@ -11,6 +11,7 @@ import frc.robot.lib.util.FuelSim;
 import frc.robot.subsystems.interfaces.Turret;
 import frc.robot.subsystems.interfaces.Limelight;
 import frc.robot.subsystems.interfaces.Shooter;
+import frc.robot.subsystems.statemachines.drivetrain.DrivetrainStateMachine;
 import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -21,6 +22,7 @@ public class RobotMap {
   /* state machine instances */
   // public static final DrivetrainStateMachine drivetrainStateMachine = new DrivetrainStateMachine();
   public static final ScoringStateMachine scoringStateMachine = new ScoringStateMachine();
+  public static final DrivetrainStateMachine drivetrainStateMachine = new DrivetrainStateMachine();
 
   /* Xbox controllers */
   public static final XboxController manipulatorController = new XboxController(1);
@@ -38,8 +40,8 @@ public class RobotMap {
     Shooter.init();
 
     //THEN STATEMACHINES
-
-    // drivetrainStateMachine.init();
+    drivetrainStateMachine.setCurrentState(drivetrainStateMachine.teleopState);
+    scoringStateMachine.setCurrentState(scoringStateMachine.idleState);;
   }
 
   public static void subsystemPeriodics() {
@@ -51,13 +53,14 @@ public class RobotMap {
 
       if (driverController.getXButtonPressed()) {
         FuelSim.getInstance().clearFuel();
-
-        /*More Aidan AP CSA Code */
-        System.out.print("Cleared the Fuel you ");
-        System.out.println("poop head.");
       }
     }
 
+    if (driverController.getXButtonPressed()) {
+      Swerve.zeroGyro();
+    }
+
+    drivetrainStateMachine.setNextState();
     scoringStateMachine.setNextState();
   }
 

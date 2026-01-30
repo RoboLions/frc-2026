@@ -25,12 +25,12 @@ public class Limelight {
   public static void init() {
     cameras = new ArrayList<>();
 
-    FRONT_CAMERA_MODEL4 = new LimeLightObject("LL4", 0); // TODO: RENAME CAMERAS;
+    FRONT_CAMERA_MODEL4 = new LimeLightObject("limelight-four", 0); // TODO: RENAME CAMERAS;
     SIDE_CAMERA_MODEL3G = new LimeLightObject("LL_LEFT", 0); // TODO: RENAME CAMERAS
 
     FRONT_CAMERA_MODEL4.usePigeon = false; // IMPORTANT TO DISABLE THE YAW CORRECTION FROM PIGEON
     LimelightHelpers.SetIMUMode(FRONT_CAMERA_MODEL4.cameraName, 3);
-    LimelightHelpers.SetIMUAssistAlpha(FRONT_CAMERA_MODEL4.cameraName, 0.002);
+    LimelightHelpers.SetIMUAssistAlpha(FRONT_CAMERA_MODEL4.cameraName, 0.05);
 
     cameras.add(FRONT_CAMERA_MODEL4);
     cameras.add(SIDE_CAMERA_MODEL3G);

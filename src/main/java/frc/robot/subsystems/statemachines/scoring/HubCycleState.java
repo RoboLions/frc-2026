@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems.statemachines.scoring;
 
-import frc.robot.Constants;
-import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 
