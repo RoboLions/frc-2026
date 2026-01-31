@@ -127,7 +127,7 @@ public class Turret {
    * The fully abstracted method that tracks the turret, no nonsense and all setup already.
    * Call to update the turret position.
    */
-  public static void turretTrack() {
+  public static void turretTrackHub() {
     Turret.simulateTurretAngle(Swerve.getPose(), 
                              Constants.Hood.HUB_POSE, 
                              Swerve.getYawAsRadians(), 

@@ -22,9 +22,7 @@ public class PassAimState extends State {
               return RobotMap.driverController.getBButton();
             },
             ScoringStateMachine.idleState));
-
-
-                addTransition(
+    addTransition(
         new Transition(
             () -> {
               return RobotMap.driverController.getRightTriggerAxis() > 0.25;

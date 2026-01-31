@@ -19,10 +19,6 @@ public class PresetState extends State {
               return RobotMap.driverController.getBButton();
             },
             ScoringStateMachine.idleState));
-
-        
-       
-
   }
 
   @Override

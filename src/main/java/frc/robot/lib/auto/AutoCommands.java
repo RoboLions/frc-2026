@@ -32,7 +32,7 @@ public class AutoCommands {
     }
 
     public static Command simulationSetTurretTrack() {
-        return Commands.run(() -> Turret.turretTrack());
+        return Commands.run(() -> Turret.turretTrackHub());
     }
 
     public static Command simulationIntakeUp() {
