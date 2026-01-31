@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.lib.util.FuelSim;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -339,6 +340,10 @@ public class Turret {
    * These two methods are only used for simulation. Can be deleted afterwards.
    */
   public static void launchFuel() {
+    if (Robot.isReal()) {
+      return;
+    }
+
     SimulationObjects.simTimer.start();
 
     if (!SimulationObjects.simTimer.hasElapsed(0.5)) {

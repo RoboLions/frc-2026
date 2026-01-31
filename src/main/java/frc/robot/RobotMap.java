@@ -2,13 +2,11 @@ package frc.robot;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.lib.auto.AutoSubsystem;
 import frc.robot.lib.util.FuelSim;
-import frc.robot.subsystems.interfaces.Turret;
 import frc.robot.subsystems.interfaces.Limelight;
 import frc.robot.subsystems.interfaces.Shooter;
 import frc.robot.subsystems.statemachines.drivetrain.DrivetrainStateMachine;
@@ -43,37 +41,28 @@ public class RobotMap {
 
     drivetrainStateMachine.setCurrentState(DrivetrainStateMachine.teleopState);
     scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);;
+
+    scheduleAuto();
   }
 
   public static void subsystemPeriodics() {
     Swerve.periodic();
     Limelight.periodic();
 
-    if (DriverStation.isTeleopEnabled() && Robot.isSimulation()) {
-      Swerve.simulationDrive();
-
-      if (driverController.getXButtonPressed()) {
-        FuelSim.getInstance().clearFuel();
-      }
+    if (Robot.isSimulation() && driverController.getXButtonPressed()) {
+      FuelSim.getInstance().clearFuel();
     }
 
     if (driverController.getXButtonPressed()) {
       Swerve.zeroGyro();
     }
-
-    drivetrainStateMachine.setNextState();
-    scoringStateMachine.setNextState();
   }
 
-  public static void simulationAuto() {
-    autoSubsystem.scheduleAutoSimulation();
+  public static void scheduleAuto() {
+    autoSubsystem.scheduleAuto();
   }
 
   public static void simulateFuelPeriodics() {
-    if (scoringStateMachine.getCurrentState().equals(ScoringStateMachine.shootState)) {
-      Turret.launchFuel();
-    }
-
     Logger.recordOutput("Fuel Sim/ BLUE SCORE", FuelSim.Hub.BLUE_HUB.getScore()); // get number of fuel scored in blue hub
     Logger.recordOutput("Fuel Sim/ RED SCORE",FuelSim.Hub.RED_HUB.getScore()); // get number of fuel scored in red hub
   }

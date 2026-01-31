@@ -23,13 +23,12 @@ public class ShootState extends State {
 
           }
   @Override
-  public void init(State prevState) {
-
-  }
+  public void init(State prevState) {}
 
   @Override
   public void execute() {
     Turret.turretTrack();
+    Turret.launchFuel();
   }
   
   @Override

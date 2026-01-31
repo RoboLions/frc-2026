@@ -74,7 +74,9 @@ public class Robot extends LoggedRobot {
    * chooser code above as well.
    */
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+
+  }
 
   /** This function is called periodically during autonomous. */
   @Override
@@ -88,7 +90,10 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    RobotMap.drivetrainStateMachine.setNextState();
+    RobotMap.scoringStateMachine.setNextState();
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
@@ -109,12 +114,9 @@ public class Robot extends LoggedRobot {
   /** This function is called once when the robot is first started up. */
   @Override
   public void simulationInit() {
-    RobotMap.simulationAuto();
     RobotMap.configureFuelSim();
     
     Logger.recordOutput("Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));
-
-    RobotMap.scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);
   }
 
   /** This function is called periodically whilst in simulation. */

@@ -23,7 +23,7 @@ public class AutoSubsystem {
         SmartDashboard.putData("AutoChooser", autoChooser);
     }
 
-    public void scheduleAutoSimulation() {
+    public void scheduleAuto() {
         RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
     }
     

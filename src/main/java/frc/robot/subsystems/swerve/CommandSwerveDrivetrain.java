@@ -259,8 +259,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     /**
-     * Replacement to resetpose for now
-     * @param pose
+     * I don't want the pose to be reset as we have limelights to adjust the beginning pose.
+     * So this will do nothing to replace the pose reset consumer.
+     * 
+     * @param pose poop
      */
     private void nothingMethod(Pose2d pose) {}
 
