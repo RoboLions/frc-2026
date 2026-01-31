@@ -26,10 +26,7 @@ public class AutoSubsystem {
     public void scheduleAutoSimulation() {
         RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
     }
-
     
-
-
     private Supplier<AutoRoutine> simulationRoutine() {
         AutoRoutine routine = autoFactory.newRoutine("SIMULATION AUTO (Depot_2Trip_Climb)");
 

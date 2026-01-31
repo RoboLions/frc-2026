@@ -222,7 +222,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public AutoFactory createAutoFactory(TrajectoryLogger<SwerveSample> trajLogger) {
         return new AutoFactory(
             () -> getState().Pose,
-            this::resetPose,
+            this::nothingMethod,
             this::followPath,
             true,
             this,
@@ -257,6 +257,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 .withWheelForceFeedforwardsY(sample.moduleForcesY())
         );
     }
+
+    /**
+     * Replacement to resetpose for now
+     * @param pose
+     */
+    private void nothingMethod(Pose2d pose) {}
 
     /**
      * Runs the SysId Quasistatic test in the given direction for the routine
