@@ -12,16 +12,16 @@ import org.littletonrobotics.junction.Logger;
 
 public class FuelSim {
     private static final double PERIOD = 0.02; // sec
-    private static int subticks = 1;
+    private static int subticks = 2;
     private static final Translation3d GRAVITY = new Translation3d(0, 0, -9.81); // m/s^2
-    private static final double FIELD_COR = Math.sqrt(22 / 51.5); // coefficient of restitution with the field
-    private static final double FUEL_COR = 0.5; // coefficient of restitution with another fuel
+    private static final double FIELD_COR = 0.35; // coefficient of restitution with the field
+    private static final double FUEL_COR = 0.2; // coefficient of restitution with another fuel
     private static final double NET_COR = 0.2; // coefficient of restitution with the net
     private static final double ROBOT_COR = 0.1; // coefficient of restitution with a robot
     private static final double FUEL_RADIUS = 0.075;
     private static final double FIELD_LENGTH = 16.51;
     private static final double FIELD_WIDTH = 8.04;
-    private static final double FRICTION = 0.1; // proportion of horizontal velocity to lose per second while on ground
+    private static final double FRICTION = 0.99; // proportion of horizontal velocity to lose per second while on ground
 
     private static FuelSim instance = null;
 
@@ -67,9 +67,9 @@ public class FuelSim {
             if (pos.getZ() > FUEL_RADIUS) {
                 vel = vel.plus(GRAVITY.times(PERIOD / subticks));
             }
-            if (Math.abs(vel.getZ()) < 0.05 && pos.getZ() <= FUEL_RADIUS + 0.03) {
+            if (Math.abs(vel.getZ()) < 0.05 && pos.getZ() <= FUEL_RADIUS + 0.65) {
                 vel = new Translation3d(vel.getX(), vel.getY(), 0);
-                vel = vel.times(1 - FRICTION * PERIOD / subticks);
+                vel = vel.times(1 - FRICTION / subticks);
                 // pos = new Translation3d(pos.getX(), pos.getY(), FUEL_RADIUS);
             }
             handleFieldCollisions();

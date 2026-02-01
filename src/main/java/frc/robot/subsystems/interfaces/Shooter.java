@@ -25,10 +25,6 @@ public class Shooter {
   public static final StatusSignal<AngularVelocity> mFrontMotorVelo = mMasterFlywheelMotor.getVelocity();
 
   public static final double WHEEL_DIAMETER = Units.inchesToMeters(3.0);
-  public static final double AMP_DUTY_CYCLE = -0.5;
-  public static final double OUUTake = 0.25;
-  public static final double SPEED_PASS_THRESH = 0.95;
-  public static final double SHOOTER_RATIO = 0.5;
 
   public static void init() {
 
@@ -73,12 +69,13 @@ public class Shooter {
   // speed in meters per second
   public static void setShootSpeed(double speed) {
     // https://en.wikipedia.org/wiki/Angular_velocity
-    double back = Conversions.linearSpeedToRotationalSpeed(speed * 0.5, (WHEEL_DIAMETER / 2.0));
-    double front = Conversions.linearSpeedToRotationalSpeed(speed, (WHEEL_DIAMETER / 2.0));
+    double setSpeed = Conversions.linearSpeedToRotationalSpeed(speed, (WHEEL_DIAMETER / 2.0)) * Constants.Shooter.POWER_GAIN_MULTIPLIER;
+
     mMasterFlywheelMotor.setControl(
-        new MotionMagicVelocityVoltage(back)
+        new MotionMagicVelocityVoltage(setSpeed)
             .withUpdateFreqHz(1000.0)
             .withEnableFOC(true));
+    
     mFollowerFlywheelMotor.setControl(
       new Follower(
         Constants.CAN_IDS.FLYWHEEL_MOTOR_MASTER, 

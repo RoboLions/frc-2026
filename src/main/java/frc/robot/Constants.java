@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class Constants {
+
     public class Hood {
         public static final double G = 9.80665;
         public static final double THETA_ANGLE_FROM_SHOOTER = 90; //this is measured angled which the ball exits the shooter
@@ -18,6 +19,10 @@ public class Constants {
         public static final Translation3d PASS_LOWER =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.5, 1, 0) : new Translation3d(15, 1, 0);
 
         public static final double HEIGHT_FROM_BOT_TO_TARGET = 1.25;
+    }
+
+    public class Shooter {
+        public static final double POWER_GAIN_MULTIPLIER = 1.1;
     }
 
     public class LimeLight {
