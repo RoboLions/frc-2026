@@ -7,6 +7,7 @@ package frc.robot.subsystems.statemachines.scoring;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
+import frc.robot.subsystems.interfaces.Turret;
 
 /** Add your docs here. */
 public class PassAimState extends State {
@@ -31,13 +32,12 @@ public class PassAimState extends State {
   }
 
   @Override
-  public void init(State prevState) {
-
-  }
+  public void init(State prevState) {}
 
   @Override
   public void execute() {
-
+    Turret.turretTrackPassPose();
+    Turret.launchFuel();
   }
 
   @Override

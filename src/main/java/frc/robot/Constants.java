@@ -14,8 +14,8 @@ public class Constants {
 
         public static final Translation2d HUB_POSE =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation2d(4.62744, 4.03648) : new Translation2d(11.91642, 4.03814);
 
-        public static final Translation3d PASS_DEPOT = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.5, 7, 0) : new Translation3d(15, 7, 0);
-        public static final Translation3d PASS_OUTPOST =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.5, 1, 0) : new Translation3d(15, 1, 0);
+        public static final Translation3d PASS_UPPER = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.5, 7, 0) : new Translation3d(15, 7, 0);
+        public static final Translation3d PASS_LOWER =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.5, 1, 0) : new Translation3d(15, 1, 0);
 
         public static final double HEIGHT_FROM_BOT_TO_TARGET = 1.25;
     }

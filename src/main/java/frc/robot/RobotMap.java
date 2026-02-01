@@ -9,6 +9,7 @@ import frc.robot.lib.auto.AutoSubsystem;
 import frc.robot.lib.util.FuelSim;
 import frc.robot.subsystems.interfaces.Limelight;
 import frc.robot.subsystems.interfaces.Shooter;
+import frc.robot.subsystems.interfaces.Turret;
 import frc.robot.subsystems.statemachines.drivetrain.DrivetrainStateMachine;
 import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
 import frc.robot.subsystems.swerve.Swerve;
@@ -34,6 +35,7 @@ public class RobotMap {
     Swerve.init();
     Limelight.init();
     Shooter.init();
+    Turret.init();
 
     //THEN STATEMACHINES
     drivetrainStateMachine.enable();

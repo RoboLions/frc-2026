@@ -115,8 +115,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void simulationInit() {
     RobotMap.configureFuelSim();
-    
-    Logger.recordOutput("Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));
   }
 
   /** This function is called periodically whilst in simulation. */
