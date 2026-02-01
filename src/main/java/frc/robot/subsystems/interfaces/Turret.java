@@ -352,9 +352,9 @@ public class Turret {
     double newR = Math.sqrt(newR2);
 
     SimulationObjects.desiredTurretAngleRobotRelRad = wrapAngle(Math.atan2(newDY, newDX) - robotFieldYaw);
-    SimulationObjects.totalShotVelocity= sampleVelocity(newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET, xSpeeds, ySpeeds);
-    SimulationObjects.desiredHoodAngleRobotRel = calculateHoodAngle(SimulationObjects.totalShotVelocity, newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
-    SimulationObjects.literalShotHoodRad = calculateLaunchAngleRad(SimulationObjects.totalShotVelocity, newR, Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET);
+    SimulationObjects.totalShotVelocity= sampleVelocity(newR, targetHeightRelativeBot, xSpeeds, ySpeeds);
+    SimulationObjects.desiredHoodAngleRobotRel = calculateHoodAngle(SimulationObjects.totalShotVelocity, newR, targetHeightRelativeBot);
+    SimulationObjects.literalShotHoodRad = calculateLaunchAngleRad(SimulationObjects.totalShotVelocity, newR, targetHeightRelativeBot);
 
     //iteration 2, the actual target using iteration 1's TOF estimation.
     Logger.recordOutput("Turret/ Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));
@@ -368,13 +368,14 @@ public class Turret {
    * These two methods are only used for simulation. Can be deleted afterwards.
    */
   public static void launchFuel() {
+
     if (Robot.isReal()) {
       return;
     }
 
     SimulationObjects.simTimer.start();
 
-    if (!SimulationObjects.simTimer.hasElapsed(0.5)) {
+    if (!SimulationObjects.simTimer.hasElapsed(0.125)) {
       return;
     }
 
