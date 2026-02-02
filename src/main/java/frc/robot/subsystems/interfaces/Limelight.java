@@ -56,7 +56,7 @@ public class Limelight {
    */
   public static void periodic() {
     if (DriverStation.isDisabled()) {
-      disabledPoseSetup(FRONT_CAMERA_MODEL4);
+      disabledPoseSetup(FRONT_CAMERA_MODEL4, 0.261799388);
       Logger.recordOutput("LIMELIGHTS /IS ENABLED?", false);
       
       return;
@@ -132,7 +132,7 @@ public class Limelight {
     }
 
     LimelightHelpers.PoseEstimate megaTagPoseEstimate =
-        LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelight_name);
+        LimelightHelpers.getBotPoseEstimate_wpiBlue(limelight_name);
     Pose2d botPose = megaTagPoseEstimate.pose;
 
     
@@ -185,7 +185,7 @@ public class Limelight {
                                  megaTagPoseEstimate.timestampSeconds);
   }
 
-  private static void disabledPoseSetup(LimeLightObject limeLight) {
+  private static void disabledPoseSetup(LimeLightObject limeLight, double yawOffset) {
     var poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(limeLight.cameraName);
     
     double shortestDistance = Double.POSITIVE_INFINITY;
@@ -223,7 +223,9 @@ public class Limelight {
       return;
     }
 
-    Swerve.addLimelightMeasurement(poseEstimate.pose, poseEstimate.timestampSeconds, VecBuilder.fill(10, 10, 5));
+    Pose2d feedPose = new Pose2d(poseEstimate.pose.getTranslation(), new Rotation2d(poseEstimate.pose.getRotation().getRadians() - yawOffset));
+
+    Swerve.addLimelightMeasurement(feedPose, poseEstimate.timestampSeconds, VecBuilder.fill(10, 10, 5));
   }
 
   public static Pose3d toPose3D(double[] inData) {
@@ -277,6 +279,7 @@ public class Limelight {
     final double yawOffset;
     PosewithDeviation results;
     boolean usePigeon = true;
+    Pose2d lastValidPose;
 
     LimeLightObject(String cameraName, double yawOffset) {
       this.cameraName = cameraName;
