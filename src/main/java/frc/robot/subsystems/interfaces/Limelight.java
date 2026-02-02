@@ -146,6 +146,12 @@ public class Limelight {
       return null;
     }
 
+    if (Math.abs(megaTagPoseEstimate.pose.getRotation().getDegrees() - yawDeg) > 10) {
+      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "YAW DEVIATION TOO LARGE"  );
+      return null;
+    }
+
+
     if (botPose.getX() >= 17 // TODO: GET A NEW FIELD RANGE
         || botPose.getY() >= 9
         || botPose.getX() <= -0.5
