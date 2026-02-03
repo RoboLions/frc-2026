@@ -70,7 +70,7 @@ public class Shooter {
   // speed in meters per second
   public static void setShootSpeed(double speed) {
     // https://en.wikipedia.org/wiki/Angular_velocity
-    double setSpeed = Conversions.linearSpeedToRotationalSpeed(speed, (WHEEL_DIAMETER / 2.0));
+    double setSpeed = Conversions.linearSpeedToRotationalSpeed(speed, (WHEEL_DIAMETER / 2.0)) * Constants.Shooter.POWER_GAIN_MULTIPLIER;
 
     Logger.recordOutput("Shooter/ Flywheel setspeed", setSpeed);
 
