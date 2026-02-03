@@ -22,7 +22,7 @@ public class Constants {
     }
 
     public class Shooter {
-        public static final double POWER_GAIN_MULTIPLIER = 1.1;
+        public static final double POWER_GAIN_MULTIPLIER = 1.0;
     }
 
     public class LimeLight {
@@ -31,23 +31,18 @@ public class Constants {
     }
     
     public class CAN_IDS {
-        public static final int HOOD_PIVOT_MOTOR = 0;
-        public static final int FLYWHEEL_MOTOR_MASTER = 0;
+        public static final int HOOD_PIVOT_MOTOR = 51;
+        public static final int FLYWHEEL_MOTOR_MASTER = 52;
         public static final int FLYWHEEL_MOTOR_FOLLOWER = 0;
         public static final int TURRET_AZIMUTH_MOTOR = 0;
 
-        public static final int FRONT_PIVOT_MOTOR = 0;
-        public static final int BACK_PIVOT_MOTOR = 0;
-
         public static final int MASTER_INTAKE_MOTOR = 0;
         public static final int FOLLOWER_INTAKE_MOTOR = 0;
-        public static final int INDEX_MOTOR = 0;
-        public static final int FEED_MOTOR = 0;
+        public static final int INDEX_MOTOR = 50;
+        public static final int FEED_MOTOR = 55;
         public static final int INT_PIVOT_MOTOR = 0;
 
         public static final int LEFT_CLIMB_MOTOR = 0;
         public static final int RIGHT_CLIMB_MOTOR = 0;
-
-
     }
 }

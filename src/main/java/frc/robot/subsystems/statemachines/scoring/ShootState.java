@@ -20,8 +20,8 @@ public class ShootState extends State {
               return RobotMap.driverController.getBButton();
             },
             ScoringStateMachine.idleState));
+  }
 
-          }
   @Override
   public void init(State prevState) {}
 

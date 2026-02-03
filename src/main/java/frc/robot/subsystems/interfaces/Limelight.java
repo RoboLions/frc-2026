@@ -280,6 +280,7 @@ public class Limelight {
     PosewithDeviation results;
     boolean usePigeon = true;
     Pose2d lastValidPose;
+    double numValidPoses;
 
     LimeLightObject(String cameraName, double yawOffset) {
       this.cameraName = cameraName;

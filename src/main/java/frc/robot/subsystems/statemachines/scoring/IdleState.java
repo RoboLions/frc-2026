@@ -45,6 +45,12 @@ public class IdleState extends State {
             return RobotMap.driverController.getLeftTriggerAxis() > 0.25;
             },
             ScoringStateMachine.passAimState));
+    addTransition(
+        new Transition(
+            () -> {
+            return RobotMap.driverController.getYButtonPressed();
+            },
+            ScoringStateMachine.testState));
   }
 
   @Override
@@ -53,6 +59,8 @@ public class IdleState extends State {
     Intake.setFeed(0);
     Intake.setIndex(0);
     Shooter.stopAll();
+
+    // simulation code
     Intake.simulateIntakeUp();
   }
 
