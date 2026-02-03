@@ -1,8 +1,10 @@
 package frc.robot.subsystems.interfaces;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -39,8 +41,14 @@ public class Shooter {
     frontShooterMotorConfig.Slot0.kD = 0.0;
 
     frontShooterMotorConfig.MotionMagic.MotionMagicAcceleration = 500.0;
+    frontShooterMotorConfig.MotionMagic.MotionMagicExpo_kA = 0.007;
+    frontShooterMotorConfig.MotionMagic.MotionMagicExpo_kV = 0.0125;
+
+    frontShooterMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
+    frontShooterMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     frontShooterMotorConfig.Feedback.SensorToMechanismRatio = 1 / 1;
+    frontShooterMotorConfig.Feedback.RotorToSensorRatio = 1 / 1;
 
     frontShooterMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     frontShooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
@@ -62,21 +70,22 @@ public class Shooter {
   // speed in meters per second
   public static void setShootSpeed(double speed) {
     // https://en.wikipedia.org/wiki/Angular_velocity
-    double setSpeed = Conversions.linearSpeedToRotationalSpeed(speed, (WHEEL_DIAMETER / 2.0)) * Constants.Shooter.POWER_GAIN_MULTIPLIER;
+    double setSpeed = Conversions.linearSpeedToRotationalSpeed(speed, (WHEEL_DIAMETER / 2.0));
+
+    Logger.recordOutput("Shooter/ Flywheel setspeed", setSpeed);
 
     mMasterFlywheelMotor.setControl(
         new MotionMagicVelocityVoltage(setSpeed)
-            .withUpdateFreqHz(500.0));
+            .withUpdateFreqHz(250));
     
-    // mFollowerFlywheelMotor.setControl(
-    //   new Follower(
-    //     Constants.CAN_IDS.FLYWHEEL_MOTOR_MASTER, 
-    //     MotorAlignmentValue.Aligned));  
+    mFollowerFlywheelMotor.setControl(
+        new MotionMagicVelocityVoltage(setSpeed)
+            .withUpdateFreqHz(250));
   }
 
   public static void stopAll() {
-    mMasterFlywheelMotor.setControl(new DutyCycleOut(0));
-    // mFollowerFlywheelMotor.setControl(new DutyCycleOut(0)); 
+    mMasterFlywheelMotor.setControl(new VoltageOut(0));
+    mFollowerFlywheelMotor.setControl(new VoltageOut(0)); 
   }
 
   public static boolean readyToShoot() {
