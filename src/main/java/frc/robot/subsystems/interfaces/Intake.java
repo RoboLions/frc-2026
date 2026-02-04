@@ -33,11 +33,23 @@ public class Intake {
 
     TalonFXConfiguration indexMotorCongirConfiguration = new TalonFXConfiguration();
 
-    indexMotorCongirConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    indexMotorCongirConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
+    indexMotorCongirConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+    
+    indexMotorCongirConfiguration.MotionMagic.MotionMagicAcceleration = 1;
+    indexMotorCongirConfiguration.Feedback.SensorToMechanismRatio = 1 / 1;
+
+    indexMotorCongirConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     TalonFXConfiguration feedMotorConfiguration = new TalonFXConfiguration();
 
-    feedMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    feedMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
+    feedMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+
+    feedMotorConfiguration.MotionMagic.MotionMagicAcceleration = 1;
+    feedMotorConfiguration.Feedback.SensorToMechanismRatio = 1 / 1;
+
+    feedMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     mIndexMotor.getConfigurator().apply(indexMotorCongirConfiguration);
     mFeedMotor.getConfigurator().apply(feedMotorConfiguration);
@@ -76,11 +88,11 @@ public class Intake {
   }
 
   public static void IndexIn() {
-    setIndex(0);
+    setIndex(12);
   }
 
   public static void IndexOut() {
-    setIndex(0);
+    setIndex(-4);
   }
 
   public static void setFeed(double outputVoltage) {
@@ -88,11 +100,11 @@ public class Intake {
   }
 
   public static void FeedIn() {
-    setFeed(0.0);
+    setFeed(9);
   }
 
   public static void FeedOut() {
-    setFeed(0.0);
+    setFeed(-5);
   }
 
   public static void simulateIntakeUp() {

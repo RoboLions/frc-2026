@@ -85,15 +85,18 @@ public class Turret {
     turretAzimuthConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
     turretAzimuthConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5;
 
-    turretAzimuthConfig.Slot0.kS = 0;
-    turretAzimuthConfig.Slot0.kV = 0;
-    turretAzimuthConfig.Slot0.kA = 0;
-    turretAzimuthConfig.Slot0.kP = 0;
+    turretAzimuthConfig.Slot0.kS = 0.25;
+    turretAzimuthConfig.Slot0.kV = 0.08;
+    turretAzimuthConfig.Slot0.kA = 0.0022;
+    turretAzimuthConfig.Slot0.kP = 0.75;
     turretAzimuthConfig.Slot0.kI = 0;
-    turretAzimuthConfig.Slot0.kD = 0;
+    turretAzimuthConfig.Slot0.kD = 0.01;
+    turretAzimuthConfig.Slot0.kG = 0;
 
-    turretAzimuthConfig.MotionMagic.MotionMagicAcceleration = 1;
-    turretAzimuthConfig.Feedback.SensorToMechanismRatio = 1 / 1;
+    turretAzimuthConfig.MotionMagic.MotionMagicAcceleration = 75;
+    turretAzimuthConfig.MotionMagic.MotionMagicCruiseVelocity = 75;
+    turretAzimuthConfig.Feedback.SensorToMechanismRatio = 10 / 1;
+    turretAzimuthConfig.Feedback.RotorToSensorRatio = 1 / 1;
 
     turretAzimuthConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     turretAzimuthConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;

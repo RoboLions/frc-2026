@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 import frc.robot.lib.util.LimelightHelpers;
 import frc.robot.lib.util.LimelightHelpers.LimelightResults;
+import frc.robot.lib.util.LimelightHelpers.PoseEstimate;
 import frc.robot.subsystems.swerve.Swerve;
 
 import java.util.ArrayList;
@@ -186,7 +187,7 @@ public class Limelight {
   }
 
   private static void disabledPoseSetup(LimeLightObject limeLight, double yawOffset) {
-    var poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(limeLight.cameraName);
+    LimelightHelpers.PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(limeLight.cameraName);
     
     double shortestDistance = Double.POSITIVE_INFINITY;
     int shortest_fidx = -1;
@@ -223,9 +224,14 @@ public class Limelight {
       return;
     }
 
+    if (poseEstimate == null || poseEstimate.pose == null) {
+      Logger.recordOutput(limeLight.cameraName + "RETURNS/ "  + "DISABLED ERROR STATUS", "NULLED POSE MT DISABLED");
+      return;
+    }
+
     Pose2d feedPose = new Pose2d(poseEstimate.pose.getTranslation(), new Rotation2d(poseEstimate.pose.getRotation().getRadians() - yawOffset));
 
-    Swerve.addLimelightMeasurement(feedPose, poseEstimate.timestampSeconds, VecBuilder.fill(10, 10, 5));
+    Swerve.addLimelightMeasurement(feedPose, poseEstimate.timestampSeconds, VecBuilder.fill(15, 15, 5));
   }
 
   public static Pose3d toPose3D(double[] inData) {

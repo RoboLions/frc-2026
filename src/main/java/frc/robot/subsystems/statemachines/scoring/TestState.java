@@ -29,6 +29,8 @@ public class TestState extends State {
 
   @Override
   public void execute() {
+    Shooter.setShootSpeed(12.5);
+
     if (RobotMap.driverController.getRightTriggerAxis() > 0.25) {
       Intake.allRollersIn();
     }

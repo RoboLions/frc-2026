@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.lib.auto.AutoSubsystem;
 import frc.robot.lib.util.FuelSim;
+import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Limelight;
 import frc.robot.subsystems.interfaces.Shooter;
 import frc.robot.subsystems.interfaces.Turret;
@@ -36,6 +37,7 @@ public class RobotMap {
     Limelight.init();
     Shooter.init();
     Turret.init();
+    Intake.init();
 
     //THEN STATEMACHINES
     drivetrainStateMachine.enable();

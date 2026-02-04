@@ -50,11 +50,11 @@ public class Shooter {
     frontShooterMotorConfig.Feedback.SensorToMechanismRatio = 1 / 1;
     frontShooterMotorConfig.Feedback.RotorToSensorRatio = 1 / 1;
 
-    frontShooterMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    frontShooterMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     frontShooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
     mMasterFlywheelMotor.getConfigurator().apply(frontShooterMotorConfig);
-    // mFollowerFlywheelMotor.getConfigurator().apply(frontShooterMotorConfig);
+    mFollowerFlywheelMotor.getConfigurator().apply(frontShooterMotorConfig);
   }
 
   public static double getfrontSpeed() {
