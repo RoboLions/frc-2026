@@ -5,6 +5,8 @@ import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Shooter;
+import frc.robot.subsystems.interfaces.Turret;
+import frc.robot.subsystems.interfaces.Turret.SimulationObjects;
 
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
@@ -23,13 +25,12 @@ public class TestState extends State {
   }
 
   @Override
-  public void init(State prevState) {
-    Shooter.setShootSpeed(5);
-  }
+  public void init(State prevState) {}
 
   @Override
   public void execute() {
-    Shooter.setShootSpeed(12.5);
+    Turret.turretTrackHub();
+    Shooter.setShootSpeed(SimulationObjects.totalShotVelocity);
 
     if (RobotMap.driverController.getRightTriggerAxis() > 0.25) {
       Intake.allRollersIn();

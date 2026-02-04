@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 import frc.robot.lib.util.LimelightHelpers;
 import frc.robot.lib.util.LimelightHelpers.LimelightResults;
-import frc.robot.lib.util.LimelightHelpers.PoseEstimate;
 import frc.robot.subsystems.swerve.Swerve;
 
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class Limelight {
     cameras.add(SIDE_CAMERA_MODEL3G);
 
     LimelightHelpers.setCameraPose_RobotSpace(FRONT_CAMERA_MODEL4.cameraName,
-                                              0.0, 
+                                              0.356, 
                                               0.0, 
                                               0, 
                                               0, 
@@ -52,12 +51,13 @@ public class Limelight {
                                               0);
   }
 
+  
   /**
    * THIS SHOULD NEVER BE USED TO INIT THE PIGEON. THIS IS ONLY FOR PERIODIC UPDATE AND NOT PIGEON FEED.
    */
   public static void periodic() {
     if (DriverStation.isDisabled()) {
-      disabledPoseSetup(FRONT_CAMERA_MODEL4, 0.261799388);
+      disabledPoseSetup(FRONT_CAMERA_MODEL4, 0);
       Logger.recordOutput("LIMELIGHTS /IS ENABLED?", false);
       
       return;

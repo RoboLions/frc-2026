@@ -1,6 +1,7 @@
 package frc.robot.subsystems.interfaces;
 
 import org.littletonrobotics.junction.Logger;
+import org.opencv.core.Mat;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -86,42 +87,49 @@ public class Turret {
     turretAzimuthConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5;
 
     turretAzimuthConfig.Slot0.kS = 0.25;
-    turretAzimuthConfig.Slot0.kV = 0.08;
-    turretAzimuthConfig.Slot0.kA = 0.0022;
-    turretAzimuthConfig.Slot0.kP = 0.75;
+    turretAzimuthConfig.Slot0.kV = 0.078;
+    turretAzimuthConfig.Slot0.kA = 0;
+    turretAzimuthConfig.Slot0.kP = 0.5;
     turretAzimuthConfig.Slot0.kI = 0;
     turretAzimuthConfig.Slot0.kD = 0.01;
     turretAzimuthConfig.Slot0.kG = 0;
 
     turretAzimuthConfig.MotionMagic.MotionMagicAcceleration = 75;
-    turretAzimuthConfig.MotionMagic.MotionMagicCruiseVelocity = 75;
-    turretAzimuthConfig.Feedback.SensorToMechanismRatio = 10 / 1;
+    turretAzimuthConfig.MotionMagic.MotionMagicCruiseVelocity = 50;
+    turretAzimuthConfig.Feedback.SensorToMechanismRatio = 1 / 1;
     turretAzimuthConfig.Feedback.RotorToSensorRatio = 1 / 1;
 
     turretAzimuthConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     turretAzimuthConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
+
     turretAzimuthConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     turretAzimuthConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    turretAzimuthConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = TurretConstants.maxPositiveTurnAngle;
-    turretAzimuthConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = TurretConstants.maxNegaitveTurnAngle;
+    turretAzimuthConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 25;
+    turretAzimuthConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -25; //25 rotations max
 
     turretAzimuthConfig.ClosedLoopGeneral.ContinuousWrap = false;
 
     mAzimuthTurretMotor.getConfigurator().apply(turretAzimuthConfig);
 
+    // mAzimuthTurretMotor.setPosition(0);
+
     Logger.recordOutput("Turret/ Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));
   }
 
   private static void setHoodAngle() {
-    mHoodPivotMotor.setControl(new MotionMagicVoltage(SimulationObjects.desiredHoodAngleRobotRel));
+    // mHoodPivotMotor.setControl(new MotionMagicVoltage(SimulationObjects.desiredHoodAngleRobotRel));
   }
 
   /**
    * Should always be a robot-relative angle.
    */
-  private static void setAzimuthAngle() {
-    mHoodPivotMotor.setControl(new MotionMagicVoltage(SimulationObjects.desiredTurretAngleRobotRelRad));
+  public static void setAzimuthAngle() {
+    double setAngle = (SimulationObjects.desiredTurretAngleRobotRelRad / 7.2) * (180 / Math.PI);
+
+    Logger.recordOutput("setAngle", setAngle);
+
+    mAzimuthTurretMotor.setControl(new MotionMagicVoltage(setAngle));
   }
 
   private static double getAzimuthAngle() {
@@ -129,6 +137,7 @@ public class Turret {
   }
 
   /** 
+   * 
    * The fully abstracted method that tracks the turret, no nonsense and all setup already.
    * Call to update the turret position.
    */
@@ -142,9 +151,10 @@ public class Turret {
                         Swerve.getChassisAcceleration(),
                         Swerve.getLoopLatencySec());
     
-    setHoodAngle();
+    // setHoodAngle();
     setAzimuthAngle();
 
+    Logger.recordOutput("Turret/ Turret Sim/ Turret Angle", SimulationObjects.desiredTurretAngleRobotRelRad);
     Logger.recordOutput("Turret/ Realoutputs/ Turret Azimuth", getAzimuthAngle());
   }
 

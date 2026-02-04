@@ -22,7 +22,7 @@ public class Constants {
     }
 
     public class Shooter {
-        public static final double POWER_GAIN_MULTIPLIER = 1.0;
+        public static final double POWER_GAIN_MULTIPLIER = 1.85;
     }
 
     public class LimeLight {

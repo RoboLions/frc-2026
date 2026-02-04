@@ -70,9 +70,7 @@ public class Swerve {
             new Field2d();
     }
     
-    public static void init() {
-        Swerve.resetPose(new Pose2d(new Translation2d(3.445100784301758, 4.781177043914795), new Rotation2d(2.0760863861141203)));
-    }
+    public static void init() {}
 
     public static void periodic() {
         SwerveObjects.Swerve.periodic(); // look at the function comment and see that this is actually just a reorientation tool
