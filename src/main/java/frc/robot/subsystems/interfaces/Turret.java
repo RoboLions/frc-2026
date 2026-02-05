@@ -1,7 +1,6 @@
 package frc.robot.subsystems.interfaces;
 
 import org.littletonrobotics.junction.Logger;
-import org.opencv.core.Mat;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -39,7 +38,7 @@ public class Turret {
   
   public class SimulationObjects {
     public static double desiredTurretAngleRobotRelRad;
-    public static double desiredHoodAngleRobotRel;
+    public static double desiredHoodAngleRobotRelDeg;
     public static double totalShotVelocity;
     public static double literalShotHoodRad;
 
@@ -117,21 +116,31 @@ public class Turret {
     Logger.recordOutput("Turret/ Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));
   }
 
+  /**
+   * Commands the hood pivot motor to the calculated optimal angle.
+   * * <p>Uses Motion Magic to provide a smooth trapezoidal velocity profile 
+   * to the hood's position setpoint.</p>
+   */
   private static void setHoodAngle() {
-    // mHoodPivotMotor.setControl(new MotionMagicVoltage(SimulationObjects.desiredHoodAngleRobotRel));
+    // mHoodPivotMotor.setControl(new MotionMagicVoltage(SimulationObjects.desiredHoodAngleRobotRelDeg));
   }
 
   /**
-   * Should always be a robot-relative angle.
+   * Commands the turret azimuth motor to the calculated robot-relative angle.
+   * * <p>This method converts the calculated radians into motor rotations 
+   * before sending the signal to the TalonFX via Motion Magic.</p>
    */
-  public static void setAzimuthAngle() {
-    double setAngle = (SimulationObjects.desiredTurretAngleRobotRelRad / 7.2) * (180 / Math.PI);
+  private static void setAzimuthAngle() {
+    double setAngle = (SimulationObjects.desiredTurretAngleRobotRelRad / 7.2) * (180 / Math.PI);    
+    mAzimuthTurretMotor.setControl(new MotionMagicVoltage(setAngle));
 
     Logger.recordOutput("setAngle", setAngle);
-
-    mAzimuthTurretMotor.setControl(new MotionMagicVoltage(setAngle));
   }
 
+  /**
+   * Retrieves the current rotational position of the turret azimuth.
+   * * @return The current position of the azimuth motor in rotations.
+   */
   private static double getAzimuthAngle() {
     return mAzimuthTurretMotor.getPosition().getValueAsDouble();
   }
@@ -143,6 +152,7 @@ public class Turret {
    */
   public static void turretTrackHub() {
     simulateTurretAngle(Swerve.getPose(), 
+                        Constants.Hood.TURRET_ROBOT_OFFSET,
                         Constants.Hood.HUB_POSE,
                         Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET, 
                         Swerve.getYawAsRadians(), 
@@ -154,14 +164,14 @@ public class Turret {
     // setHoodAngle();
     setAzimuthAngle();
 
-    Logger.recordOutput("Turret/ Turret Sim/ Turret Angle", SimulationObjects.desiredTurretAngleRobotRelRad);
-    Logger.recordOutput("Turret/ Realoutputs/ Turret Azimuth", getAzimuthAngle());
+    // Logger.recordOutput("Turret/ Realoutputs/ Turret Azimuth", getAzimuthAngle());
   }
 
   public static void turretTrackPassPose() {
     Translation2d passPose = (Swerve.getPose().getY() <= 4) ? Constants.Hood.PASS_LOWER.toTranslation2d() : Constants.Hood.PASS_UPPER.toTranslation2d();
 
     simulateTurretAngle(Swerve.getPose(), 
+                        Constants.Hood.TURRET_ROBOT_OFFSET,
                         passPose, 
                         0,
                         Swerve.getYawAsRadians(), 
@@ -183,7 +193,7 @@ public class Turret {
    * @param inputAngle The desired robot-relative angle in degrees.
    * @return The optimized motor setpoint in degrees.
    */
-  public static double wrapAngle(double inputAngle) {
+  private static double wrapAngle(double inputAngle) {
     if (inputAngle > TurretConstants.maxPositiveTurnAngle) {
       inputAngle -= 360;
     } else if (inputAngle < TurretConstants.maxNegaitveTurnAngle) {
@@ -224,18 +234,18 @@ public class Turret {
   }
 
   /**Calculates the required launch angle for a 2D projectile to hit a target.
-  * Uses the standard trajectory equation: 
-  * h = d*tan(θ) - (g*d²) / (2*v²*cos²(θ))
-  * 
-  * @param v The velocity as the piece exits the robot's shooter.
-  * @param d The distance from the exit point to the target.
-  * @param h The height from the exit point to the target.
-  * @return The angle in degrees relative to the horizontal. Returns Double.NaN 
+   * Uses the standard trajectory equation: 
+   * h = d*tan(θ) - (g*d²) / (2*v²*cos²(θ))
+   * 
+   * @param v The velocity as the piece exits the robot's shooter.
+   * @param d The distance from the exit point to the target.
+   * @param h The height from the exit point to the target.
+   * @return The angle in degrees relative to the horizontal. Returns Double.NaN 
    * if the target is out of range at the current velocity.
    * * @note This implementation calculates the "High Arc" (Lob) solution. 
    * The physical hood offset is applied before returning.
-  */
-  public static double calculateHoodAngle(double v, double d, double h) {
+   */
+  private static double calculateHoodAngle(double v, double d, double h) {
     final double g = Constants.Hood.G;
     double v2 = v * v;
     double v4 = v * v * v * v;
@@ -253,13 +263,13 @@ public class Turret {
   } 
 
   /** Is the mirror double to the algorithm above but just in launch, not a hood.
-  * 
-  * @param v The velocity as the piece exits the robot's shooter.
-  * @param d The distance from the exit point to the target.
-  * @param h The height from the exit point to the target.
-  * @return angle in Rad that the particle will launch from relative to the horizontal plane.
-  */
-  public static double calculateLaunchAngleRad(double v, double d, double h) {
+   * 
+   * @param v The velocity as the piece exits the robot's shooter.
+   * @param d The distance from the exit point to the target.
+   * @param h The height from the exit point to the target.
+   * @return angle in Rad that the particle will launch from relative to the horizontal plane.
+   */
+  private static double calculateLaunchAngleRad(double v, double d, double h) {
     final double g = Constants.Hood.G;
     double v2 = v * v;
     double v4 = v * v * v * v;
@@ -276,25 +286,45 @@ public class Turret {
   } 
 
   /** Offsets the target position along the line from the robot to the target.
-  *
-  * This is used to intentionally aim *behind* the hub's center rather than directly at
-  * its center. By shifting the target point backward along the robot-to-hub
-  * bearing, the shot contacts the back of the hub at a slight angle instead of
-  * squaring up in the middle. This promotes more consistent backspin interaction
-  * with the hub and improves shot forgiveness and accuracy.
-  *
-  * A positive transformation distance moves the target farther away from the
-  * robot (past the hub), while a negative value pulls the aim point closer.
-  *
-  * @param currPose Current robot pose on the field
-  * @param targetPose Original target position (hub center)
-  * @param transformationInMeters Distance to shift the target along the bearing
-  * @return Transformed target translation used for aiming
-  */
-  public static Translation2d transformTarget(Pose2d currPose, Translation2d targetPose, double transformationInMeters) {
-    Translation2d deltaTranslation = targetPose.minus(currPose.getTranslation());
+   *
+   * This is used to intentionally aim *behind* the hub's center rather than directly at
+   * its center. By shifting the target point backward along the robot-to-hub
+   * bearing, the shot contacts the back of the hub at a slight angle instead of
+   * squaring up in the middle. This promotes more consistent backspin interaction
+   * with the hub and improves shot forgiveness and accuracy.
+   *
+   * A positive transformation distance moves the target farther away from the
+   * robot (past the hub), while a negative value pulls the aim point closer.
+   *
+   * @param currTranslation Current robot pose on the field
+   * @param targetPose Original target position (hub center)
+   * @param transformationInMeters Distance to shift the target along the bearing
+   * @return Transformed target translation used for aiming
+   */
+  private static Translation2d transformTarget(Translation2d currTranslation, Translation2d targetPose, double transformationInMeters) {
+    Translation2d deltaTranslation = targetPose.minus(currTranslation);
     double radAngle = Math.atan2(deltaTranslation.getY(), deltaTranslation.getX());
     return new Translation2d(targetPose.getX() + transformationInMeters * Math.cos(radAngle), targetPose.getY() + transformationInMeters * Math.sin(radAngle));
+  }
+
+  /**
+   * Calculates the field-relative pose of the turret by applying a robot-relative 
+   * offset to the current robot field pose.
+   * * <p>This method accounts for the robot's current heading (rotation) to ensure 
+   * the physical offset of the turret (e.g., if the turret is mounted 10cm behind 
+   * the robot's center) is correctly translated into field coordinates.</p>
+   *
+   * @param robotFieldPose      The current 2D pose of the robot chassis relative to the field.
+   * @param turretRelativeOffset The physical translation of the turret pivot point 
+   * relative to the robot's center (Robot Frame).
+   * @return A {@link Pose2d} representing the turret's position on the field and its 
+   * current orientation (matching the robot's rotation).
+   */
+  private static Pose2d getTurretPosition(Pose2d robotFieldPose, Translation2d turretRelativeOffset) {
+      Translation2d turretFieldOffset = turretRelativeOffset.rotateBy(robotFieldPose.getRotation());
+      Translation2d turretFieldPosition = robotFieldPose.getTranslation().plus(turretFieldOffset);
+
+      return new Pose2d(turretFieldPosition, robotFieldPose.getRotation());
   }
 
   /**
@@ -307,6 +337,8 @@ public class Turret {
    * </ul>
    *
    * @param currPose           The current 2D field pose of the robot (meters).
+   * @param turretRelative     The relative position of the turret to the robot. The frame of refernce is in meters. 
+   * X axis is perpendicular to the front face, Y is parallel to the front face.
    * @param targetPose         The static 2D field position of the goal/hub (meters).
    * @param targetHeightRelativeBot The exit-point relative height from the target to the hood (meters).
    * @param robotFieldYaw      The current rotation of the robot relative to the field (radians).
@@ -323,6 +355,7 @@ public class Turret {
    * </ul>
    */
   public static void simulateTurretAngle(Pose2d currPose, 
+                                         Translation2d turretRelative, 
                                          Translation2d targetPose, 
                                          double targetHeightRelativeBot,
                                          double robotFieldYaw,
@@ -331,14 +364,17 @@ public class Turret {
                                          ChassisSpeeds fieldRobotAccel,
                                          double loopLatencySec) 
   {
-    Translation2d transformedTarget = transformTarget(currPose, targetPose, 0.25);
+    Pose2d turretPose = getTurretPosition(currPose, turretRelative);
+    Logger.recordOutput("Turret/ Turret Sim/ Turret2dPose", turretPose);
+
+    Translation2d transformedTarget = transformTarget(turretPose.getTranslation(), targetPose, 0.25);
     double xSpeeds = fieldRobotSpeeds.vxMetersPerSecond;
     double ySpeeds = fieldRobotSpeeds.vyMetersPerSecond;
     double xAccel = fieldRobotAccel.vxMetersPerSecond;
     double yAccel = fieldRobotAccel.vyMetersPerSecond;
 
-    double dx = transformedTarget.getX() - currPose.getX();
-    double dy = transformedTarget.getY() - currPose.getY();
+    double dx = transformedTarget.getX() - turretPose.getX();
+    double dy = transformedTarget.getY() - turretPose.getY();
     double r2 = dx * dx + dy * dy;
     double r = Math.sqrt(r2);
 
@@ -346,11 +382,11 @@ public class Turret {
     double preliminaryTheta = calculateLaunchAngleRad(preliminaryV, r, targetHeightRelativeBot);
     double timeOFlight = Math.sqrt(r2) / (preliminaryV * Math.cos(preliminaryTheta));
 
-    //iteration 1, culminating to the TOF estimation.
-    Logger.recordOutput("Turret/ Turret Sim/ Pre-emptive Distance to Goal", r);
-    Logger.recordOutput("Turret/ Turret Sim/ Pre-emptive Estimated Velocity", preliminaryV);
-    Logger.recordOutput("Turret/ Turret Sim/ Pre-emptive Estimated Launch Angle", Math.toDegrees(preliminaryTheta));
-    Logger.recordOutput("Turret/ Turret Sim/ Pre-emptive Estimated TOF", timeOFlight);
+    //iteration 1 ended, culminating to the TOF estimation.
+    // Logger.recordOutput("Turret/ Turret Sim/ Pre-emptive Distance to Goal", r);
+    // Logger.recordOutput("Turret/ Turret Sim/ Pre-emptive Estimated Velocity", preliminaryV);
+    // Logger.recordOutput("Turret/ Turret Sim/ Pre-emptive Estimated Launch Angle", Math.toDegrees(preliminaryTheta));
+    // Logger.recordOutput("Turret/ Turret Sim/ Pre-emptive Estimated TOF", timeOFlight);
 
     Translation2d targetOffset = new Translation2d(xSpeeds, ySpeeds).times(timeOFlight);
     targetOffset = targetOffset.plus(new Translation2d(xAccel, yAccel).times(loopLatencySec));
@@ -359,28 +395,29 @@ public class Turret {
     
     Logger.recordOutput("Turret/ Turret Sim/ Fake Target", FAKEPOSE);
 
-    double newDX = FAKEPOSE.getX() - currPose.getX();
-    double newDY = FAKEPOSE.getY() - currPose.getY();
+    double newDX = FAKEPOSE.getX() - turretPose.getX();
+    double newDY = FAKEPOSE.getY() - turretPose.getY();
     double newR2 = newDX * newDX + newDY * newDY;
     double newR = Math.sqrt(newR2);
 
     SimulationObjects.desiredTurretAngleRobotRelRad = wrapAngle(Math.atan2(newDY, newDX) - robotFieldYaw);
     SimulationObjects.totalShotVelocity= sampleVelocity(newR, targetHeightRelativeBot, xSpeeds, ySpeeds);
-    SimulationObjects.desiredHoodAngleRobotRel = calculateHoodAngle(SimulationObjects.totalShotVelocity, newR, targetHeightRelativeBot);
+    SimulationObjects.desiredHoodAngleRobotRelDeg = calculateHoodAngle(SimulationObjects.totalShotVelocity, newR, targetHeightRelativeBot);
     SimulationObjects.literalShotHoodRad = calculateLaunchAngleRad(SimulationObjects.totalShotVelocity, newR, targetHeightRelativeBot);
 
     //iteration 2, the actual target using iteration 1's TOF estimation.
-    Logger.recordOutput("Turret/ Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));
+    Logger.recordOutput("Turret/ Turret Sim/ Turret 3D Pose", new Pose3d(Constants.Hood.TURRET_ROBOT_OFFSET.getX(), Constants.Hood.TURRET_ROBOT_OFFSET.getY(), 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));
     Logger.recordOutput("Turret/ Turret Sim/ Shot Velocity", preliminaryV);
-    Logger.recordOutput("Turret/ Turret Sim/ Hood Angle", SimulationObjects.desiredHoodAngleRobotRel);
+    Logger.recordOutput("Turret/ Turret Sim/ Hood Angle", SimulationObjects.desiredHoodAngleRobotRelDeg);
     Logger.recordOutput("Turret/ Turret Sim/ Shot-Angle (Adjusted)", Math.toDegrees(SimulationObjects.literalShotHoodRad));
-    Logger.recordOutput("Turret/ Turret Sim/ Turret Angle Field Relative", SimulationObjects.desiredTurretAngleRobotRelRad + Swerve.getPose().getRotation().getDegrees());
+    
+    launchFuel();
   }
 
   /**
    * These two methods are only used for simulation. Can be deleted afterwards.
    */
-  public static void launchFuel() {
+  private static void launchFuel() {
 
     if (Robot.isReal()) {
       return;
@@ -388,12 +425,13 @@ public class Turret {
 
     SimulationObjects.simTimer.start();
 
-    if (!SimulationObjects.simTimer.hasElapsed(0.125)) {
+    if (!SimulationObjects.simTimer.hasElapsed(0.2)) {
       return;
     }
 
-    Pose3d robot = Swerve.getPose3d();
-    Translation3d initialPosition = robot.getTranslation().plus(new Translation3d(0, 0, 0.3));
+    Translation2d turret = getTurretPosition(Swerve.getPose(), Constants.Hood.TURRET_ROBOT_OFFSET).getTranslation();
+
+    Translation3d initialPosition = new Translation3d(turret).plus(new Translation3d(0, 0, 0.3));
     FuelSim.getInstance().spawnFuel(initialPosition, launchVectorSim().plus(
       new Translation3d(Swerve.getFieldSpeeds().vxMetersPerSecond, Swerve.getFieldSpeeds().vyMetersPerSecond, 0)));
 

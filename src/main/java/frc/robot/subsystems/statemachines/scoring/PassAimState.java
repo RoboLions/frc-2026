@@ -37,7 +37,6 @@ public class PassAimState extends State {
   @Override
   public void execute() {
     Turret.turretTrackPassPose();
-    Turret.launchFuel();
   }
 
   @Override

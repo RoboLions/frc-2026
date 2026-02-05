@@ -28,7 +28,6 @@ public class ShootState extends State {
   @Override
   public void execute() {
     Turret.turretTrackHub();
-    Turret.launchFuel();
   }
   
   @Override
