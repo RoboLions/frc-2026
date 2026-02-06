@@ -18,12 +18,13 @@ public class Constants {
         public static final Translation3d PASS_UPPER = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.5, 7, 0) : new Translation3d(15, 7, 0);
         public static final Translation3d PASS_LOWER =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.5, 1, 0) : new Translation3d(15, 1, 0);
 
-        public static final double HEIGHT_FROM_BOT_TO_TARGET = 1.25; //meters
-        public static final Translation2d TURRET_ROBOT_OFFSET = new Translation2d(0.0, 0.0); //meters
+        public static final double HEIGHT_FROM_BOT_TO_TARGET = 0.75; //meters
+        public static final Translation2d TURRET_ROBOT_OFFSET = new Translation2d(0.2286, -0.1524
+        ); //meters
     }
 
     public class Shooter {
-        public static final double POWER_GAIN_MULTIPLIER = 1.85;
+        public static final double POWER_GAIN_MULTIPLIER = 1.25;
     }
 
     public class LimeLight {

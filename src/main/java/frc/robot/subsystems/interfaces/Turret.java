@@ -54,28 +54,33 @@ public class Turret {
     hoodPivotConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
     hoodPivotConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5;
 
-    hoodPivotConfig.Slot0.kS = 0;
-    hoodPivotConfig.Slot0.kV = 0;
+    hoodPivotConfig.Slot0.kS = 0.2;
+    hoodPivotConfig.Slot0.kV = 0.0625;
     hoodPivotConfig.Slot0.kA = 0;
-    hoodPivotConfig.Slot0.kP = 0;
+    hoodPivotConfig.Slot0.kG = 0.07;
+    hoodPivotConfig.Slot0.kP = 1;
     hoodPivotConfig.Slot0.kI = 0;
     hoodPivotConfig.Slot0.kD = 0;
 
     hoodPivotConfig.MotionMagic.MotionMagicAcceleration = 1;
-    hoodPivotConfig.Feedback.SensorToMechanismRatio = 1 / 1;
+    hoodPivotConfig.Feedback.RotorToSensorRatio = 1;
+    hoodPivotConfig.Feedback.SensorToMechanismRatio = 0.4675;
     hoodPivotConfig.Feedback.FeedbackRotorOffset = 0.0;
 
-    hoodPivotConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    hoodPivotConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     hoodPivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     hoodPivotConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     hoodPivotConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    hoodPivotConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 30;
+    hoodPivotConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 10;
     hoodPivotConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
 
-    hoodPivotConfig.ClosedLoopGeneral.ContinuousWrap = false;
+    hoodPivotConfig.MotionMagic.MotionMagicAcceleration = 75;
+    hoodPivotConfig.MotionMagic.MotionMagicCruiseVelocity = 17;
 
     mHoodPivotMotor.getConfigurator().apply(hoodPivotConfig);
+
+    // mHoodPivotMotor.setPosition(0);
 
     TalonFXConfiguration turretAzimuthConfig = new TalonFXConfiguration();
     turretAzimuthConfig.CurrentLimits.StatorCurrentLimitEnable = false;
@@ -86,7 +91,7 @@ public class Turret {
     turretAzimuthConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5;
 
     turretAzimuthConfig.Slot0.kS = 0.25;
-    turretAzimuthConfig.Slot0.kV = 0.078;
+    turretAzimuthConfig.Slot0.kV = 0.08;
     turretAzimuthConfig.Slot0.kA = 0;
     turretAzimuthConfig.Slot0.kP = 0.5;
     turretAzimuthConfig.Slot0.kI = 0;
@@ -95,12 +100,12 @@ public class Turret {
 
     turretAzimuthConfig.MotionMagic.MotionMagicAcceleration = 75;
     turretAzimuthConfig.MotionMagic.MotionMagicCruiseVelocity = 50;
+
     turretAzimuthConfig.Feedback.SensorToMechanismRatio = 1 / 1;
     turretAzimuthConfig.Feedback.RotorToSensorRatio = 1 / 1;
 
     turretAzimuthConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     turretAzimuthConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-
 
     turretAzimuthConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     turretAzimuthConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
@@ -121,8 +126,18 @@ public class Turret {
    * * <p>Uses Motion Magic to provide a smooth trapezoidal velocity profile 
    * to the hood's position setpoint.</p>
    */
-  private static void setHoodAngle() {
-    // mHoodPivotMotor.setControl(new MotionMagicVoltage(SimulationObjects.desiredHoodAngleRobotRelDeg));
+  private static void setHoodAngle() {    
+    double angle = SimulationObjects.desiredHoodAngleRobotRelDeg - 30;
+
+    if (angle > 26) {
+      angle = 26;
+    } else if (angle < 0) {
+      angle = 0;
+    }
+
+    mHoodPivotMotor.setControl(new MotionMagicVoltage(angle));
+
+    Logger.recordOutput("Turret/ setAngleForHood", SimulationObjects.desiredHoodAngleRobotRelDeg - 30);
   }
 
   /**
@@ -134,7 +149,7 @@ public class Turret {
     double setAngle = (SimulationObjects.desiredTurretAngleRobotRelRad / 7.2) * (180 / Math.PI);    
     mAzimuthTurretMotor.setControl(new MotionMagicVoltage(setAngle));
 
-    Logger.recordOutput("setAngle", setAngle);
+    Logger.recordOutput("Turret/ setAngleAzimuth", setAngle);
   }
 
   /**
@@ -161,7 +176,7 @@ public class Turret {
                         Swerve.getChassisAcceleration(),
                         Swerve.getLoopLatencySec());
     
-    // setHoodAngle();
+    setHoodAngle();
     setAzimuthAngle();
 
     // Logger.recordOutput("Turret/ Realoutputs/ Turret Azimuth", getAzimuthAngle());
@@ -226,7 +241,7 @@ public class Turret {
   private static double sampleVelocity(double d, double h, double vx, double vy) {
     double velocity = Math.sqrt(
       Constants.Hood.G * (Math.sqrt(d * d + h * h) + h)) // the minimum line. go below this velocity and we will hit the SIDE.
-        + 5 * Math.pow(Math.E, -(0.75 * d)); // the offset line, adjust as desired
+        + 3 + 5 * Math.pow(Math.E, -(2 * d)); // the offset line, adjust as desired
 
     Logger.recordOutput("Turret/ Turret Sim/ Velocity Boost Factor", 5 * Math.pow(Math.E, -2 * d));
         

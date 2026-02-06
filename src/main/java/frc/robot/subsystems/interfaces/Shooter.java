@@ -26,23 +26,18 @@ public class Shooter {
     TalonFXConfiguration frontShooterMotorConfig = new TalonFXConfiguration();
 
     frontShooterMotorConfig.CurrentLimits.StatorCurrentLimitEnable = false;
-    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 60;
-    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
-    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5;
-    frontShooterMotorConfig.TorqueCurrent.PeakForwardTorqueCurrent = 100;
-    frontShooterMotorConfig.TorqueCurrent.PeakReverseTorqueCurrent = -100;
+    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
+    frontShooterMotorConfig.TorqueCurrent.PeakForwardTorqueCurrent = 800;
+    frontShooterMotorConfig.TorqueCurrent.PeakReverseTorqueCurrent = -800;
 
-    frontShooterMotorConfig.Slot0.kS = 0.0;
-    frontShooterMotorConfig.Slot0.kV = 0.125;
-    frontShooterMotorConfig.Slot0.kA = 0.007;
-    frontShooterMotorConfig.Slot0.kP = 0.35;
+    frontShooterMotorConfig.Slot0.kS = 0.275;
+    frontShooterMotorConfig.Slot0.kV = 0.126;
+    frontShooterMotorConfig.Slot0.kA = 0.01;
+    frontShooterMotorConfig.Slot0.kP = 0.8;
     frontShooterMotorConfig.Slot0.kI = 0.0;
-    frontShooterMotorConfig.Slot0.kD = 0.0;
+    frontShooterMotorConfig.Slot0.kD = 0.00005;
 
     frontShooterMotorConfig.MotionMagic.MotionMagicAcceleration = 500.0;
-    frontShooterMotorConfig.MotionMagic.MotionMagicExpo_kA = 0.007;
-    frontShooterMotorConfig.MotionMagic.MotionMagicExpo_kV = 0.0125;
 
     frontShooterMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     frontShooterMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
