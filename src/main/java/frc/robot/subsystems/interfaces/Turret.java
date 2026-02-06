@@ -127,7 +127,7 @@ public class Turret {
    * to the hood's position setpoint.</p>
    */
   private static void setHoodAngle() {    
-    double angle = SimulationObjects.desiredHoodAngleRobotRelDeg - 30;
+    double angle = SimulationObjects.desiredHoodAngleRobotRelDeg - Constants.Hood.BASE_HOOD_ANGLE_DEG;
 
     if (angle > 26) {
       angle = 26;
@@ -137,7 +137,7 @@ public class Turret {
 
     mHoodPivotMotor.setControl(new MotionMagicVoltage(angle));
 
-    Logger.recordOutput("Turret/ setAngleForHood", SimulationObjects.desiredHoodAngleRobotRelDeg - 30);
+    Logger.recordOutput("Turret/ setAngleForHood", SimulationObjects.desiredHoodAngleRobotRelDeg - Constants.Hood.BASE_HOOD_ANGLE_DEG);
   }
 
   /**
@@ -241,7 +241,7 @@ public class Turret {
   private static double sampleVelocity(double d, double h, double vx, double vy) {
     double velocity = Math.sqrt(
       Constants.Hood.G * (Math.sqrt(d * d + h * h) + h)) // the minimum line. go below this velocity and we will hit the SIDE.
-       + 5 * Math.pow(Math.E, -(2 * d)); // the offset line, adjust as desired
+       + 5 * Math.pow(Math.E, -(1.25 * d)); // the offset line, adjust as desired
 
     Logger.recordOutput("Turret/ Turret Sim/ Velocity Boost Factor", 5 * Math.pow(Math.E, -2 * d));
         
