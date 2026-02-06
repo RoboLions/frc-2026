@@ -133,7 +133,7 @@ public class Limelight {
     }
 
     LimelightHelpers.PoseEstimate megaTagPoseEstimate =
-        LimelightHelpers.getBotPoseEstimate_wpiBlue(limelight_name);
+        LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelight_name);
     Pose2d botPose = megaTagPoseEstimate.pose;
 
     
@@ -187,7 +187,7 @@ public class Limelight {
   }
 
   private static void disabledPoseSetup(LimeLightObject limeLight, double yawOffset) {
-    LimelightHelpers.PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(limeLight.cameraName);
+    LimelightHelpers.PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limeLight.cameraName);
     
     double shortestDistance = Double.POSITIVE_INFINITY;
     int shortest_fidx = -1;

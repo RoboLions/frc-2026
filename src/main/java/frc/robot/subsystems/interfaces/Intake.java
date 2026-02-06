@@ -3,6 +3,7 @@ package frc.robot.subsystems.interfaces;
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -46,7 +47,12 @@ public class Intake {
     feedMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     feedMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
-    feedMotorConfiguration.MotionMagic.MotionMagicAcceleration = 1;
+    feedMotorConfiguration.Slot0.kA = 0.018;
+    feedMotorConfiguration.Slot0.kV = 0.107;
+    feedMotorConfiguration.Slot0.kS = 0.4;
+    feedMotorConfiguration.Slot0.kP = 0.2;
+
+    feedMotorConfiguration.MotionMagic.MotionMagicAcceleration = 100;
     feedMotorConfiguration.Feedback.SensorToMechanismRatio = 1 / 1;
 
     feedMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -95,16 +101,21 @@ public class Intake {
     setIndex(-4);
   }
 
-  public static void setFeed(double outputVoltage) {
-    mFeedMotor.setControl(new VoltageOut(outputVoltage));
+  public static void setFeed(double rpm) {
+    mFeedMotor.setControl(new MotionMagicVelocityVoltage(rpm)
+              .withUpdateFreqHz(100));
   }
 
   public static void FeedIn() {
-    setFeed(9);
+    setFeed(70);
+  }
+
+  public static void FeedRamp() {
+    setFeed(50);
   }
 
   public static void FeedOut() {
-    setFeed(-5);
+    setFeed(-10);
   }
 
   public static void simulateIntakeUp() {

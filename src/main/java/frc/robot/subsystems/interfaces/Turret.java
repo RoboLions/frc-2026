@@ -241,7 +241,7 @@ public class Turret {
   private static double sampleVelocity(double d, double h, double vx, double vy) {
     double velocity = Math.sqrt(
       Constants.Hood.G * (Math.sqrt(d * d + h * h) + h)) // the minimum line. go below this velocity and we will hit the SIDE.
-        + 3 + 5 * Math.pow(Math.E, -(2 * d)); // the offset line, adjust as desired
+       + 5 * Math.pow(Math.E, -(2 * d)); // the offset line, adjust as desired
 
     Logger.recordOutput("Turret/ Turret Sim/ Velocity Boost Factor", 5 * Math.pow(Math.E, -2 * d));
         
@@ -416,7 +416,7 @@ public class Turret {
     double newR = Math.sqrt(newR2);
 
     SimulationObjects.desiredTurretAngleRobotRelRad = wrapAngle(Math.atan2(newDY, newDX) - robotFieldYaw);
-    SimulationObjects.totalShotVelocity= sampleVelocity(newR, targetHeightRelativeBot, xSpeeds, ySpeeds);
+    SimulationObjects.totalShotVelocity= sampleVelocity(newR, targetHeightRelativeBot, xSpeeds * Constants.Hood.MOVING_COMPENSATING_SCALE, ySpeeds * Constants.Hood.MOVING_COMPENSATING_SCALE);
     SimulationObjects.desiredHoodAngleRobotRelDeg = calculateHoodAngle(SimulationObjects.totalShotVelocity, newR, targetHeightRelativeBot);
     SimulationObjects.literalShotHoodRad = calculateLaunchAngleRad(SimulationObjects.totalShotVelocity, newR, targetHeightRelativeBot);
 

@@ -30,6 +30,7 @@ public class TestState extends State {
   @Override
   public void execute() {
     Turret.turretTrackHub();
+    Intake.FeedRamp();
     Shooter.setShootSpeed(SimulationObjects.totalShotVelocity);
 
     if (RobotMap.driverController.getRightTriggerAxis() > 0.25) {

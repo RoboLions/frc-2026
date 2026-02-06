@@ -32,12 +32,12 @@ public class Shooter {
 
     frontShooterMotorConfig.Slot0.kS = 0.275;
     frontShooterMotorConfig.Slot0.kV = 0.126;
-    frontShooterMotorConfig.Slot0.kA = 0.01;
-    frontShooterMotorConfig.Slot0.kP = 0.8;
+    frontShooterMotorConfig.Slot0.kA = 0.0175;
+    frontShooterMotorConfig.Slot0.kP = 0.2;
     frontShooterMotorConfig.Slot0.kI = 0.0;
-    frontShooterMotorConfig.Slot0.kD = 0.00005;
+    frontShooterMotorConfig.Slot0.kD = 0.0;
 
-    frontShooterMotorConfig.MotionMagic.MotionMagicAcceleration = 500.0;
+    frontShooterMotorConfig.MotionMagic.MotionMagicAcceleration = 200.0;
 
     frontShooterMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     frontShooterMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
