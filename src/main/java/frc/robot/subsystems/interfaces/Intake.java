@@ -14,9 +14,7 @@ import frc.robot.Constants;
 public class Intake {
 
   private static final TalonFX mIntakeRollerMotor =
-    new TalonFX(Constants.CAN_IDS.MASTER_INTAKE_MOTOR);  
-  // private static final TalonFX mIntakeActuationMotor =
-  //   new TalonFX(Constants.CAN_IDS.INT_PIVOT_MOTOR, "CANivore");
+    new TalonFX(Constants.CAN_IDS.INTAKE_ROLLER);  
   private static final TalonFX mIndexMotor = 
     new TalonFX(Constants.CAN_IDS.INDEX_MOTOR);
   private static final TalonFX mFeedMotor = 
@@ -57,6 +55,7 @@ public class Intake {
 
     feedMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
+    mIntakeRollerMotor.getConfigurator().apply(masterIntakeMotorConfiguration);
     mIndexMotor.getConfigurator().apply(indexMotorCongirConfiguration);
     mFeedMotor.getConfigurator().apply(feedMotorConfiguration);
   }
@@ -66,11 +65,11 @@ public class Intake {
   }
 
   public static void intake() {
-    set(0.0);
+    set(5);
   }
 
   public static void outtake() {
-    set(0.0);
+    set(-5);
   }
 
   public static void setAngle(double target) {
