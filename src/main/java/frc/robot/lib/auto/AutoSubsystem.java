@@ -35,31 +35,31 @@ public class AutoSubsystem {
 
             DEPOT_MID1_STOP.atTime(0.25).onTrue(AutoCommands.simulationSetTurretTrack());
 
-            DEPOT_MID1_STOP.atTranslation("2", 0.5)
-                   .onTrue(AutoCommands.simulationIntakeDown()
-                   .alongWith(AutoCommands.simulationIntakeIn()));
+            // DEPOT_MID1_STOP.atTranslation("2", 0.5)
+            //        .onTrue(AutoCommands.simulationIntakeDown()
+            //        .alongWith(AutoCommands.simulationIntakeIn()));
 
-            DEPOT_MID1_STOP.atTranslation("3", 0.5)
-                   .onTrue(AutoCommands.simulationIntakeUp()
-                   .alongWith(AutoCommands.simulationIntakeStop()));
+            // DEPOT_MID1_STOP.atTranslation("3", 0.5)
+            //        .onTrue(AutoCommands.simulationIntakeUp()
+            //        .alongWith(AutoCommands.simulationIntakeStop()));
 
-            DEPOT_MID1_STOP.atTranslation("7", 0.5)
-                   .onTrue(AutoCommands.simulationIntakeDown()
-                   .alongWith(AutoCommands.simulationIntakeIn()));
+            // DEPOT_MID1_STOP.atTranslation("7", 0.5)
+            //        .onTrue(AutoCommands.simulationIntakeDown()
+            //        .alongWith(AutoCommands.simulationIntakeIn()));
 
-            DEPOT_MID1_STOP.atTranslation("9", 0.5)
-                   .onTrue(AutoCommands.simulationIntakeUp()
-                   .alongWith(AutoCommands.simulationIntakeStop()));
+            // DEPOT_MID1_STOP.atTranslation("9", 0.5)
+            //        .onTrue(AutoCommands.simulationIntakeUp()
+            //        .alongWith(AutoCommands.simulationIntakeStop()));
 
             AutoTrajectory SHOT_MID2_STOP = routine.trajectory("SHOT_MID2_STOP");
 
-            SHOT_MID2_STOP.atTranslation("3", 0.5)
-                   .onTrue(AutoCommands.simulationIntakeDown()
-                   .alongWith(AutoCommands.simulationIntakeIn()));
+            // SHOT_MID2_STOP.atTranslation("3", 0.5)
+            //        .onTrue(AutoCommands.simulationIntakeDown()
+            //        .alongWith(AutoCommands.simulationIntakeIn()));
 
-            SHOT_MID2_STOP.atTranslation("6", 0.5)
-                   .onTrue(AutoCommands.simulationIntakeUp()
-                   .alongWith(AutoCommands.simulationIntakeStop()));
+            // SHOT_MID2_STOP.atTranslation("6", 0.5)
+            //        .onTrue(AutoCommands.simulationIntakeUp()
+            //        .alongWith(AutoCommands.simulationIntakeStop()));
 
             SHOT_MID2_STOP.atPose(SHOT_MID2_STOP.getFinalPose().get(), 0.1, 0.05)
                    .onTrue(AutoCommands.PrintItem("within-tolerance"));

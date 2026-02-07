@@ -35,13 +35,13 @@ public class AutoCommands {
         return Commands.run(() -> Turret.turretTrackHub());
     }
 
-    public static Command simulationIntakeUp() {
-        return Commands.runOnce(() -> Intake.simulateIntakeUp());
-    }
+    // public static Command simulationIntakeUp() {
+    //     return Commands.runOnce(() -> Intake.simulateIntakeUp());
+    // }
 
-    public static Command simulationIntakeDown() {
-        return Commands.runOnce(() -> Intake.simulateIntakeDown());
-    }
+    // public static Command simulationIntakeDown() {
+    //     return Commands.runOnce(() -> Intake.simulateIntakeDown());
+    // }
 
     public static Command simulationIntakeIn() {
         return Commands.runOnce(() -> Logger.recordOutput("Intake Sim/ IntakeIn", true));
