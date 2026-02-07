@@ -4,6 +4,7 @@ import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
 
 public class TeleopState extends State {
     @Override
@@ -23,6 +24,12 @@ public class TeleopState extends State {
 
     @Override
     public void execute() {
+        if (RobotMap.scoringStateMachine.getCurrentState().equals(ScoringStateMachine.shootState) ||
+            RobotMap.scoringStateMachine.getCurrentState().equals(ScoringStateMachine.testState)) {
+            Swerve.teleopDrive(0.3);
+            return;
+        }
+
         Swerve.teleopDrive();
     }   
     

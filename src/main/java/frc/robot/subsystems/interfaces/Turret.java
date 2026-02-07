@@ -98,7 +98,7 @@ public class Turret {
     turretAzimuthConfig.Slot0.kD = 0.01;
     turretAzimuthConfig.Slot0.kG = 0;
 
-    turretAzimuthConfig.MotionMagic.MotionMagicAcceleration = 75;
+    turretAzimuthConfig.MotionMagic.MotionMagicAcceleration = 100;
     turretAzimuthConfig.MotionMagic.MotionMagicCruiseVelocity = 50;
 
     turretAzimuthConfig.Feedback.SensorToMechanismRatio = 1 / 1;
@@ -241,7 +241,7 @@ public class Turret {
   private static double sampleVelocity(double d, double h, double vx, double vy) {
     double velocity = Math.sqrt(
       Constants.Hood.G * (Math.sqrt(d * d + h * h) + h)) // the minimum line. go below this velocity and we will hit the SIDE.
-       + 5 * Math.pow(Math.E, -(1.25 * d)); // the offset line, adjust as desired
+       + 5 * Math.pow(Math.E, -(1 * d)); // the offset line, adjust as desired
 
     Logger.recordOutput("Turret/ Turret Sim/ Velocity Boost Factor", 5 * Math.pow(Math.E, -2 * d));
         

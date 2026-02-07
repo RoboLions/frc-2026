@@ -61,7 +61,7 @@ public class IdleState extends State {
     Shooter.stopAll();
 
     // simulation code
-    Intake.simulateIntakeUp();
+    // Intake.simulateIntakeUp();
   }
 
   @Override

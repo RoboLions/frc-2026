@@ -34,7 +34,7 @@ public class IntakeState extends State {
   public void init(State prevState) {
     Intake.intakeDown();
     Intake.intake();
-    Intake.simulateIntakeDown();
+    // Intake.simulateIntakeDown();
   }
 
   @Override

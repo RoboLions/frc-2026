@@ -30,8 +30,12 @@ public class TestState extends State {
   @Override
   public void execute() {
     Turret.turretTrackHub();
-    Intake.FeedRamp();
+    Intake.FeedIn();
     Shooter.setShootSpeed(SimulationObjects.totalShotVelocity);
+
+    if (RobotMap.driverController.getLeftBumperButtonPressed()) {
+      Intake.FeedOut();
+    }
 
     if (RobotMap.driverController.getRightTriggerAxis() > 0.25) {
       Intake.allRollersIn();

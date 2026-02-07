@@ -37,7 +37,7 @@ public class Limelight {
 
     LimelightHelpers.setCameraPose_RobotSpace(FRONT_CAMERA_MODEL4.cameraName,
                                               0.356, 
-                                              0.0, 
+                                              -0.13, 
                                               0, 
                                               0, 
                                               0, 
@@ -112,8 +112,8 @@ public class Limelight {
       return null;
     }
 
-    if (shortestDistance > 5 && DriverStation.isAutonomous()) {
-      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "SHORTEST DISTANCE IN AUTO THRESHOLD: " + shortestDistance);
+    if (shortestDistance > 6) {
+      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "SHORTEST DISTANCE THRESHOLD: " + shortestDistance);
       return null;
     }
 
@@ -174,7 +174,7 @@ public class Limelight {
 
     LogForPositionTuning(limelightPose3d, Constants.LimeLight.known_pose_blue_left, limelight_name, false);
 
-    double angleStdDev = 10000;
+    double angleStdDev = 1000000;
     double distanceStdDev = 0.5 * Math.abs(yawRate) + 10.0;
 
     Logger.recordOutput(limelight_name + "RETURNS/ "  + "/Distance Deviation", distanceStdDev);
@@ -209,8 +209,8 @@ public class Limelight {
       return;
     }
 
-    if (shortestDistance > 5 && DriverStation.isAutonomous()) {
-      Logger.recordOutput(limeLight.cameraName + "RETURNS/ " + "DISABLED ERROR STATUS", "SHORTEST DISTANCE IN AUTO THRESHOLD: " + shortestDistance);
+    if (shortestDistance > 6) {
+      Logger.recordOutput(limeLight.cameraName + "RETURNS/ " + "DISABLED ERROR STATUS", "SHORTEST DISTANCE THRESHOLD: " + shortestDistance);
       return;
     }
 
@@ -231,7 +231,7 @@ public class Limelight {
 
     Pose2d feedPose = new Pose2d(poseEstimate.pose.getTranslation(), new Rotation2d(poseEstimate.pose.getRotation().getRadians() - yawOffset));
 
-    Swerve.addLimelightMeasurement(feedPose, poseEstimate.timestampSeconds, VecBuilder.fill(15, 15, 5));
+    Swerve.addLimelightMeasurement(feedPose, poseEstimate.timestampSeconds, VecBuilder.fill(15, 15, 4));
   }
 
   public static Pose3d toPose3D(double[] inData) {

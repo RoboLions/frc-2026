@@ -94,7 +94,7 @@ public class Intake {
   }
 
   public static void IndexIn() {
-    setIndex(12);
+    setIndex(4);
   }
 
   public static void IndexOut() {
@@ -107,10 +107,6 @@ public class Intake {
   }
 
   public static void FeedIn() {
-    setFeed(70);
-  }
-
-  public static void FeedRamp() {
     setFeed(50);
   }
 
@@ -118,15 +114,15 @@ public class Intake {
     setFeed(-10);
   }
 
-  public static void simulateIntakeUp() {
-    Logger.recordOutput("Intake Sim/ Intake Component 1", new Pose3d(0.1225, 0, -0.0825, new Rotation3d(0, -30 * Math.PI / 180, 0)));
-    Logger.recordOutput("Intake Sim/ Intake Component 2", new Pose3d(-0.3675, 0, 0.5025, new Rotation3d(0, 40 * Math.PI / 180, 0)));
-  }
+  // public static void simulateIntakeUp() {
+  //   Logger.recordOutput("Intake Sim/ Intake Component 1", new Pose3d(0.1225, 0, -0.0825, new Rotation3d(0, -30 * Math.PI / 180, 0)));
+  //   Logger.recordOutput("Intake Sim/ Intake Component 2", new Pose3d(-0.3675, 0, 0.5025, new Rotation3d(0, 40 * Math.PI / 180, 0)));
+  // }
 
-  public static void simulateIntakeDown() {
-    Logger.recordOutput("Intake Sim/ Intake Component 1", new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)));
-    Logger.recordOutput("Intake Sim/ Intake Component 2", new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)));
-  }
+  // public static void simulateIntakeDown() {
+  //   Logger.recordOutput("Intake Sim/ Intake Component 1", new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)));
+  //   Logger.recordOutput("Intake Sim/ Intake Component 2", new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)));
+  // }
 
   public static void allRollersIn() {
     intake();
