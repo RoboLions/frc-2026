@@ -7,7 +7,6 @@ package frc.robot.subsystems.statemachines.scoring;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
-import frc.robot.subsystems.interfaces.Turret;
 import frc.robot.subsystems.interfaces.Intake;
 
 /** Add your docs here. */
