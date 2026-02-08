@@ -34,6 +34,7 @@ public class Turret {
   private class TurretConstants {
     private static final double maxPositiveTurnAngle = 180;
     private static final double maxNegaitveTurnAngle = -180;
+    private static final double azimuthDegreesToRotations = 7.2;
   }
   
   public class SimulationObjects {
@@ -146,7 +147,7 @@ public class Turret {
    * before sending the signal to the TalonFX via Motion Magic.</p>
    */
   private static void setAzimuthAngle() {
-    double setAngle = (SimulationObjects.desiredTurretAngleRobotRelRad / 7.2) * (180 / Math.PI);    
+    double setAngle = (SimulationObjects.desiredTurretAngleRobotRelRad / TurretConstants.azimuthDegreesToRotations) * (180 / Math.PI);    
     mAzimuthTurretMotor.setControl(new MotionMagicVoltage(setAngle));
 
     Logger.recordOutput("Turret/ setAngleAzimuth", setAngle);
@@ -158,6 +159,14 @@ public class Turret {
    */
   private static double getAzimuthAngle() {
     return mAzimuthTurretMotor.getPosition().getValueAsDouble();
+  }
+
+    /**
+   * Retrieves the current rotational position of the turret azimuth.
+   * * @return The current position of the azimuth motor in degrees.
+   */
+  private static double getAzimuthAngleDeg() {
+    return mAzimuthTurretMotor.getPosition().getValueAsDouble() * TurretConstants.azimuthDegreesToRotations;
   }
 
   /** 
@@ -209,11 +218,6 @@ public class Turret {
    * @return The optimized motor setpoint in degrees.
    */
   private static double wrapAngle(double inputAngle) {
-    if (inputAngle > TurretConstants.maxPositiveTurnAngle) {
-      inputAngle -= 360;
-    } else if (inputAngle < TurretConstants.maxNegaitveTurnAngle) {
-      inputAngle += 360;
-    }
 
     // safetyclamp
     if (inputAngle > TurretConstants.maxPositiveTurnAngle) {
