@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.interfaces.Turret;
-import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class AutoCommands {
@@ -31,24 +30,8 @@ public class AutoCommands {
         return Commands.runOnce(() -> System.out.println(string));
     }
 
-    public static Command simulationSetTurretTrack() {
+    public static Command setTurretTrack() {
         return Commands.run(() -> Turret.turretTrackHub());
-    }
-
-    // public static Command simulationIntakeUp() {
-    //     return Commands.runOnce(() -> Intake.simulateIntakeUp());
-    // }
-
-    // public static Command simulationIntakeDown() {
-    //     return Commands.runOnce(() -> Intake.simulateIntakeDown());
-    // }
-
-    public static Command simulationIntakeIn() {
-        return Commands.runOnce(() -> Logger.recordOutput("Intake Sim/ IntakeIn", true));
-    }
-
-    public static Command simulationIntakeStop() {
-        return Commands.runOnce(() -> Logger.recordOutput("Intake Sim/ IntakeIn", false));
     }
 
     public static BooleanSupplier timerAt(double time, Timer timer) {
