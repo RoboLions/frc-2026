@@ -24,5 +24,6 @@ public class ScoringStateMachine extends StateMachine{
         shootState.build();
         presetState.build();
         testState.build();
+        outtakeState.build();
     }
 }

@@ -14,8 +14,6 @@ public class OuttakeState extends State {
 
   @Override
   public void build() {
-
-
     addTransition(
         new Transition(
             () -> {
@@ -25,6 +23,7 @@ public class OuttakeState extends State {
 
 
     addTransition(
+      
         new Transition(
             () -> {
               return RobotMap.driverController.getRightBumper();
