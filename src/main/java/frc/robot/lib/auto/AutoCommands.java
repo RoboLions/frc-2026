@@ -9,7 +9,10 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.interfaces.Intake;
+import frc.robot.subsystems.interfaces.Shooter;
 import frc.robot.subsystems.interfaces.Turret;
+import frc.robot.subsystems.interfaces.Turret.SimulationObjects;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class AutoCommands {
@@ -32,6 +35,14 @@ public class AutoCommands {
 
     public static Command setTurretTrack() {
         return Commands.run(() -> Turret.turretTrackHub());
+    }
+
+    public static Command startShooter() {
+        return Commands.run(() ->  Shooter.setShootSpeed(SimulationObjects.totalShotVelocity));
+    }
+
+    public static Command feedIn() {
+        return Commands.run(() -> Intake.allRollersIn());
     }
 
     public static BooleanSupplier timerAt(double time, Timer timer) {

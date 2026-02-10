@@ -18,7 +18,7 @@ public class AutoSubsystem {
         autoFactory = createAutoFactory;
         autoChooser = new AutoChooser();
 
-        autoChooser.addRoutine("simulation", simulationRoutine());
+        autoChooser.addRoutine("testPath", testRoutine());
 
         SmartDashboard.putData("AutoChooser", autoChooser);
     }
@@ -26,31 +26,26 @@ public class AutoSubsystem {
     public void scheduleAuto() {
         RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
     }
-    
-    private Supplier<AutoRoutine> simulationRoutine() {
-        AutoRoutine routine = autoFactory.newRoutine("SIMULATION AUTO (Depot_2Trip_Climb)");
+
+    private Supplier<AutoRoutine> testRoutine() {
+        AutoRoutine routine = autoFactory.newRoutine("testPath");
 
         return () -> {
-            AutoTrajectory DEPOT_MID1_STOP = routine.trajectory("DEPOT_MID1_STOP");
+            AutoTrajectory testPath = routine.trajectory("testPath");
 
-            DEPOT_MID1_STOP.atTime(0.25).onTrue(AutoCommands.setTurretTrack());
+            testPath.atTime(0.5).onTrue(AutoCommands.setTurretTrack()
+                                               .alongWith(AutoCommands.startShooter()));
+            testPath.atTime(1).onTrue(AutoCommands.feedIn());
 
-            AutoTrajectory SHOT_MID2_STOP = routine.trajectory("SHOT_MID2_STOP");
 
-            SHOT_MID2_STOP.atPose(SHOT_MID2_STOP.getFinalPose().get(), 0.1, 0.05)
-                   .onTrue(AutoCommands.PrintItem("within-tolerance"));
-
-            SHOT_MID2_STOP.done().onTrue(AutoCommands.SwerveStop().andThen(AutoCommands.PrintItem("simPath-Done")));
- 
             routine.active().onTrue(
                 Commands.sequence(
-                    DEPOT_MID1_STOP.resetOdometry(),
-                    DEPOT_MID1_STOP.cmd(),
-                    AutoCommands.waitAndStopSwerve(2.5),
-                    SHOT_MID2_STOP.cmd()
+                    testPath.cmd(),
+                    AutoCommands.SwerveStop()
                 )
+                
             );
-
+        
             return routine;
         };
     }

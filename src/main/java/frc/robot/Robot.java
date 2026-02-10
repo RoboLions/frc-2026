@@ -74,7 +74,7 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void autonomousInit() {
-
+    CommandScheduler.getInstance().run(); // we will always need this in auto, command schedulers are not built into the LoggedRobot class, but it is for TimedRobot.
   }
 
   /** This function is called periodically during autonomous. */

@@ -231,7 +231,7 @@ public class Limelight {
 
     Pose2d feedPose = new Pose2d(poseEstimate.pose.getTranslation(), new Rotation2d(poseEstimate.pose.getRotation().getRadians() - yawOffset));
 
-    Swerve.addLimelightMeasurement(feedPose, poseEstimate.timestampSeconds, VecBuilder.fill(7, 7, 4));
+    Swerve.addLimelightMeasurement(feedPose, poseEstimate.timestampSeconds, VecBuilder.fill(4, 4, 4));
   }
 
   public static Pose3d toPose3D(double[] inData) {
