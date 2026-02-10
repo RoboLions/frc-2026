@@ -30,7 +30,7 @@ public class Limelight {
 
     FRONT_CAMERA_MODEL4.usePigeon = false; // IMPORTANT TO DISABLE THE YAW CORRECTION FROM PIGEON
     LimelightHelpers.SetIMUMode(FRONT_CAMERA_MODEL4.cameraName, 3);
-    LimelightHelpers.SetIMUAssistAlpha(FRONT_CAMERA_MODEL4.cameraName, 0.05);
+    LimelightHelpers.SetIMUAssistAlpha(FRONT_CAMERA_MODEL4.cameraName, 0.001);
 
     cameras.add(FRONT_CAMERA_MODEL4);
     cameras.add(SIDE_CAMERA_MODEL3G);
@@ -175,7 +175,7 @@ public class Limelight {
     LogForPositionTuning(limelightPose3d, Constants.LimeLight.known_pose_blue_left, limelight_name, false);
 
     double angleStdDev = 1000000;
-    double distanceStdDev = 0.5 * Math.abs(yawRate) + 10.0;
+    double distanceStdDev = 0.25 * Math.abs(yawRate) + 5.0;
 
     Logger.recordOutput(limelight_name + "RETURNS/ "  + "/Distance Deviation", distanceStdDev);
     Logger.recordOutput(limelight_name + "RETURNS/ "  + "/Angle Deviation", angleStdDev);
@@ -231,7 +231,7 @@ public class Limelight {
 
     Pose2d feedPose = new Pose2d(poseEstimate.pose.getTranslation(), new Rotation2d(poseEstimate.pose.getRotation().getRadians() - yawOffset));
 
-    Swerve.addLimelightMeasurement(feedPose, poseEstimate.timestampSeconds, VecBuilder.fill(15, 15, 4));
+    Swerve.addLimelightMeasurement(feedPose, poseEstimate.timestampSeconds, VecBuilder.fill(7, 7, 4));
   }
 
   public static Pose3d toPose3D(double[] inData) {
