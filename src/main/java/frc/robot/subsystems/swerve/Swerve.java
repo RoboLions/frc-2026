@@ -13,6 +13,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -56,6 +57,7 @@ public class Swerve {
                 .withDeadband(SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
             
+        private static final PIDController pointDriveController = new PIDController(1, 0, 0);
     }
 
     private class TelemetryObjects{
@@ -249,7 +251,7 @@ public class Swerve {
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
 
-    public static void automaticDrive(double velocity, Rotation2d heading) {
+    private static void automaticDrive(double velocity, Rotation2d heading) {
         double vx = velocity * heading.getCos();
         double vy = velocity * heading.getSin();
         double omega = 0;
@@ -260,6 +262,18 @@ public class Swerve {
                 .withRotationalRate(omega * SwerveConstants.MaxAngularRate));
 
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
+    }
+
+    public static void driveToPoint(Pose2d targetPose, double maxVelocity) {
+        Pose2d currPose = getPose();
+        double dy = targetPose.getY() - currPose.getY();
+        double dx = targetPose.getX() - currPose.getX();
+        double distance = targetPose.getTranslation().getDistance(currPose.getTranslation());
+
+        SwerveObjects.pointDriveController.setSetpoint(distance);
+        double velocity = Math.min(SwerveObjects.pointDriveController.calculate(0), maxVelocity);
+
+        automaticDrive(velocity, new Rotation2d(Math.atan2(dy, dx)));
     }
 
     public void outputTelemetry() {
