@@ -10,8 +10,10 @@ import frc.robot.lib.statemachine.StateMachine;
 public class DrivetrainStateMachine extends StateMachine{
 
     public static TeleopState teleopState = new TeleopState();
+    public static AlignState alignState = new AlignState();
 
     public DrivetrainStateMachine() {
         teleopState.build();
+        alignState.build();
     }
 }
