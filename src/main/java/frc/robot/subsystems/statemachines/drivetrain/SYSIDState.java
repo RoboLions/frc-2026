@@ -32,23 +32,23 @@ public class SYSIDState extends State{
     public void execute() {
         /*
          * Make sure to comment out all other idleState transitions in Scoring or you might screw this up.
-         * Joystick Y = quasistatic forward
-         * Joystick A = quasistatic reverse
-         * Joystick rightBumper = dynamic forward
-         * Joystick leftBumper = dyanmic reverse
+         * Joystick RightPOV = quasistatic forward
+         * Joystick LeftPOV = quasistatic reverse
+         * Joystick UpPOV = dynamic forward
+         * Joystick DownPOV = dyanmic reverse
          */
 
-        Trigger y = new Trigger(RobotMap.driverController::getYButton);
-        y.whileTrue(Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        Trigger RightPOV = new Trigger(() -> RobotMap.driverController.getPOV() == 90);
+        RightPOV.whileTrue(Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
 
-        Trigger a = new Trigger(RobotMap.driverController::getAButton);
-        a.whileTrue(Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        Trigger LeftPOV = new Trigger(() -> RobotMap.driverController.getPOV() == 270);
+        LeftPOV.whileTrue(Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
-        Trigger r = new Trigger(RobotMap.driverController::getRightBumperButton);
-        r.whileTrue(Swerve.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        Trigger UpPOV = new Trigger(() -> RobotMap.driverController.getPOV() == 0);
+        UpPOV.whileTrue(Swerve.sysIdDynamic(SysIdRoutine.Direction.kForward));
 
-        Trigger l = new Trigger(RobotMap.driverController::getLeftBumperButton);
-        l.whileTrue(Swerve.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        Trigger DownPOV = new Trigger(() -> RobotMap.driverController.getPOV() == 180);
+        DownPOV.whileTrue(Swerve.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
 
         CommandScheduler.getInstance().run();
