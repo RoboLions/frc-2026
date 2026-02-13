@@ -10,14 +10,14 @@ public class Constants {
 
     public class Hood {
         public static final double G = 9.80665;
-        public static final double THETA_ANGLE_FROM_SHOOTER = 90; //this is measured angled which the ball exits the shooter
+        public static final double THETA_ANGLE_FROM_SHOOTER = 95; //this is measured angled which the ball exits the shooter
         public static final double BASE_HOOD_ANGLE_DEG = 30;
 
         public static final double TIME_OF_FLIGHT_SCALE = 1.0;
         public static final double MOVING_COMPENSATING_SCALE = 0.0;
 
         public static final double HEIGHT_FROM_BOT_TO_TARGET = 0.7; //meters
-        public static final Translation2d TURRET_ROBOT_OFFSET = new Translation2d(0.2286, -0.1524); //meters
+        public static final Translation2d TURRET_ROBOT_OFFSET = new Translation2d(0.2286, -0.13); //meters
 
         public static final Translation2d HUB_POSE =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation2d(4.62744, 4.03648) : new Translation2d(11.91642, 4.03814);
         public static final Translation3d PASS_UPPER = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.5, 7, 0) : new Translation3d(15, 7, 0);
@@ -26,7 +26,7 @@ public class Constants {
     }
 
     public class Shooter {
-        public static final double POWER_GAIN_MULTIPLIER = 1.66;
+        public static final double POWER_GAIN_MULTIPLIER = 1.7;
     }
 
     public class LimeLight {

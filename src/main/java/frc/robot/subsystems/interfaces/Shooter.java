@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -30,10 +31,10 @@ public class Shooter {
     frontShooterMotorConfig.TorqueCurrent.PeakForwardTorqueCurrent = 800;
     frontShooterMotorConfig.TorqueCurrent.PeakReverseTorqueCurrent = -800;
 
-    frontShooterMotorConfig.Slot0.kS = 0.275;
-    frontShooterMotorConfig.Slot0.kV = 0.126;
-    frontShooterMotorConfig.Slot0.kA = 0.0175;
-    frontShooterMotorConfig.Slot0.kP = 0.2;
+    frontShooterMotorConfig.Slot0.kS = 7.9;
+    frontShooterMotorConfig.Slot0.kV = 0.081;
+    frontShooterMotorConfig.Slot0.kA = 0.0;
+    frontShooterMotorConfig.Slot0.kP = 12;
     frontShooterMotorConfig.Slot0.kI = 0.0;
     frontShooterMotorConfig.Slot0.kD = 0.0;
 
@@ -70,11 +71,11 @@ public class Shooter {
     Logger.recordOutput("Shooter/ Flywheel setspeed", setSpeed);
 
     mMasterFlywheelMotor.setControl(
-        new MotionMagicVelocityVoltage(setSpeed)
+        new VelocityTorqueCurrentFOC(setSpeed)
             .withUpdateFreqHz(250));
     
     mFollowerFlywheelMotor.setControl(
-        new MotionMagicVelocityVoltage(setSpeed)
+        new VelocityTorqueCurrentFOC(setSpeed)
             .withUpdateFreqHz(250));
   }
 
