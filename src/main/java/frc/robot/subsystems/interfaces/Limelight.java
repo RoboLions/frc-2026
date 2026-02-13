@@ -20,20 +20,18 @@ import org.littletonrobotics.junction.Logger;
 public class Limelight {
   private static ArrayList<LimeLightObject> cameras;
   private static LimeLightObject FRONT_CAMERA_MODEL4; // TODO: RENAME CAMERAS;
-  private static LimeLightObject SIDE_CAMERA_MODEL3G; // TODO: RENAME CAMERAS
 
   public static void init() {
     cameras = new ArrayList<>();
 
     FRONT_CAMERA_MODEL4 = new LimeLightObject("limelight-four", 0); // TODO: RENAME CAMERAS;
-    SIDE_CAMERA_MODEL3G = new LimeLightObject("LL_LEFT", 0); // TODO: RENAME CAMERAS
-
     FRONT_CAMERA_MODEL4.usePigeon = false; // IMPORTANT TO DISABLE THE YAW CORRECTION FROM PIGEON
+    
     LimelightHelpers.SetIMUMode(FRONT_CAMERA_MODEL4.cameraName, 3);
     LimelightHelpers.SetIMUAssistAlpha(FRONT_CAMERA_MODEL4.cameraName, 0.001);
+    LimelightHelpers.setRewindEnabled(FRONT_CAMERA_MODEL4.cameraName, false);
 
     cameras.add(FRONT_CAMERA_MODEL4);
-    cameras.add(SIDE_CAMERA_MODEL3G);
 
     LimelightHelpers.setCameraPose_RobotSpace(FRONT_CAMERA_MODEL4.cameraName,
                                               0.356, 
@@ -42,14 +40,7 @@ public class Limelight {
                                               0, 
                                               0, 
                                               0);
-    LimelightHelpers.setCameraPose_RobotSpace(SIDE_CAMERA_MODEL3G.cameraName,
-                                              0.0, 
-                                              0.0, 
-                                              0, 
-                                              0, 
-                                              0, 
-                                              0);
-  }
+    }
 
   
   /**
