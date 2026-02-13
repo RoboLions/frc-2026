@@ -11,9 +11,11 @@ public class DrivetrainStateMachine extends StateMachine{
 
     public static TeleopState teleopState = new TeleopState();
     public static AlignState alignState = new AlignState();
+    public static SYSIDState sysIdState = new SYSIDState();
 
     public DrivetrainStateMachine() {
         teleopState.build();
         alignState.build();
+        sysIdState.build();
     }
 }

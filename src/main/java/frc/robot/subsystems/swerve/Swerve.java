@@ -31,6 +31,9 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotMap;
 
 public class Swerve {
@@ -276,6 +279,13 @@ public class Swerve {
         automaticDrive(velocity, new Rotation2d(Math.atan2(dy, dx)));
     }
 
+    public static Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return SwerveObjects.Swerve.sysIdQuasistatic(direction);
+    }
+
+    public static Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return SwerveObjects.Swerve.sysIdDynamic(direction);
+    }
     public void outputTelemetry() {
 		TelemetryObjects.mechanismPublisher.set(new Pose3d(getPose()));
 		TelemetryObjects.telemetryLogger.telemeterize(SwerveObjects.lastReadState);
