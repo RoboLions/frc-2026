@@ -259,14 +259,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     /**
-     * I don't want the pose to be reset as we have limelights to adjust the beginning pose.
-     * So this will do nothing to replace the pose reset consumer.
-     * 
-     * @param pose poop
-     */
-    private void nothingMethod(Pose2d pose) {}
-
-    /**
      * Runs the SysId Quasistatic test in the given direction for the routine
      * specified by {@link #m_sysIdRoutineToApply}.
      *
