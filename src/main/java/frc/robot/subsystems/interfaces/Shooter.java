@@ -31,10 +31,10 @@ public class Shooter {
     frontShooterMotorConfig.TorqueCurrent.PeakForwardTorqueCurrent = 800;
     frontShooterMotorConfig.TorqueCurrent.PeakReverseTorqueCurrent = -800;
 
-    frontShooterMotorConfig.Slot0.kS = 7.9;
-    frontShooterMotorConfig.Slot0.kV = 0.081;
-    frontShooterMotorConfig.Slot0.kA = 0.0;
-    frontShooterMotorConfig.Slot0.kP = 12;
+    frontShooterMotorConfig.Slot0.kS = 7.95;
+    frontShooterMotorConfig.Slot0.kV = 0.0825;
+    frontShooterMotorConfig.Slot0.kA = 0.029;
+    frontShooterMotorConfig.Slot0.kP = 11.5;
     frontShooterMotorConfig.Slot0.kI = 0.0;
     frontShooterMotorConfig.Slot0.kD = 0.0;
 
@@ -72,11 +72,11 @@ public class Shooter {
 
     mMasterFlywheelMotor.setControl(
         new VelocityTorqueCurrentFOC(setSpeed)
-            .withUpdateFreqHz(250));
+            .withUpdateFreqHz(500));
     
     mFollowerFlywheelMotor.setControl(
         new VelocityTorqueCurrentFOC(setSpeed)
-            .withUpdateFreqHz(250));
+            .withUpdateFreqHz(500));
   }
 
   public static void stopAll() {

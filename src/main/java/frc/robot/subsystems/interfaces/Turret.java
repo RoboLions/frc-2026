@@ -148,7 +148,7 @@ public class Turret {
    */
   private static void setAzimuthAngle() {
     double setAngle = (SimulationObjects.desiredTurretAngleRobotRelRad / TurretConstants.azimuthDegreesToRotations) * (180 / Math.PI);    
-    mAzimuthTurretMotor.setControl(new MotionMagicVoltage(setAngle));
+    mAzimuthTurretMotor.setControl(new MotionMagicVoltage(setAngle).withEnableFOC(true));
 
     Logger.recordOutput("Turret/ setAngleAzimuth", setAngle);
   }
@@ -161,7 +161,7 @@ public class Turret {
     return mAzimuthTurretMotor.getPosition().getValueAsDouble();
   }
 
-    /**
+  /**
    * Retrieves the current rotational position of the turret azimuth.
    * * @return The current position of the azimuth motor in degrees.
    */
@@ -210,7 +210,8 @@ public class Turret {
     Logger.recordOutput("Turret/ Realoutputs/ Turret Azimuth", getAzimuthAngle());
   }
 
-  /** Calculates the optimal target angle closest to the current position 
+  /** 
+   * Calculates the optimal target angle closest to the current position 
    * that respects the physical soft limits of the turret. Right now it
    * is set to respect [-180, 180].
    * 
@@ -245,14 +246,15 @@ public class Turret {
   private static double sampleVelocity(double d, double h, double vx, double vy) {
     double velocity = Math.sqrt(
       Constants.Hood.G * (Math.sqrt(d * d + h * h) + h)) // the minimum line. go below this velocity and we will hit the SIDE.
-       + 0.5 + 5 * Math.pow(Math.E, -(1 * d)); // the offset line, adjust as desired
+       + 0.5 + 4 * Math.pow(Math.E, -(1 * d)); // the offset line, adjust as desired
 
-    Logger.recordOutput("Turret/ Turret Sim/ Velocity Boost Factor", 5 * Math.pow(Math.E, -2 * d));
+    Logger.recordOutput("Turret/ Turret Sim/ Velocity Boost Factor", 0.5 + 4 * Math.pow(Math.E, -1 * d));
         
     return velocity;
   }
 
-  /**Calculates the required launch angle for a 2D projectile to hit a target.
+  /**
+   * Calculates the required launch angle for a 2D projectile to hit a target.
    * Uses the standard trajectory equation: 
    * h = d*tan(θ) - (g*d²) / (2*v²*cos²(θ))
    * 

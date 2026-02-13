@@ -46,11 +46,11 @@ public class Intake {
     feedMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     feedMotorConfiguration.Slot0.kA = 0.018;
-    feedMotorConfiguration.Slot0.kV = 0.107;
+    feedMotorConfiguration.Slot0.kV = 0.115;
     feedMotorConfiguration.Slot0.kS = 0.4;
     feedMotorConfiguration.Slot0.kP = 0.2;
 
-    feedMotorConfiguration.MotionMagic.MotionMagicAcceleration = 100;
+    feedMotorConfiguration.MotionMagic.MotionMagicAcceleration = 125;
     feedMotorConfiguration.Feedback.SensorToMechanismRatio = 1 / 1;
 
     feedMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -89,11 +89,11 @@ public class Intake {
   }
 
   public static void setIndex(double voltageOut) {
-    mIndexMotor.setControl(new VoltageOut(voltageOut));
+    mIndexMotor.setControl(new VoltageOut(voltageOut).withEnableFOC(true));
   }
 
   public static void IndexIn() {
-    setIndex(4);
+    setIndex(9);
   }
 
   public static void IndexOut() {
@@ -102,11 +102,12 @@ public class Intake {
 
   public static void setFeed(double rpm) {
     mFeedMotor.setControl(new MotionMagicVelocityVoltage(rpm)
-              .withUpdateFreqHz(100));
+              .withUpdateFreqHz(100)
+              .withEnableFOC(true));
   }
 
   public static void FeedIn() {
-    setFeed(50);
+    setFeed(90);
   }
 
   public static void FeedOut() {
@@ -124,13 +125,13 @@ public class Intake {
   // }
 
   public static void allRollersIn() {
-    intake();
+    // intake();
     IndexIn();
     FeedIn();
   }
 
   public static void allRollersOut() {
-    outtake();
+    // outtake();
     IndexOut();
     FeedOut();
   }
