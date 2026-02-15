@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.ctre.phoenix6.CANBus;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -35,6 +37,8 @@ public class Constants {
     }
     
     public class CAN_IDS {
+        public static final CANBus RIO_BUS = new CANBus("rio");
+
         public static final int HOOD_PIVOT_MOTOR = 53;
         public static final int FLYWHEEL_MOTOR_MASTER = 52;
         public static final int FLYWHEEL_MOTOR_FOLLOWER = 0;
