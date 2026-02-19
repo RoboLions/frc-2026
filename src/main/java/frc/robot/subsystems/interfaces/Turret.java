@@ -210,6 +210,23 @@ public class Turret {
     Logger.recordOutput("Turret/ Realoutputs/ Turret Azimuth", getAzimuthAngle());
   }
 
+    public static void turretTrackPassPose(Translation2d poseToTrack) {
+    simulateTurretAngle(Swerve.getPose(), 
+                        Constants.Hood.TURRET_ROBOT_OFFSET,
+                        poseToTrack, 
+                        0,
+                        Swerve.getYawAsRadians(), 
+                        Swerve.getYawRateAsRad(),
+                        Swerve.getFieldSpeeds(),
+                        Swerve.getChassisAcceleration(),
+                        Swerve.getLoopLatencySec());
+    
+    setHoodAngle();
+    setAzimuthAngle();
+    
+    Logger.recordOutput("Turret/ Realoutputs/ Turret Azimuth", getAzimuthAngle());
+  }
+
   /** 
    * Calculates the optimal target angle closest to the current position 
    * that respects the physical soft limits of the turret. Right now it
