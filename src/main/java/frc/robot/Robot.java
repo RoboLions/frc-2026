@@ -117,6 +117,18 @@ public class Robot extends LoggedRobot {
   @Override
   public void simulationInit() {
     RobotMap.configureFuelSim();
+
+    if (Constants.LimeLight.example.equals("hi")) {
+      Logger.recordOutput("Hi value", "Yes");
+    } else if (Constants.LimeLight.example.length() > 1) {
+      Logger.recordOutput("Hi length", "Yes");
+    } else if (!Constants.LimeLight.example.substring(0,1).equals("hi")) {
+      Logger.recordOutput("Hi substring", "No");
+    } else if (Constants.LimeLight.example.indexOf("h") == 0) {
+      Logger.recordOutput("Hi index", "0");
+    } else if (Constants.LimeLight.example.compareTo("AAAAA") > 1) {
+      Logger.recordOutput("Hi comparison", 10);
+    } // aidan proj, delete afterwards
   }
 
   /** This function is called periodically whilst in simulation. */

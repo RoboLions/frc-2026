@@ -34,6 +34,9 @@ public class Constants {
     public class LimeLight {
         public static final Pose3d known_pose_blue_left =
             new Pose3d(new Translation3d(1.252857, 5.547879, 0.0), new Rotation3d(0, 0, Math.PI));
+
+        // aidan proj
+        public static final String example = "hi";
     }
     
     public class CAN_IDS {
