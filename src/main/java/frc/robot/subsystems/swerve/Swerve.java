@@ -60,6 +60,7 @@ public class Swerve {
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
             
         private static final PIDController pointDriveController = new PIDController(1, 0, 0);
+        private static final PIDController headingController = new PIDController(2.0, 0, 0.04);
     }
 
     private class TelemetryObjects{
@@ -74,7 +75,9 @@ public class Swerve {
             new Field2d();
     }
     
-    public static void init() {}
+    public static void init() {
+        SwerveObjects.headingController.enableContinuousInput(-Math.PI, Math.PI);
+    }
 
     public static void periodic() {
         SwerveObjects.Swerve.periodic(); // look at the function comment and see that this is actually just a reorientation tool
@@ -253,10 +256,9 @@ public class Swerve {
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
 
-    private static void automaticDrive(double velocity, Rotation2d heading) {
+    private static void automaticDrive(double velocity, Rotation2d heading, double omega) {
         double vx = velocity * heading.getCos();
         double vy = velocity * heading.getSin();
-        double omega = 0;
 
         SwerveObjects.Swerve.setControl(
             SwerveObjects.teleopDrive.withVelocityX(vx * SwerveConstants.MaxSpeed)
@@ -275,7 +277,10 @@ public class Swerve {
         SwerveObjects.pointDriveController.setSetpoint(distance);
         double velocity = Math.min(SwerveObjects.pointDriveController.calculate(0), maxVelocity);
 
-        automaticDrive(velocity, new Rotation2d(Math.atan2(dy, dx)));
+        SwerveObjects.headingController.setSetpoint(targetPose.getRotation().getRadians());
+        double omega = SwerveObjects.headingController.calculate(currPose.getRotation().getRadians());
+
+        automaticDrive(velocity, new Rotation2d(Math.atan2(dy, dx)), omega);
     }
 
     public static Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
@@ -285,6 +290,7 @@ public class Swerve {
     public static Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return SwerveObjects.Swerve.sysIdDynamic(direction);
     }
+
     public void outputTelemetry() {
 		TelemetryObjects.mechanismPublisher.set(new Pose3d(getPose()));
 		TelemetryObjects.telemetryLogger.telemeterize(SwerveObjects.lastReadState);
