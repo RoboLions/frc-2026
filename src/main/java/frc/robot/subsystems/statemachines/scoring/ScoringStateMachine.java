@@ -14,7 +14,6 @@ public class ScoringStateMachine extends StateMachine{
     public static OuttakeState outtakeState = new OuttakeState();
     public static PassAimState passAimState = new PassAimState();
     public static ShootState shootState = new ShootState();
-    public static PresetState presetState = new PresetState();
     public static TestState testState = new TestState();
 
     public ScoringStateMachine() {
@@ -22,7 +21,6 @@ public class ScoringStateMachine extends StateMachine{
         idleState.build();
         passAimState.build();
         shootState.build();
-        presetState.build();
         testState.build();
         outtakeState.build();
     }
