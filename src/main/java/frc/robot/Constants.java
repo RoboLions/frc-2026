@@ -51,6 +51,7 @@ public class Constants {
         public static final int INDEX_MOTOR = 51;
         public static final int FEED_MOTOR = 55;
         public static final int INTAKE_ROLLER = 59;
+        public static final int RACK_MOTOR = 0;
 
         public static final int LEFT_CLIMB_MOTOR = 0;
         public static final int RIGHT_CLIMB_MOTOR = 0;

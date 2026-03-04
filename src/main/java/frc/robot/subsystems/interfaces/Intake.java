@@ -1,20 +1,31 @@
 package frc.robot.subsystems.interfaces;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+
 import frc.robot.Constants;
 
 public class Intake {
 
   private static final TalonFX mIntakeRollerMotor =
     new TalonFX(Constants.CAN_IDS.INTAKE_ROLLER);  
-  private static final TalonFX mIndexMotor = 
+  private static final TalonFX mSpindexMotor = 
     new TalonFX(Constants.CAN_IDS.INDEX_MOTOR);
   private static final TalonFX mFeedMotor = 
     new TalonFX(Constants.CAN_IDS.FEED_MOTOR);
+  private static final TalonFX mRackMotor = 
+    new TalonFX(Constants.CAN_IDS.RACK_MOTOR);
+
+  private static final PositionVoltage mRackMotorControlRequest = new PositionVoltage(0).withEnableFOC(true).withFeedForward(0);
 
   private static final double STOW_POS = 0.0;
   private static final double DOWN_POS = 0.0;
@@ -52,8 +63,34 @@ public class Intake {
     feedMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     mIntakeRollerMotor.getConfigurator().apply(masterIntakeMotorConfiguration);
-    mIndexMotor.getConfigurator().apply(indexMotorCongirConfiguration);
+    mSpindexMotor.getConfigurator().apply(indexMotorCongirConfiguration);
     mFeedMotor.getConfigurator().apply(feedMotorConfiguration);
+
+    TalonFXConfiguration liftMotorConfiguration = new TalonFXConfiguration();
+    
+    liftMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+
+    liftMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
+    liftMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 70;
+
+    liftMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+    liftMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    liftMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0;
+    liftMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    liftMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -1;
+    
+    liftMotorConfiguration.Slot0.GravityType = GravityTypeValue.Elevator_Static; 
+
+    liftMotorConfiguration.Slot0.kS = 0.2;
+    liftMotorConfiguration.Slot0.kP = 17;
+    liftMotorConfiguration.Slot0.kI = 0.5;
+    liftMotorConfiguration.Slot0.kD = 0.0;
+
+    liftMotorConfiguration.ClosedLoopGeneral.ContinuousWrap = false;
+    
+    mRackMotor.getConfigurator().apply(liftMotorConfiguration);
+    
   }
 
   public static void set(double outputVoltage) {
@@ -68,24 +105,24 @@ public class Intake {
     set(-5);
   }
 
-  public static void setAngle(double target) {
-    // mLiftMotor.setControl(mLiftMotorControlRequest.withPosition(target));
+  public static void setRack(double target) {
+    mRackMotor.setControl(mRackMotorControlRequest.withPosition(target));
   }
 
   public static void intakeUp() {
-    setAngle(STOW_POS);
+    setRack(STOW_POS);
   }
 
   public static void intakeDown() {
-    setAngle(DOWN_POS);
+    setRack(DOWN_POS);
   }
 
   public static void intakePivotStop() {
-    // mLiftMotor.set(0.0);
+    mRackMotor.set(0.0);
   }
 
   public static void setIndex(double voltageOut) {
-    mIndexMotor.setControl(new VoltageOut(voltageOut).withEnableFOC(true));
+    mSpindexMotor.setControl(new VoltageOut(voltageOut).withEnableFOC(true));
   }
 
   public static void IndexIn() {
@@ -121,13 +158,13 @@ public class Intake {
   // }
 
   public static void allRollersIn() {
-    // intake();
+    intake();
     IndexIn();
     FeedIn();
   }
 
   public static void allRollersOut() {
-    // outtake();
+    outtake();
     IndexOut();
     FeedOut();
   }

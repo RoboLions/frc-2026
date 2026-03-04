@@ -34,7 +34,7 @@ public class Turret {
   private class TurretConstants {
     private static final double maxPositiveTurnAngle = 180;
     private static final double maxNegaitveTurnAngle = -180;
-    private static final double azimuthDegreesToRotations = 7.2;
+    private static final double azimuthDegreesToRotations = 0;
   }
   
   public class SimulationObjects {

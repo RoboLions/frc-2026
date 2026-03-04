@@ -12,7 +12,7 @@ import frc.robot.subsystems.interfaces.Turret.SimulationObjects;
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-public class TestState extends State {
+public class CycleState extends State {
 
   @Override
   public void build() {
@@ -25,17 +25,16 @@ public class TestState extends State {
   }
 
   @Override
-  public void init(State prevState) {}
+  public void init(State prevState) {
+    Shooter.setShootSpeed(SimulationObjects.totalShotVelocity);
+    Intake.intakeDown();
+    Intake.intake();
+
+  }
 
   @Override
   public void execute() {
     Turret.turretTrackHub();
-    Intake.FeedIn();
-    Shooter.setShootSpeed(SimulationObjects.totalShotVelocity);
-
-    if (RobotMap.driverController.getLeftBumperButtonPressed()) {
-      Intake.FeedOut();
-    }
 
     if (RobotMap.driverController.getRightTriggerAxis() > 0.25) {
       Intake.allRollersIn();
