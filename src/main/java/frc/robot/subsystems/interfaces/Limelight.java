@@ -283,6 +283,46 @@ public class Limelight {
       this.cameraName = cameraName;
       this.yawOffset = yawOffset;
     }
+
+    public String toString() {
+      return this.cameraName;
+    }
+
+    public double getYawOffset() {
+        return this.yawOffset;
+    }
+
+    public PosewithDeviation getLimelightResults() {
+        return this.results;
+    }
+
+    public void setLimelightResults(PosewithDeviation results) {
+        this.results = results;
+    }
+
+    public boolean isUsingPigeon() {
+        return this.usePigeon;
+    }
+
+    public void usePigeon(boolean toggle) {
+        this.usePigeon = toggle;
+    }
+
+    public Pose2d getLastPose() {
+        return this.lastValidPose;
+    }
+
+    public void setNextValidPose(Pose2d pose) {
+        this.lastValidPose = pose;
+    }
+
+    public double getNumValidPoses() {
+        return this.numValidPoses;
+    }
+
+    public void incrementNumValidPoses() {
+        this.numValidPoses++;
+    }
   }
 
   public static class PosewithDeviation {

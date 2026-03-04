@@ -230,7 +230,7 @@ public class Swerve {
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
 
-        public static void teleopDrive(double percentSpeed) {
+    public static void teleopDrive(double percentSpeed) {
         double vy = -RobotMap.driverController.getLeftX() * percentSpeed;
         double vx = -RobotMap.driverController.getLeftY() * percentSpeed;
         double omega = -RobotMap.driverController.getRightX() * percentSpeed;
