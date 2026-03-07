@@ -195,7 +195,7 @@ public class GeneratedConstants {
      */
     public static CommandSwerveDrivetrain createDrivetrain() {
         return new CommandSwerveDrivetrain(
-            DrivetrainConstants, FrontLeft, FrontRight, BackLeft, BackRight
+            DrivetrainConstants, Swerve.SwerveConstants.ODOMETRY_FREQUENCY, FrontLeft, FrontRight, BackLeft, BackRight
         );
     }
 

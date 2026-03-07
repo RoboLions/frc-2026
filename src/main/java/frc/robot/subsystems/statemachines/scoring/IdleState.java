@@ -50,7 +50,7 @@ public class IdleState extends State {
   @Override
   public void init(State prevState) {
     Intake.set(0);
-    Intake.setFeed(0);
+    Intake.stopFeed();
     Intake.setIndex(0);
     Shooter.stopAll();
 

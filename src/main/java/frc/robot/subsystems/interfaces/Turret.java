@@ -24,9 +24,9 @@ import frc.robot.subsystems.swerve.Swerve;
 
 public class Turret {
   private static final TalonFX mHoodPivotMotor =
-    new TalonFX(Constants.CAN_IDS.HOOD_PIVOT_MOTOR);
+    new TalonFX(Constants.CAN_IDS.HOOD_PIVOT_MOTOR, "CANexternal");
   private static final TalonFX mAzimuthTurretMotor = 
-    new TalonFX(Constants.CAN_IDS.TURRET_AZIMUTH_MOTOR);
+    new TalonFX(Constants.CAN_IDS.TURRET_AZIMUTH_MOTOR, "CANexternal");
 
   public static final StatusSignal<Angle> mBackMotorVelo = mHoodPivotMotor.getPosition();
   public static final StatusSignal<Angle> mFrontMotorVelo = mAzimuthTurretMotor.getPosition();

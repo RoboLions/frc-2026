@@ -13,27 +13,31 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import frc.robot.Constants;
+
 public class Climb  {
-  /** Creates a new Climb. */
-  public static TalonFX Climber = new TalonFX(0);
-// Here we are setting climb up at a given speed. 
-  public static void RunClimber () {
-    Climber.set( 0);
-  }
-//Here we are setting climb down at the given speed which is currently 0. 
-  public static void LowerClimber () {
-    Climber.set( 0);
-  }
+  public static TalonFX Climber = new TalonFX(Constants.CAN_IDS.CLIMB_MOTOR, "CANexternal");
 
   public static void init(){
     TalonFXConfiguration climbMotorConfiguration = new TalonFXConfiguration();
+
     climbMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     climbMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    climbMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0;
+    climbMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 105;
     climbMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+
     climbMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     climbMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    Climber.getConfigurator().apply(climbMotorConfiguration);
 
+    Climber.getConfigurator().apply(climbMotorConfiguration);
   }
+
+  public static void RunClimber () {
+    Climber.set(0);
+  }
+
+  public static void LowerClimber () {
+    Climber.set(0);
+  }
+
 }

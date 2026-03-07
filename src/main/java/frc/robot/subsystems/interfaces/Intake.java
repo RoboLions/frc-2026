@@ -13,13 +13,13 @@ import frc.robot.Constants;
 public class Intake {
 
   private static final TalonFX mIntakeRollerMotor =
-    new TalonFX(Constants.CAN_IDS.INTAKE_ROLLER);  
+    new TalonFX(Constants.CAN_IDS.INTAKE_ROLLER, "CANexternal");  
   private static final TalonFX mSpindexMotor = 
-    new TalonFX(Constants.CAN_IDS.INDEX_MOTOR);
+    new TalonFX(Constants.CAN_IDS.INDEX_MOTOR, "CANexternal");
   private static final TalonFX mFeedMotor = 
-    new TalonFX(Constants.CAN_IDS.FEED_MOTOR);
+    new TalonFX(Constants.CAN_IDS.FEED_MOTOR, "CANexternal");
   private static final TalonFX mRackMotor = 
-    new TalonFX(Constants.CAN_IDS.RACK_MOTOR);
+    new TalonFX(Constants.CAN_IDS.RACK_MOTOR, "CANexternal");
 
   private static final PositionVoltage mRackMotorControlRequest = new PositionVoltage(0).withEnableFOC(true).withFeedForward(0);
 
@@ -39,7 +39,7 @@ public class Intake {
 
     indexMotorCongirConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     indexMotorCongirConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
-    indexMotorCongirConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    indexMotorCongirConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     mSpindexMotor.getConfigurator().apply(indexMotorCongirConfiguration);
 
@@ -92,7 +92,7 @@ public class Intake {
   }
 
   public static void set(double outputVoltage) {
-    mIntakeRollerMotor.setControl(new VoltageOut(outputVoltage));
+    mIntakeRollerMotor.setControl(new VoltageOut(outputVoltage).withEnableFOC(true));
   }
 
   public static void intake() {
@@ -104,7 +104,7 @@ public class Intake {
   }
 
   public static void setRack(double target) {
-    mRackMotor.setControl(mRackMotorControlRequest.withPosition(target));
+    mRackMotor.setControl(mRackMotorControlRequest.withPosition(target).withEnableFOC(true));
   }
 
   public static void intakeUp() {
@@ -124,7 +124,7 @@ public class Intake {
   }
 
   public static void IndexIn() {
-    setIndex(9);
+    setIndex(10);
   }
 
   public static void IndexOut() {
@@ -138,11 +138,15 @@ public class Intake {
   }
 
   public static void FeedIn() {
-    setFeed(90);
+    setFeed(50);
   }
 
   public static void FeedOut() {
     setFeed(-10);
+  }
+
+  public static void stopFeed() {
+    mFeedMotor.setControl(new VoltageOut(0).withEnableFOC(true));
   }
 
   // public static void simulateIntakeUp() {

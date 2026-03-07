@@ -60,8 +60,6 @@ public class RobotMap {
     if (driverController.getXButtonPressed()) {
       Swerve.zeroGyro();
     }
-
-    Logger.recordOutput(Constants.CAN_IDS.RIO_BUS.getName() + "/ Utilization", Constants.CAN_IDS.RIO_BUS.getStatus().BusUtilization);
   }
 
   public static void scheduleAuto() {

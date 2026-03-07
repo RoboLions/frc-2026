@@ -20,9 +20,7 @@ public class IntakeState extends State {
               return RobotMap.driverController.getLeftBumper();
             },
             ScoringStateMachine.outtakeState));
-  
-
-      addTransition(
+    addTransition(
         new Transition(
             () -> {
               return RobotMap.driverController.getBButton();
@@ -31,12 +29,15 @@ public class IntakeState extends State {
   }
   @Override
   public void init(State prevState) {
-    Intake.intake();
-    Intake.intakeDown();
+    Intake.IndexIn();
+    Intake.FeedIn();
   }
 
   @Override
-  public void execute() {} 
+  public void execute() {
+    Intake.IndexIn();
+    Intake.FeedIn();
+  } 
 
   @Override
   public void exit(State nextState) {}

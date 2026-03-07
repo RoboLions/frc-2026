@@ -17,9 +17,9 @@ import frc.robot.lib.util.Conversions;
 public class Shooter {
 
   private static final TalonFX mMasterFlywheelMotor =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_MASTER);
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_MASTER, "CANexternal");
   private static final TalonFX mFollowerFlywheelMotor =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER);  
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER, "CANexternal");  
 
   private static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
 
