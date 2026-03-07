@@ -32,14 +32,21 @@ public class Shooter {
     frontShooterMotorConfig.TorqueCurrent.PeakForwardTorqueCurrent = 800;
     frontShooterMotorConfig.TorqueCurrent.PeakReverseTorqueCurrent = -800;
 
-    frontShooterMotorConfig.Slot0.kS = 7.95;
-    frontShooterMotorConfig.Slot0.kV = 0.0825;
-    frontShooterMotorConfig.Slot0.kA = 0.029;
-    frontShooterMotorConfig.Slot0.kP = 11.5;
+    frontShooterMotorConfig.CurrentLimits.StatorCurrentLimitEnable = false;
+    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 70;
+    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
+    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5;
+
+    frontShooterMotorConfig.Slot0.kS = 0.0;
+    frontShooterMotorConfig.Slot0.kV = 0.0;
+    frontShooterMotorConfig.Slot0.kA = 0.0;
+    frontShooterMotorConfig.Slot0.kP = 0.0;
     frontShooterMotorConfig.Slot0.kI = 0.0;
     frontShooterMotorConfig.Slot0.kD = 0.0;
 
-    frontShooterMotorConfig.MotionMagic.MotionMagicAcceleration = 200.0;
+    frontShooterMotorConfig.MotionMagic.MotionMagicAcceleration = 0.0;
 
     frontShooterMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     frontShooterMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;

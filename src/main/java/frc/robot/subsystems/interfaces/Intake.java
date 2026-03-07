@@ -1,16 +1,13 @@
 package frc.robot.subsystems.interfaces;
 
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import frc.robot.Constants;
 
@@ -28,69 +25,71 @@ public class Intake {
   private static final PositionVoltage mRackMotorControlRequest = new PositionVoltage(0).withEnableFOC(true).withFeedForward(0);
 
   private static final double STOW_POS = 0.0;
-  private static final double DOWN_POS = 0.0;
+  private static final double DOWN_POS = 40.0;
 
   public static void init() {    
     TalonFXConfiguration masterIntakeMotorConfiguration = new TalonFXConfiguration();
-    
+
+    masterIntakeMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
+    masterIntakeMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
     masterIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-    // TODO: MAKE THE REST OF THE CONFIGS FOR INTAKE ROLLER
+    mIntakeRollerMotor.getConfigurator().apply(masterIntakeMotorConfiguration);
 
     TalonFXConfiguration indexMotorCongirConfiguration = new TalonFXConfiguration();
 
     indexMotorCongirConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     indexMotorCongirConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
-    
-    indexMotorCongirConfiguration.MotionMagic.MotionMagicAcceleration = 1;
-    indexMotorCongirConfiguration.Feedback.SensorToMechanismRatio = 1 / 1;
-
     indexMotorCongirConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+
+    mSpindexMotor.getConfigurator().apply(indexMotorCongirConfiguration);
 
     TalonFXConfiguration feedMotorConfiguration = new TalonFXConfiguration();
 
     feedMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     feedMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
-    feedMotorConfiguration.Slot0.kA = 0.018;
-    feedMotorConfiguration.Slot0.kV = 0.115;
-    feedMotorConfiguration.Slot0.kS = 0.4;
-    feedMotorConfiguration.Slot0.kP = 0.2;
+    feedMotorConfiguration.Slot0.kP = 0.5;
+    feedMotorConfiguration.Slot0.kI = 0.0;
+    feedMotorConfiguration.Slot0.kD = 0.0;
+    feedMotorConfiguration.Slot0.kS = 0.37;
+    feedMotorConfiguration.Slot0.kA = 0.003;
+    feedMotorConfiguration.Slot0.kV = 0.1185;
+    feedMotorConfiguration.Slot0.kG = 0.0;
 
-    feedMotorConfiguration.MotionMagic.MotionMagicAcceleration = 125;
+    feedMotorConfiguration.MotionMagic.MotionMagicAcceleration = 250;
     feedMotorConfiguration.Feedback.SensorToMechanismRatio = 1 / 1;
-
     feedMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-    mIntakeRollerMotor.getConfigurator().apply(masterIntakeMotorConfiguration);
-    mSpindexMotor.getConfigurator().apply(indexMotorCongirConfiguration);
     mFeedMotor.getConfigurator().apply(feedMotorConfiguration);
 
-    TalonFXConfiguration liftMotorConfiguration = new TalonFXConfiguration();
+    TalonFXConfiguration rackMotorConfiguration = new TalonFXConfiguration();
     
-    liftMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    rackMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-    liftMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    liftMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 70;
+    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
+    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 70;
 
-    liftMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    rackMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-    liftMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    liftMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0;
-    liftMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    liftMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -1;
+    rackMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    rackMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0;
+    rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 40;
     
-    liftMotorConfiguration.Slot0.GravityType = GravityTypeValue.Elevator_Static; 
+    rackMotorConfiguration.Slot0.kP = 0.5;
+    rackMotorConfiguration.Slot0.kI = 0.0;
+    rackMotorConfiguration.Slot0.kD = 0.0;
+    rackMotorConfiguration.Slot0.kS = 0.8;
+    rackMotorConfiguration.Slot0.kV = 0.105;
+    rackMotorConfiguration.Slot0.kA = 0.0;
+    rackMotorConfiguration.Slot0.kG = 0.0;
 
-    liftMotorConfiguration.Slot0.kS = 0.2;
-    liftMotorConfiguration.Slot0.kP = 17;
-    liftMotorConfiguration.Slot0.kI = 0.5;
-    liftMotorConfiguration.Slot0.kD = 0.0;
-
-    liftMotorConfiguration.ClosedLoopGeneral.ContinuousWrap = false;
+    rackMotorConfiguration.ClosedLoopGeneral.ContinuousWrap = false;
+    rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 100.0;
+    rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 75.0;
     
-    mRackMotor.getConfigurator().apply(liftMotorConfiguration);
-    
+    mRackMotor.getConfigurator().apply(rackMotorConfiguration);
   }
 
   public static void set(double outputVoltage) {

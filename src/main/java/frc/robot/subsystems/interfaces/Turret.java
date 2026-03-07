@@ -55,17 +55,17 @@ public class Turret {
     hoodPivotConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
     hoodPivotConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5;
 
-    hoodPivotConfig.Slot0.kS = 0.2;
-    hoodPivotConfig.Slot0.kV = 0.0625;
-    hoodPivotConfig.Slot0.kA = 0;
-    hoodPivotConfig.Slot0.kG = 0.07;
-    hoodPivotConfig.Slot0.kP = 1;
-    hoodPivotConfig.Slot0.kI = 0;
-    hoodPivotConfig.Slot0.kD = 0;
+    hoodPivotConfig.Slot0.kS = 0.0;
+    hoodPivotConfig.Slot0.kV = 0.0;
+    hoodPivotConfig.Slot0.kA = 0.0;
+    hoodPivotConfig.Slot0.kG = 0.0;
+    hoodPivotConfig.Slot0.kP = 0.0;
+    hoodPivotConfig.Slot0.kI = 0.0;
+    hoodPivotConfig.Slot0.kD = 0.0;
 
     hoodPivotConfig.MotionMagic.MotionMagicAcceleration = 1;
     hoodPivotConfig.Feedback.RotorToSensorRatio = 1;
-    hoodPivotConfig.Feedback.SensorToMechanismRatio = 0.4675;
+    hoodPivotConfig.Feedback.SensorToMechanismRatio = 0.0;
     hoodPivotConfig.Feedback.FeedbackRotorOffset = 0.0;
 
     hoodPivotConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -73,11 +73,11 @@ public class Turret {
 
     hoodPivotConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     hoodPivotConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    hoodPivotConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 10;
+    hoodPivotConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0;
     hoodPivotConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
 
-    hoodPivotConfig.MotionMagic.MotionMagicAcceleration = 75;
-    hoodPivotConfig.MotionMagic.MotionMagicCruiseVelocity = 17;
+    hoodPivotConfig.MotionMagic.MotionMagicAcceleration = 0;
+    hoodPivotConfig.MotionMagic.MotionMagicCruiseVelocity = 0;
 
     mHoodPivotMotor.getConfigurator().apply(hoodPivotConfig);
 
