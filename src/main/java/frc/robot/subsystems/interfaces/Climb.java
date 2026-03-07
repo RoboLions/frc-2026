@@ -30,6 +30,7 @@ public class Climb  {
     climbMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     Climber.getConfigurator().apply(climbMotorConfiguration);
+    Climber.setPosition(0.0);
   }
 
   public static void RunClimber () {

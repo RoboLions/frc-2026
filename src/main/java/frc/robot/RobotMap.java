@@ -20,7 +20,6 @@ public class RobotMap {
   private static final AutoSubsystem autoSubsystem = new AutoSubsystem(Swerve.createAutoFactory());
 
   /* state machine instances */
-  // public static final DrivetrainStateMachine drivetrainStateMachine = new DrivetrainStateMachine();
   public static final ScoringStateMachine scoringStateMachine = new ScoringStateMachine();
   public static final DrivetrainStateMachine drivetrainStateMachine = new DrivetrainStateMachine();
 

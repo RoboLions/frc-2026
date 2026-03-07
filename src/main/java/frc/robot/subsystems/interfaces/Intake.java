@@ -35,13 +35,13 @@ public class Intake {
 
     mIntakeRollerMotor.getConfigurator().apply(masterIntakeMotorConfiguration);
 
-    TalonFXConfiguration indexMotorCongirConfiguration = new TalonFXConfiguration();
+    TalonFXConfiguration indexMotorConfiguration = new TalonFXConfiguration();
 
-    indexMotorCongirConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
-    indexMotorCongirConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
-    indexMotorCongirConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    indexMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
+    indexMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+    indexMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-    mSpindexMotor.getConfigurator().apply(indexMotorCongirConfiguration);
+    mSpindexMotor.getConfigurator().apply(indexMotorConfiguration);
 
     TalonFXConfiguration feedMotorConfiguration = new TalonFXConfiguration();
 
@@ -89,6 +89,7 @@ public class Intake {
     rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 75.0;
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
+    mRackMotor.setPosition(0.0);
   }
 
   public static void set(double outputVoltage) {

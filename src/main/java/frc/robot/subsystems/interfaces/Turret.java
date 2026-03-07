@@ -81,7 +81,7 @@ public class Turret {
 
     mHoodPivotMotor.getConfigurator().apply(hoodPivotConfig);
 
-    // mHoodPivotMotor.setPosition(0);
+    mHoodPivotMotor.setPosition(0.0);
 
     TalonFXConfiguration turretAzimuthConfig = new TalonFXConfiguration();
     turretAzimuthConfig.CurrentLimits.StatorCurrentLimitEnable = false;
@@ -117,7 +117,7 @@ public class Turret {
 
     mAzimuthTurretMotor.getConfigurator().apply(turretAzimuthConfig);
 
-    // mAzimuthTurretMotor.setPosition(0);
+    mAzimuthTurretMotor.setPosition(0.0);
 
     Logger.recordOutput("Turret/ Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));
   }
