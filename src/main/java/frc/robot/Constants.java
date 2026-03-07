@@ -42,15 +42,15 @@ public class Constants {
     public class CAN_IDS {
         public static final CANBus RIO_BUS = new CANBus("rio");
 
-        public static final int HOOD_PIVOT_MOTOR = 53;
-        public static final int FLYWHEEL_MOTOR_MASTER = 52;
+        public static final int HOOD_PIVOT_MOTOR = 0;
+        public static final int FLYWHEEL_MOTOR_MASTER = 0;
         public static final int FLYWHEEL_MOTOR_FOLLOWER = 0;
-        public static final int TURRET_AZIMUTH_MOTOR = 50;
+        public static final int TURRET_AZIMUTH_MOTOR = 0;
 
         public static final int FOLLOWER_INTAKE_MOTOR = 0;
-        public static final int INDEX_MOTOR = 51;
-        public static final int FEED_MOTOR = 55;
-        public static final int INTAKE_ROLLER = 59;
+        public static final int INDEX_MOTOR = 0;
+        public static final int FEED_MOTOR = 0;
+        public static final int INTAKE_ROLLER = 0;
         public static final int RACK_MOTOR = 0;
 
         public static final int LEFT_CLIMB_MOTOR = 0;
