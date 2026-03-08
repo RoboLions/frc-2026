@@ -34,14 +34,13 @@ public class Limelight {
     cameras.add(FRONT_CAMERA_MODEL4);
 
     LimelightHelpers.setCameraPose_RobotSpace(FRONT_CAMERA_MODEL4.cameraName,
-                                              0.356, 
-                                              -0.13, 
+                                              0.349510, 
+                                              -0.048847, 
                                               0, 
                                               0, 
                                               0, 
                                               0);
     }
-
   
   /**
    * THIS SHOULD NEVER BE USED TO INIT THE PIGEON. THIS IS ONLY FOR PERIODIC UPDATE AND NOT PIGEON FEED.

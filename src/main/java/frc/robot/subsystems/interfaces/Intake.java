@@ -23,7 +23,7 @@ public class Intake {
 
   private static final double STOW_POS = 0.5;
   private static final double MIDDLE_POS = 5.0;
-  private static final double DOWN_POS = 49.7;
+  private static final double DOWN_POS = 46.0;
 
   public static void init() {    
     TalonFXConfiguration masterIntakeMotorConfiguration = new TalonFXConfiguration();
@@ -96,7 +96,7 @@ public class Intake {
   }
 
   public static void intake() {
-    set(3);
+    set(3.5);
   }
 
   public static void outtake() {

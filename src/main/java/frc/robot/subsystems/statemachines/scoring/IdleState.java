@@ -9,6 +9,8 @@ import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Shooter;
+import frc.robot.subsystems.interfaces.Turret;
+import frc.robot.subsystems.swerve.Swerve;
 
 /** Add your docs here. */
 public class IdleState extends State {
@@ -33,12 +35,6 @@ public class IdleState extends State {
             return RobotMap.driverController.getLeftBumper();
             },
             ScoringStateMachine.outtakeState));
-    addTransition(
-        new Transition(
-            () -> {
-            return RobotMap.driverController.getLeftTriggerAxis() > 0.25;
-            },
-            ScoringStateMachine.passAimState));
   }
 
   @Override
@@ -47,10 +43,17 @@ public class IdleState extends State {
     Intake.stopFeed();
     Intake.setIndex(0);
     Shooter.idlerShooter();
+    Shooter.stopAll();
   }
 
   @Override
   public void execute() {
+    if (Swerve.getPose().getX() >= 4.75 && Swerve.getPose().getX() <= 11.75) {
+      Turret.turretTrackPassPoseAzimuth();
+    } else {
+      Turret.turretTrackHubAzimuth();
+    }
+    
     if (RobotMap.driverController.getYButton()) {
       Intake.intakeUp();
     } else if (RobotMap.driverController.getAButton()) {

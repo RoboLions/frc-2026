@@ -46,7 +46,6 @@ public class Shooter {
     frontShooterMotorConfig.Slot0.kI = 0.0;
     frontShooterMotorConfig.Slot0.kD = 0.0;
 
-    
     frontShooterMotorConfig.MotionMagic.MotionMagicAcceleration = 300.0;
 
     frontShooterMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
@@ -91,7 +90,7 @@ public class Shooter {
   }
 
   public static void idlerShooter() {
-    mMasterFlywheelMotor.setControl(new VoltageOut(1.5).withEnableFOC(true));
+    mMasterFlywheelMotor.setControl(new VoltageOut(0.9).withEnableFOC(true));
     mFollowerFlywheelMotor.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
             .withUpdateFreqHz(50));

@@ -29,8 +29,6 @@ public class Robot extends LoggedRobot {
    * initialization code.
    */
   public Robot() {
-    Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
-
     if (isReal()) {
       Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
       Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
@@ -46,8 +44,6 @@ public class Robot extends LoggedRobot {
     Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
 
     RobotMap.init();
-
-    Logger.recordOutput("Swerve/ Zero-Pose", new Pose3d());
   }
 
   /**
@@ -117,18 +113,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void simulationInit() {
     RobotMap.configureFuelSim();
-
-    if (Constants.LimeLight.example.equals("hi")) {
-      Logger.recordOutput("Hi value", "Yes");
-    } else if (Constants.LimeLight.example.length() > 1) {
-      Logger.recordOutput("Hi length", "Yes");
-    } else if (!Constants.LimeLight.example.substring(0,1).equals("hi")) {
-      Logger.recordOutput("Hi substring", "No");
-    } else if (Constants.LimeLight.example.indexOf("h") == 0) {
-      Logger.recordOutput("Hi index", "0");
-    } else if (Constants.LimeLight.example.compareTo("AAAAA") > 1) {
-      Logger.recordOutput("Hi comparison", 10);
-    } // aidan proj, delete afterwards
   }
 
   /** This function is called periodically whilst in simulation. */

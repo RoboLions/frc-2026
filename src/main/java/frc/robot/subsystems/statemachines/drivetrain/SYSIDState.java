@@ -50,7 +50,6 @@ public class SYSIDState extends State{
         Trigger DownPOV = new Trigger(() -> RobotMap.driverController.getPOV() == 180);
         DownPOV.whileTrue(Swerve.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-
         CommandScheduler.getInstance().run();
     }  
     
