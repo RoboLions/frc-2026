@@ -70,8 +70,8 @@ public class Turret {
     hoodPivotConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.77;
     hoodPivotConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
 
-    hoodPivotConfig.MotionMagic.MotionMagicAcceleration = 75;
-    hoodPivotConfig.MotionMagic.MotionMagicCruiseVelocity = 75;
+    hoodPivotConfig.MotionMagic.MotionMagicAcceleration = 35;
+    hoodPivotConfig.MotionMagic.MotionMagicCruiseVelocity = 35;
 
     mHoodPivotMotor.getConfigurator().apply(hoodPivotConfig);
 
@@ -105,13 +105,12 @@ public class Turret {
 
     turretAzimuthConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     turretAzimuthConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    turretAzimuthConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 25;
-    turretAzimuthConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -25; //25 rotations max
+    turretAzimuthConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 20;
+    turretAzimuthConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -20; //25 rotations max
 
     turretAzimuthConfig.ClosedLoopGeneral.ContinuousWrap = false;
 
     mAzimuthTurretMotor.getConfigurator().apply(turretAzimuthConfig);
-
     mAzimuthTurretMotor.setPosition(0.0);
 
     Logger.recordOutput("Turret/ Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));

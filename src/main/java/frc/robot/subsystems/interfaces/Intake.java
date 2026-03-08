@@ -95,8 +95,7 @@ public class Intake {
   }
 
   public static void intake() {
-    set(4
-    );
+    set(4);
   }
 
   public static void outtake() {

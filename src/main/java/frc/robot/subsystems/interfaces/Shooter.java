@@ -4,7 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -41,11 +41,12 @@ public class Shooter {
 
     frontShooterMotorConfig.Slot0.kS = 2.3;
     frontShooterMotorConfig.Slot0.kV = 0.0007;
-    frontShooterMotorConfig.Slot0.kA = 0.0002;
-    frontShooterMotorConfig.Slot0.kP = 2.75;
+    frontShooterMotorConfig.Slot0.kA = 0.0015;
+    frontShooterMotorConfig.Slot0.kP = 7;
     frontShooterMotorConfig.Slot0.kI = 0.0;
     frontShooterMotorConfig.Slot0.kD = 0.0;
 
+    
     frontShooterMotorConfig.MotionMagic.MotionMagicAcceleration = 300.0;
 
     frontShooterMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
@@ -81,7 +82,7 @@ public class Shooter {
     Logger.recordOutput("Shooter/ Flywheel setspeed", setSpeed);
 
     mMasterFlywheelMotor.setControl(
-        new VelocityTorqueCurrentFOC(setSpeed)
+        new MotionMagicVelocityTorqueCurrentFOC(setSpeed)
             .withUpdateFreqHz(500));
     
     mFollowerFlywheelMotor.setControl(

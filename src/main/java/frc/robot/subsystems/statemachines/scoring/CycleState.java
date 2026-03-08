@@ -29,20 +29,18 @@ public class CycleState extends State {
     Shooter.setShootSpeed(SimulationObjects.totalShotVelocity);
     Intake.intakeDown();
     Intake.intake();
-
   }
 
   @Override
   public void execute() {
     Turret.turretTrackHub();
+    Shooter.setShootSpeed(SimulationObjects.totalShotVelocity);
 
-    if (RobotMap.driverController.getRightTriggerAxis() > 0.25) {
+    if (RobotMap.driverController.getRightBumperButton()) {
       Intake.allRollersIn();
     }
   }
 
   @Override
-  public void exit(State nextState) {
-
-  }
+  public void exit(State nextState) {}
 }
