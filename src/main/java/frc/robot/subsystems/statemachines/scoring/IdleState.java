@@ -43,7 +43,6 @@ public class IdleState extends State {
     Intake.stopFeed();
     Intake.setIndex(0);
     Shooter.idlerShooter();
-    Shooter.stopAll();
   }
 
   @Override
