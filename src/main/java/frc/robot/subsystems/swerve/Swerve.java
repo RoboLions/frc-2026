@@ -27,6 +27,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -77,6 +78,9 @@ public class Swerve {
     
     public static void init() {
         SwerveObjects.headingController.enableContinuousInput(-Math.PI, Math.PI);
+
+        Pose2d resetToPose = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Pose2d(new Translation2d(2.5, 4), new Rotation2d(0)) : new Pose2d(new Translation2d(14.5, 4), new Rotation2d(Math.PI));
+        resetPose(resetToPose);
     }
 
     public static void periodic() {

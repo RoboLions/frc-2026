@@ -10,10 +10,12 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -27,9 +29,9 @@ public class Turret {
     new TalonFX(Constants.CAN_IDS.TURRET_AZIMUTH_MOTOR, "CANexternal");
 
   private class TurretConstants {
-    private static final double maxPositiveTurnAngle = 180;
-    private static final double maxNegaitveTurnAngle = -180;
-    private static final double azimuthRotationstoRadians = (Math.PI / 20);
+    private static final double maxPositiveTurnAngle = Math.PI;
+    private static final double maxNegaitveTurnAngle = -Math.PI;
+    private static final double azimuthRotationstoRadians = (Math.PI / 20.5);
   }
   
   public class SimulationObjects {
@@ -105,8 +107,8 @@ public class Turret {
 
     turretAzimuthConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     turretAzimuthConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    turretAzimuthConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 20;
-    turretAzimuthConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -20; //25 rotations max
+    turretAzimuthConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 20.5;
+    turretAzimuthConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -20.5;
 
     turretAzimuthConfig.ClosedLoopGeneral.ContinuousWrap = false;
 
@@ -191,7 +193,7 @@ public class Turret {
     simulateTurretAngle(Swerve.getPose(), 
                         Constants.Hood.TURRET_ROBOT_OFFSET,
                         passPose, 
-                        0,
+                        0.5,
                         Swerve.getYawAsRadians(), 
                         Swerve.getYawRateAsRad(),
                         Swerve.getFieldSpeeds(),
@@ -201,7 +203,7 @@ public class Turret {
     setHoodAngle();
     setAzimuthAngle();
     
-    Logger.recordOutput("Turret/ Realoutputs/ Turret Azimuth", getAzimuthAngle());
+    Logger.recordOutput("Pass Pose", new Pose2d(passPose, new Rotation2d()));
   }
 
     public static void turretTrackPassPose(Translation2d poseToTrack) {
@@ -216,6 +218,7 @@ public class Turret {
                         Swerve.getLoopLatencySec());
     
     setHoodAngle();
+
     setAzimuthAngle();
     
     Logger.recordOutput("Turret/ Realoutputs/ Turret Azimuth", getAzimuthAngle());
@@ -233,10 +236,12 @@ public class Turret {
 
     // safetyclamp
     if (inputAngle > TurretConstants.maxPositiveTurnAngle) {
-      inputAngle = TurretConstants.maxPositiveTurnAngle;
+      inputAngle -= 2 * Math.PI;
     } else if (inputAngle < TurretConstants.maxNegaitveTurnAngle) {
-      inputAngle = TurretConstants.maxNegaitveTurnAngle;
+      inputAngle += 2 * Math.PI;
     }
+
+    Logger.recordOutput("input Angle", inputAngle);
 
     return inputAngle;
   }
@@ -254,12 +259,10 @@ public class Turret {
    * @param vy The current velocity of the robot along the Y-axis.
    * @return   The calculated launch velocity magnitude.
    */
-  private static double sampleVelocity(double d, double h, double vx, double vy) {
+  private static double sampleVelocity(double d, double h) {
     double velocity = Math.sqrt(
       Constants.Hood.G * (Math.sqrt(d * d + h * h) + h)) // the minimum line. go below this velocity and we will hit the SIDE.
        + 0.5 + 4 * Math.pow(Math.E, -(1 * d)); // the offset line, adjust as desired
-
-    Logger.recordOutput("Turret/ Turret Sim/ Velocity Boost Factor", 0.5 + 4 * Math.pow(Math.E, -1 * d));
         
     return velocity;
   }
@@ -397,7 +400,7 @@ public class Turret {
                                          double loopLatencySec) 
   {
     Pose2d turretPose = getTurretPosition(currPose, turretRelative);
-    Logger.recordOutput("Turret/ Turret Sim/ Turret2dPose", turretPose);
+    // Logger.recordOutput("Turret/ Turret Sim/ Turret2dPose", turretPose);
 
     Translation2d transformedTarget = transformTarget(turretPose.getTranslation(), targetPose, 0.25);
     double xSpeeds = fieldRobotSpeeds.vxMetersPerSecond;
@@ -410,38 +413,33 @@ public class Turret {
     double r2 = dx * dx + dy * dy;
     double r = Math.sqrt(r2);
 
-    double preliminaryV = sampleVelocity(r, targetHeightRelativeBot, xSpeeds, ySpeeds);
+    double preliminaryV = sampleVelocity(r, targetHeightRelativeBot);
     double preliminaryTheta = calculateLaunchAngleRad(preliminaryV, r, targetHeightRelativeBot);
     double timeOFlight = Math.sqrt(r2) / (preliminaryV * Math.cos(preliminaryTheta));
 
     //iteration 1 ended, culminating to the TOF estimation.
-    // Logger.recordOutput("Turret/ Turret Sim/ Pre-emptive Distance to Goal", r);
-    // Logger.recordOutput("Turret/ Turret Sim/ Pre-emptive Estimated Velocity", preliminaryV);
-    // Logger.recordOutput("Turret/ Turret Sim/ Pre-emptive Estimated Launch Angle", Math.toDegrees(preliminaryTheta));
-    // Logger.recordOutput("Turret/ Turret Sim/ Pre-emptive Estimated TOF", timeOFlight);
 
     Translation2d targetOffset = new Translation2d(xSpeeds, ySpeeds).times(timeOFlight);
-    targetOffset = targetOffset.plus(new Translation2d(xAccel, yAccel).times(loopLatencySec));
+    targetOffset = targetOffset.plus(new Translation2d(xAccel, yAccel).times(loopLatencySec + Constants.Hood.AVERAGE_LATENCY_TO_SHOT));
     Translation2d imaginaryTarget = transformedTarget.minus(targetOffset);
     Pose3d FAKEPOSE = new Pose3d(new Translation3d(imaginaryTarget).plus(new Translation3d(0, 0, targetHeightRelativeBot)), new Rotation3d());
     
-    Logger.recordOutput("Turret/ Turret Sim/ Fake Target", FAKEPOSE);
-
     double newDX = FAKEPOSE.getX() - turretPose.getX();
     double newDY = FAKEPOSE.getY() - turretPose.getY();
     double newR2 = newDX * newDX + newDY * newDY;
     double newR = Math.sqrt(newR2);
 
     SimulationObjects.desiredTurretAngleRobotRelRad = wrapAngle(Math.atan2(newDY, newDX) - robotFieldYaw);
-    SimulationObjects.totalShotVelocity= sampleVelocity(newR, targetHeightRelativeBot, xSpeeds * Constants.Hood.MOVING_COMPENSATING_SCALE, ySpeeds * Constants.Hood.MOVING_COMPENSATING_SCALE);
+    SimulationObjects.totalShotVelocity= sampleVelocity(newR, targetHeightRelativeBot);
     SimulationObjects.desiredHoodAngleRobotRelDeg = calculateHoodAngle(SimulationObjects.totalShotVelocity, newR, targetHeightRelativeBot);
     SimulationObjects.literalShotHoodRad = calculateLaunchAngleRad(SimulationObjects.totalShotVelocity, newR, targetHeightRelativeBot);
 
     //iteration 2, the actual target using iteration 1's TOF estimation.
-    Logger.recordOutput("Turret/ Turret Sim/ Turret 3D Pose", new Pose3d(Constants.Hood.TURRET_ROBOT_OFFSET.getX(), Constants.Hood.TURRET_ROBOT_OFFSET.getY(), 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));
-    Logger.recordOutput("Turret/ Turret Sim/ Shot Velocity", preliminaryV);
-    Logger.recordOutput("Turret/ Turret Sim/ Hood Angle", SimulationObjects.desiredHoodAngleRobotRelDeg);
-    Logger.recordOutput("Turret/ Turret Sim/ Shot-Angle (Adjusted)", Math.toDegrees(SimulationObjects.literalShotHoodRad));
+    // Logger.recordOutput("Turret/ Turret Sim/ Fake Target", FAKEPOSE);
+    // Logger.recordOutput("Turret/ Turret Sim/ Turret 3D Pose", new Pose3d(Constants.Hood.TURRET_ROBOT_OFFSET.getX(), Constants.Hood.TURRET_ROBOT_OFFSET.getY(), 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));
+    // Logger.recordOutput("Turret/ Turret Sim/ Shot Velocity", preliminaryV);
+    // Logger.recordOutput("Turret/ Turret Sim/ Hood Angle", SimulationObjects.desiredHoodAngleRobotRelDeg);
+    // Logger.recordOutput("Turret/ Turret Sim/ Shot-Angle (Adjusted)", Math.toDegrees(SimulationObjects.literalShotHoodRad));
     
     launchFuel();
   }

@@ -46,16 +46,15 @@ public class IdleState extends State {
     Intake.set(0);
     Intake.stopFeed();
     Intake.setIndex(0);
-    Shooter.stopAll();
-
-    // simulation code
-    // Intake.simulateIntakeUp();
+    Shooter.idlerShooter();
   }
 
   @Override
   public void execute() {
     if (RobotMap.driverController.getYButton()) {
       Intake.intakeUp();
+    } else if (RobotMap.driverController.getAButton()) {
+      Intake.intakeMid();
     }
   }
 

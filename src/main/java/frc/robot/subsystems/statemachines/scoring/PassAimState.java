@@ -14,21 +14,12 @@ public class PassAimState extends State {
 
   @Override
   public void build() {
-
-  
-
     addTransition(
         new Transition(
             () -> {
               return RobotMap.driverController.getBButton();
             },
             ScoringStateMachine.idleState));
-    addTransition(
-        new Transition(
-            () -> {
-              return RobotMap.driverController.getRightTriggerAxis() > 0.25;
-            },
-            ScoringStateMachine.shootState));
   }
 
   @Override

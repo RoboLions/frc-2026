@@ -21,9 +21,9 @@ public class Intake {
   private static final TalonFX mRackMotor = 
     new TalonFX(Constants.CAN_IDS.RACK_MOTOR, "CANexternal");
 
-  private static final double STOW_POS = 2.0;
-  private static final double MIDDLE_POS = 0.0;
-  private static final double DOWN_POS = 48.0;
+  private static final double STOW_POS = 0.5;
+  private static final double MIDDLE_POS = 5.0;
+  private static final double DOWN_POS = 49.7;
 
   public static void init() {    
     TalonFXConfiguration masterIntakeMotorConfiguration = new TalonFXConfiguration();
@@ -71,7 +71,7 @@ public class Intake {
     rackMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     rackMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    rackMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 48.5;
+    rackMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 49.9;
     rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
     rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.25;
     
@@ -84,10 +84,11 @@ public class Intake {
     rackMotorConfiguration.Slot0.kG = 0.0;
 
     rackMotorConfiguration.ClosedLoopGeneral.ContinuousWrap = false;
-    rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 100.0;
-    rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 75.0;
+    rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 125.0;
+    rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 100.0;
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
+    mRackMotor.setPosition(0.0);
   }
 
   public static void set(double outputVoltage) {
@@ -95,7 +96,7 @@ public class Intake {
   }
 
   public static void intake() {
-    set(4);
+    set(3);
   }
 
   public static void outtake() {
@@ -108,6 +109,10 @@ public class Intake {
 
   public static void intakeUp() {
     setRack(STOW_POS);
+  }
+
+  public static void intakeMid() {
+    setRack(MIDDLE_POS);
   }
 
   public static void intakeDown() {
@@ -132,7 +137,7 @@ public class Intake {
 
   public static void setFeed(double rpm) {
     mFeedMotor.setControl(new MotionMagicVelocityVoltage(rpm)
-              .withUpdateFreqHz(100)
+              .withUpdateFreqHz(200)
               .withEnableFOC(true));
   }
 

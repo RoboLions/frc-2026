@@ -178,7 +178,7 @@ public class Limelight {
   }
 
   private static void disabledPoseSetup(LimeLightObject limeLight, double yawOffset) {
-    LimelightHelpers.PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limeLight.cameraName);
+    LimelightHelpers.PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(limeLight.cameraName);
     
     double shortestDistance = Double.POSITIVE_INFINITY;
     int shortest_fidx = -1;
@@ -197,11 +197,6 @@ public class Limelight {
 
     if (shortest_fidx == -1) {
       Logger.recordOutput(limeLight.cameraName + "RETURNS/ " + "DISABLED ERROR STATUS", "SHORTEST FIDX UNDETECTED");
-      return;
-    }
-
-    if (shortestDistance > 15) {
-      Logger.recordOutput(limeLight.cameraName + "RETURNS/ " + "DISABLED ERROR STATUS", "SHORTEST DISTANCE THRESHOLD: " + shortestDistance);
       return;
     }
 

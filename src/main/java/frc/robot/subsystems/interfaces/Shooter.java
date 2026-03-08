@@ -83,16 +83,23 @@ public class Shooter {
 
     mMasterFlywheelMotor.setControl(
         new MotionMagicVelocityTorqueCurrentFOC(setSpeed)
-            .withUpdateFreqHz(500));
+            .withUpdateFreqHz(750));
     
     mFollowerFlywheelMotor.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-            .withUpdateFreqHz(500));
+            .withUpdateFreqHz(750));
+  }
+
+  public static void idlerShooter() {
+    mMasterFlywheelMotor.setControl(new VoltageOut(1.5).withEnableFOC(true));
+    mFollowerFlywheelMotor.setControl(
+        new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
+            .withUpdateFreqHz(50));
   }
 
   public static void stopAll() {
-    mMasterFlywheelMotor.setControl(new VoltageOut(0));
-    mFollowerFlywheelMotor.setControl(new VoltageOut(0)); 
+    mMasterFlywheelMotor.setControl(new VoltageOut(0).withEnableFOC(true));
+    mFollowerFlywheelMotor.setControl(new VoltageOut(0).withEnableFOC(true));
   }
 
   public static boolean readyToShoot() {

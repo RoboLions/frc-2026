@@ -16,8 +16,8 @@ public class Constants {
         public static final double BASE_HOOD_ANGLE_DEG = 18.75;
         public static final double DEGREE_RATIO = 30.1;
 
-        public static final double TIME_OF_FLIGHT_SCALE = 1.0;
-        public static final double MOVING_COMPENSATING_SCALE = 0.0;
+        public static final double TIME_OF_FLIGHT_SCALE = 1.0;   
+        public static final double AVERAGE_LATENCY_TO_SHOT = 0.15;     
 
         public static final double HEIGHT_FROM_BOT_TO_TARGET = 0.7; //meters
         public static final Translation2d TURRET_ROBOT_OFFSET = new Translation2d(0.2286, -0.13); //meters

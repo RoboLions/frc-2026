@@ -7,6 +7,7 @@ import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Shooter;
 import frc.robot.subsystems.interfaces.Turret;
 import frc.robot.subsystems.interfaces.Turret.SimulationObjects;
+import frc.robot.subsystems.swerve.Swerve;
 
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
@@ -33,12 +34,23 @@ public class CycleState extends State {
 
   @Override
   public void execute() {
-    Turret.turretTrackHub();
-    Shooter.setShootSpeed(SimulationObjects.totalShotVelocity);
-
     if (RobotMap.driverController.getRightBumperButton()) {
       Intake.allRollersIn();
     }
+
+    if (RobotMap.driverController.getAButton()) {
+      Intake.intakeMid();
+    } else {
+      Intake.intakeDown();
+    }
+
+    if (Swerve.getPose().getX() >= 4.75 && Swerve.getPose().getX() <= 11.75) {
+      Turret.turretTrackPassPose();
+    } else {
+      Turret.turretTrackHub();
+    }
+
+    Shooter.setShootSpeed(SimulationObjects.totalShotVelocity);
   }
 
   @Override
