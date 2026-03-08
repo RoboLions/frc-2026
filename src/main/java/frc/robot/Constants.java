@@ -11,7 +11,10 @@ public class Constants {
     public class Hood {
         public static final double G = 9.80665;
         public static final double THETA_ANGLE_FROM_SHOOTER = 99.5; //this is measured angled which the ball exits the shooter
-        public static final double BASE_HOOD_ANGLE_DEG = 30;
+
+        public static final double MAX_HOOD_ANGLE_DEG = 42.0;
+        public static final double BASE_HOOD_ANGLE_DEG = 18.75;
+        public static final double DEGREE_RATIO = 30.1;
 
         public static final double TIME_OF_FLIGHT_SCALE = 1.0;
         public static final double MOVING_COMPENSATING_SCALE = 0.0;
@@ -26,7 +29,7 @@ public class Constants {
     }
 
     public class Shooter {
-        public static final double POWER_GAIN_MULTIPLIER = 1.655;
+        public static final double POWER_GAIN_MULTIPLIER = 1.0;
     }
 
     public class LimeLight {
@@ -38,16 +41,16 @@ public class Constants {
     }
     
     public class CAN_IDS {
-        public static final int HOOD_PIVOT_MOTOR = 0;
-        public static final int FLYWHEEL_MOTOR_MASTER = 0;
-        public static final int FLYWHEEL_MOTOR_FOLLOWER = 0;
+        public static final int HOOD_PIVOT_MOTOR = 58;
+        public static final int FLYWHEEL_MOTOR_RIGHT = 57;
+        public static final int FLYWHEEL_MOTOR_LEFT = 56;
         public static final int TURRET_AZIMUTH_MOTOR = 0;
 
         public static final int FOLLOWER_INTAKE_MOTOR = 0;
         public static final int INDEX_MOTOR = 50;
         public static final int FEED_MOTOR = 52;
-        public static final int INTAKE_ROLLER = 0;
-        public static final int RACK_MOTOR = 0;
+        public static final int INTAKE_ROLLER = 53;
+        public static final int RACK_MOTOR = 51;
 
         public static final int CLIMB_MOTOR = 0;
     }

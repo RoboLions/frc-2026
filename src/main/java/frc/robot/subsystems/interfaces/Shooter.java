@@ -17,9 +17,9 @@ import frc.robot.lib.util.Conversions;
 public class Shooter {
 
   private static final TalonFX mMasterFlywheelMotor =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_MASTER, "CANexternal");
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_RIGHT, "CANexternal");
   private static final TalonFX mFollowerFlywheelMotor =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER, "CANexternal");  
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_LEFT, "CANexternal");  
 
   private static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
 
@@ -35,18 +35,18 @@ public class Shooter {
     frontShooterMotorConfig.CurrentLimits.StatorCurrentLimitEnable = false;
     frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 70;
+    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 80;
     frontShooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
-    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5;
+    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 1.0;
 
-    frontShooterMotorConfig.Slot0.kS = 0.0;
-    frontShooterMotorConfig.Slot0.kV = 0.0;
-    frontShooterMotorConfig.Slot0.kA = 0.0;
-    frontShooterMotorConfig.Slot0.kP = 0.0;
+    frontShooterMotorConfig.Slot0.kS = 2.3;
+    frontShooterMotorConfig.Slot0.kV = 0.0007;
+    frontShooterMotorConfig.Slot0.kA = 0.0002;
+    frontShooterMotorConfig.Slot0.kP = 2.75;
     frontShooterMotorConfig.Slot0.kI = 0.0;
     frontShooterMotorConfig.Slot0.kD = 0.0;
 
-    frontShooterMotorConfig.MotionMagic.MotionMagicAcceleration = 0.0;
+    frontShooterMotorConfig.MotionMagic.MotionMagicAcceleration = 300.0;
 
     frontShooterMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     frontShooterMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
@@ -85,7 +85,7 @@ public class Shooter {
             .withUpdateFreqHz(500));
     
     mFollowerFlywheelMotor.setControl(
-        new VelocityTorqueCurrentFOC(setSpeed)
+        new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
             .withUpdateFreqHz(500));
   }
 

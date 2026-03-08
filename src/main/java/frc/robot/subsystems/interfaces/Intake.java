@@ -2,7 +2,7 @@ package frc.robot.subsystems.interfaces;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -21,17 +21,16 @@ public class Intake {
   private static final TalonFX mRackMotor = 
     new TalonFX(Constants.CAN_IDS.RACK_MOTOR, "CANexternal");
 
-  private static final PositionVoltage mRackMotorControlRequest = new PositionVoltage(0).withEnableFOC(true).withFeedForward(0);
-
-  private static final double STOW_POS = 0.0;
-  private static final double DOWN_POS = 40.0;
+  private static final double STOW_POS = 2.0;
+  private static final double MIDDLE_POS = 0.0;
+  private static final double DOWN_POS = 48.0;
 
   public static void init() {    
     TalonFXConfiguration masterIntakeMotorConfiguration = new TalonFXConfiguration();
 
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
-    masterIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    masterIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     mIntakeRollerMotor.getConfigurator().apply(masterIntakeMotorConfiguration);
 
@@ -64,7 +63,7 @@ public class Intake {
 
     TalonFXConfiguration rackMotorConfiguration = new TalonFXConfiguration();
     
-    rackMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    rackMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 70;
@@ -72,9 +71,9 @@ public class Intake {
     rackMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     rackMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    rackMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0;
+    rackMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 48.5;
     rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 40;
+    rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.25;
     
     rackMotorConfiguration.Slot0.kP = 0.5;
     rackMotorConfiguration.Slot0.kI = 0.0;
@@ -89,7 +88,6 @@ public class Intake {
     rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 75.0;
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
-    mRackMotor.setPosition(0.0);
   }
 
   public static void set(double outputVoltage) {
@@ -97,15 +95,16 @@ public class Intake {
   }
 
   public static void intake() {
-    set(5);
+    set(4
+    );
   }
 
   public static void outtake() {
-    set(-5);
+    set(-4);
   }
 
   public static void setRack(double target) {
-    mRackMotor.setControl(mRackMotorControlRequest.withPosition(target).withEnableFOC(true));
+    mRackMotor.setControl(new MotionMagicVoltage(target).withEnableFOC(true));
   }
 
   public static void intakeUp() {

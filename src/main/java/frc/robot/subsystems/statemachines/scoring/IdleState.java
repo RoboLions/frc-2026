@@ -20,7 +20,7 @@ public class IdleState extends State {
             () -> {
               return RobotMap.driverController.getRightTriggerAxis() > 0.25;
             },
-            ScoringStateMachine.shootState));
+              ScoringStateMachine.cycleState));
     addTransition(
             new Transition(
                 () -> {
@@ -39,12 +39,6 @@ public class IdleState extends State {
             return RobotMap.driverController.getLeftTriggerAxis() > 0.25;
             },
             ScoringStateMachine.passAimState));
-    addTransition(
-        new Transition(
-            () -> {
-            return RobotMap.driverController.getYButtonPressed();
-            },
-            ScoringStateMachine.testState));
   }
 
   @Override

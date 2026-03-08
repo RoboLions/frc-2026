@@ -29,15 +29,12 @@ public class IntakeState extends State {
   }
   @Override
   public void init(State prevState) {
-    Intake.IndexIn();
-    Intake.FeedIn();
+    Intake.intake();
+    Intake.intakeDown();
   }
 
   @Override
-  public void execute() {
-    Intake.IndexIn();
-    Intake.FeedIn();
-  } 
+  public void execute() {} 
 
   @Override
   public void exit(State nextState) {}

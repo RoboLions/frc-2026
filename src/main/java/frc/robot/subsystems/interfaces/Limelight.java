@@ -24,7 +24,7 @@ public class Limelight {
   public static void init() {
     cameras = new ArrayList<>();
 
-    FRONT_CAMERA_MODEL4 = new LimeLightObject("limelight-four", 0); // TODO: RENAME CAMERAS;
+    FRONT_CAMERA_MODEL4 = new LimeLightObject("limelight-front", 0); // TODO: RENAME CAMERAS;
     FRONT_CAMERA_MODEL4.usePigeon = false; // IMPORTANT TO DISABLE THE YAW CORRECTION FROM PIGEON
     
     LimelightHelpers.SetIMUMode(FRONT_CAMERA_MODEL4.cameraName, 3);
@@ -200,7 +200,7 @@ public class Limelight {
       return;
     }
 
-    if (shortestDistance > 6) {
+    if (shortestDistance > 15) {
       Logger.recordOutput(limeLight.cameraName + "RETURNS/ " + "DISABLED ERROR STATUS", "SHORTEST DISTANCE THRESHOLD: " + shortestDistance);
       return;
     }

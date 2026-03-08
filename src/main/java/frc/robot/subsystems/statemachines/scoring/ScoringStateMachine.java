@@ -14,14 +14,14 @@ public class ScoringStateMachine extends StateMachine{
     public static OuttakeState outtakeState = new OuttakeState();
     public static PassAimState passAimState = new PassAimState();
     public static ShootState shootState = new ShootState();
-    public static CycleState testState = new CycleState();
+    public static CycleState cycleState = new CycleState();
 
     public ScoringStateMachine() {
         intakeState.build();
         idleState.build();
         passAimState.build();
         shootState.build();
-        testState.build();
+        cycleState.build();
         outtakeState.build();
     }
 }

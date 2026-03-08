@@ -38,7 +38,7 @@ import frc.robot.RobotMap;
 public class Swerve {
 
     public class SwerveConstants{
-        public static final double ODOMETRY_FREQUENCY = 450.0;
+        public static final double ODOMETRY_FREQUENCY = 500.0;
 
         private static final double MaxSpeed = GeneratedConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
         private static final double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -186,7 +186,7 @@ public class Swerve {
 
     public static void zeroGyro() {
         Pose2d pose = Swerve.getPose();
-		SwerveObjects.Swerve.resetPose(new Pose2d(pose.getTranslation(), new Rotation2d(0)));
+		SwerveObjects.Swerve.resetPose(new Pose2d(pose.getTranslation(), new Rotation2d(Math.PI)));
 	}
 
     public static void zeroCommand() {
