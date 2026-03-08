@@ -2,7 +2,6 @@ package frc.robot.subsystems.interfaces;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -15,7 +14,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -28,13 +26,10 @@ public class Turret {
   private static final TalonFX mAzimuthTurretMotor = 
     new TalonFX(Constants.CAN_IDS.TURRET_AZIMUTH_MOTOR, "CANexternal");
 
-  public static final StatusSignal<Angle> mBackMotorVelo = mHoodPivotMotor.getPosition();
-  public static final StatusSignal<Angle> mFrontMotorVelo = mAzimuthTurretMotor.getPosition();
-
   private class TurretConstants {
     private static final double maxPositiveTurnAngle = 180;
     private static final double maxNegaitveTurnAngle = -180;
-    private static final double azimuthDegreesToRotations = 0;
+    private static final double azimuthRotationstoRadians = (Math.PI / 20);
   }
   
   public class SimulationObjects {
@@ -55,17 +50,16 @@ public class Turret {
     hoodPivotConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
     hoodPivotConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5;
 
-    hoodPivotConfig.Slot0.kS = 0.0;
-    hoodPivotConfig.Slot0.kV = 0.0;
+    hoodPivotConfig.Slot0.kS = 0.55;
+    hoodPivotConfig.Slot0.kV = 0.45;
     hoodPivotConfig.Slot0.kA = 0.0;
     hoodPivotConfig.Slot0.kG = 0.0;
-    hoodPivotConfig.Slot0.kP = 0.0;
+    hoodPivotConfig.Slot0.kP = 12.0;
     hoodPivotConfig.Slot0.kI = 0.0;
     hoodPivotConfig.Slot0.kD = 0.0;
 
-    hoodPivotConfig.MotionMagic.MotionMagicAcceleration = 1;
     hoodPivotConfig.Feedback.RotorToSensorRatio = 1;
-    hoodPivotConfig.Feedback.SensorToMechanismRatio = 0.0;
+    hoodPivotConfig.Feedback.SensorToMechanismRatio = 6.75;
     hoodPivotConfig.Feedback.FeedbackRotorOffset = 0.0;
 
     hoodPivotConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -73,11 +67,11 @@ public class Turret {
 
     hoodPivotConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     hoodPivotConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    hoodPivotConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0;
+    hoodPivotConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.77;
     hoodPivotConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
 
-    hoodPivotConfig.MotionMagic.MotionMagicAcceleration = 0;
-    hoodPivotConfig.MotionMagic.MotionMagicCruiseVelocity = 0;
+    hoodPivotConfig.MotionMagic.MotionMagicAcceleration = 75;
+    hoodPivotConfig.MotionMagic.MotionMagicCruiseVelocity = 75;
 
     mHoodPivotMotor.getConfigurator().apply(hoodPivotConfig);
 
@@ -87,20 +81,21 @@ public class Turret {
     turretAzimuthConfig.CurrentLimits.StatorCurrentLimitEnable = false;
     turretAzimuthConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-    turretAzimuthConfig.CurrentLimits.SupplyCurrentLimit = 60;
+    turretAzimuthConfig.CurrentLimits.SupplyCurrentLimit = 70;
     turretAzimuthConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
-    turretAzimuthConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5;
+    turretAzimuthConfig.CurrentLimits.SupplyCurrentLowerTime = 0.75;
 
-    turretAzimuthConfig.Slot0.kS = 0.25;
-    turretAzimuthConfig.Slot0.kV = 0.08;
-    turretAzimuthConfig.Slot0.kA = 0;
-    turretAzimuthConfig.Slot0.kP = 0.5;
+    turretAzimuthConfig.Slot0.kP = 0.7;
     turretAzimuthConfig.Slot0.kI = 0;
-    turretAzimuthConfig.Slot0.kD = 0.01;
+    turretAzimuthConfig.Slot0.kD = 0.0015;
+    turretAzimuthConfig.Slot0.kS = 0.3;
+    turretAzimuthConfig.Slot0.kV = 0.101;
+    turretAzimuthConfig.Slot0.kA = 0.001;
     turretAzimuthConfig.Slot0.kG = 0;
 
-    turretAzimuthConfig.MotionMagic.MotionMagicAcceleration = 100;
-    turretAzimuthConfig.MotionMagic.MotionMagicCruiseVelocity = 50;
+    turretAzimuthConfig.MotionMagic.MotionMagicAcceleration = 75;
+    turretAzimuthConfig.MotionMagic.MotionMagicCruiseVelocity = 300;
+    turretAzimuthConfig.MotionMagic.MotionMagicJerk = 0.0;
 
     turretAzimuthConfig.Feedback.SensorToMechanismRatio = 1 / 1;
     turretAzimuthConfig.Feedback.RotorToSensorRatio = 1 / 1;
@@ -128,15 +123,15 @@ public class Turret {
    * to the hood's position setpoint.</p>
    */
   private static void setHoodAngle() {    
-    double angle = SimulationObjects.desiredHoodAngleRobotRelDeg - Constants.Hood.BASE_HOOD_ANGLE_DEG;
+    double angle = SimulationObjects.desiredHoodAngleRobotRelDeg;
 
-    if (angle > 26) {
-      angle = 26;
-    } else if (angle < 0) {
-      angle = 0;
+    if (angle > Constants.Hood.MAX_HOOD_ANGLE_DEG) {
+      angle = Constants.Hood.MAX_HOOD_ANGLE_DEG;
+    } else if (angle < Constants.Hood.BASE_HOOD_ANGLE_DEG) {
+      angle = Constants.Hood.BASE_HOOD_ANGLE_DEG;
     }
 
-    mHoodPivotMotor.setControl(new MotionMagicVoltage(angle));
+    mHoodPivotMotor.setControl(new MotionMagicVoltage((angle - Constants.Hood.BASE_HOOD_ANGLE_DEG) / Constants.Hood.DEGREE_RATIO).withEnableFOC(true));
 
     Logger.recordOutput("Turret/ setAngleForHood", SimulationObjects.desiredHoodAngleRobotRelDeg - Constants.Hood.BASE_HOOD_ANGLE_DEG);
   }
@@ -147,7 +142,7 @@ public class Turret {
    * before sending the signal to the TalonFX via Motion Magic.</p>
    */
   private static void setAzimuthAngle() {
-    double setAngle = (SimulationObjects.desiredTurretAngleRobotRelRad / TurretConstants.azimuthDegreesToRotations) * (180 / Math.PI);    
+    double setAngle = (SimulationObjects.desiredTurretAngleRobotRelRad / TurretConstants.azimuthRotationstoRadians);    
     mAzimuthTurretMotor.setControl(new MotionMagicVoltage(setAngle).withEnableFOC(true));
 
     Logger.recordOutput("Turret/ setAngleAzimuth", setAngle);
@@ -165,8 +160,8 @@ public class Turret {
    * Retrieves the current rotational position of the turret azimuth.
    * * @return The current position of the azimuth motor in degrees.
    */
-  private static double getAzimuthAngleDeg() {
-    return mAzimuthTurretMotor.getPosition().getValueAsDouble() * TurretConstants.azimuthDegreesToRotations;
+  private static double getAzimuthAngleRad() {
+    return mAzimuthTurretMotor.getPosition().getValueAsDouble() / TurretConstants.azimuthRotationstoRadians;
   }
 
   /** 

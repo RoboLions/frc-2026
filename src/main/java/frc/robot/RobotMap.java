@@ -43,7 +43,8 @@ public class RobotMap {
     scoringStateMachine.enable();
 
     drivetrainStateMachine.setCurrentState(DrivetrainStateMachine.teleopState);
-    scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);;
+    scoringStateMachine.setCurrentState
+    (ScoringStateMachine.idleState);;
 
     scheduleAuto();
   }
