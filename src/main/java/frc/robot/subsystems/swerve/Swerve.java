@@ -59,7 +59,11 @@ public class Swerve {
         private static final SwerveRequest.FieldCentric teleopDrive = new SwerveRequest.FieldCentric()
                 .withDeadband(SwerveConstants.MaxSpeed * 0.075).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.075) // Add a 7.5% deadband
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-            
+
+        private static final SwerveRequest.FieldCentric closedLoopDrive = new SwerveRequest.FieldCentric()
+                .withDeadband(SwerveConstants.MaxSpeed * 0.075).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.075) // Add a 7.5% deadband
+                .withDriveRequestType(DriveRequestType.Velocity);  
+
         private static final PIDController pointDriveController = new PIDController(1, 0, 0);
         private static final PIDController headingController = new PIDController(2.0, 0, 0.04);
     }
@@ -234,7 +238,7 @@ public class Swerve {
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
 
-        public static void teleopDrive(double percentSpeed) {
+    public static void teleopDrive(double percentSpeed) {
         double vy = -RobotMap.driverController.getLeftX() * percentSpeed;
         double vx = -RobotMap.driverController.getLeftY() * percentSpeed;
         double omega = -RobotMap.driverController.getRightX() * percentSpeed;
@@ -247,15 +251,11 @@ public class Swerve {
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
 
-    public static void simulationDrive() {
-        double vy = -RobotMap.driverController.getLeftX();
-        double vx = -RobotMap.driverController.getLeftY();
-        double omega = -RobotMap.driverController.getRightX();
-
+    public static void maxVoltForward() {
         SwerveObjects.Swerve.setControl(
-            SwerveObjects.teleopDrive.withVelocityX(vx * SwerveConstants.MaxSpeed)
-                .withVelocityY(vy * SwerveConstants.MaxSpeed)
-                .withRotationalRate(omega * SwerveConstants.MaxAngularRate));
+            SwerveObjects.teleopDrive.withVelocityX(0)
+                .withVelocityY(GeneratedConstants.kSpeedAt12Volts)
+                .withRotationalRate(0));
 
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
@@ -265,7 +265,7 @@ public class Swerve {
         double vy = velocity * heading.getSin();
 
         SwerveObjects.Swerve.setControl(
-            SwerveObjects.teleopDrive.withVelocityX(vx * SwerveConstants.MaxSpeed)
+            SwerveObjects.closedLoopDrive.withVelocityX(vx * SwerveConstants.MaxSpeed)
                 .withVelocityY(vy * SwerveConstants.MaxSpeed)
                 .withRotationalRate(omega * SwerveConstants.MaxAngularRate));
 
