@@ -39,6 +39,8 @@ public class Turret {
     public static double literalShotHoodRad;
 
     private static Timer simTimer = new Timer();
+
+    private static final int numLoops = 2;
   }
   
   public static void init() {
@@ -147,6 +149,10 @@ public class Turret {
     Logger.recordOutput("Turret/ setAngleAzimuth", setAngle);
   }
 
+  public static void setAzimuthZero() {
+    mAzimuthTurretMotor.setControl(new MotionMagicVoltage(0).withEnableFOC(true));
+  }
+
   /**
    * Retrieves the current rotational position of the turret azimuth.
    * * @return The current position of the azimuth motor in rotations.
@@ -180,8 +186,8 @@ public class Turret {
                         Swerve.getYawAsRadians(), 
                         Swerve.getYawRateAsRad(),
                         Swerve.getFieldSpeeds(),
-                        Swerve.getChassisAcceleration(),
-                        Swerve.getLoopLatencySec());
+                        Swerve.getLoopLatencySec(),
+                        1);
     
     setHoodAngle();
     setAzimuthAngle();
@@ -202,8 +208,8 @@ public class Turret {
                         Swerve.getYawAsRadians(), 
                         Swerve.getYawRateAsRad(),
                         Swerve.getFieldSpeeds(),
-                        Swerve.getChassisAcceleration(),
-                        Swerve.getLoopLatencySec());
+                        Swerve.getLoopLatencySec(),
+                        SimulationObjects.numLoops);
     
     setAzimuthAngle();
   }
@@ -218,8 +224,8 @@ public class Turret {
                         Swerve.getYawAsRadians(), 
                         Swerve.getYawRateAsRad(),
                         Swerve.getFieldSpeeds(),
-                        Swerve.getChassisAcceleration(),
-                        Swerve.getLoopLatencySec());
+                        Swerve.getLoopLatencySec(),
+                        SimulationObjects.numLoops);
     
     setHoodAngle();
     setAzimuthAngle();
@@ -235,8 +241,8 @@ public class Turret {
                         Swerve.getYawAsRadians(), 
                         Swerve.getYawRateAsRad(),
                         Swerve.getFieldSpeeds(),
-                        Swerve.getChassisAcceleration(),
-                        Swerve.getLoopLatencySec());
+                        Swerve.getLoopLatencySec(),
+                        SimulationObjects.numLoops);
     
     setHoodAngle();
     setAzimuthAngle();
@@ -250,8 +256,8 @@ public class Turret {
                         Swerve.getYawAsRadians(), 
                         Swerve.getYawRateAsRad(),
                         Swerve.getFieldSpeeds(),
-                        Swerve.getChassisAcceleration(),
-                        Swerve.getLoopLatencySec());
+                        Swerve.getLoopLatencySec(),
+                        SimulationObjects.numLoops);
     
     setHoodAngle();
 
@@ -415,8 +421,8 @@ public class Turret {
    * @param robotFieldYaw      The current rotation of the robot relative to the field (radians).
    * @param robotYawRate       The angular velocity of the robot (rad/s).
    * @param fieldRobotSpeeds   The current velocity vector of the chassis in field-relative coordinates (m/s).
-   * @param fieldRobotAccel    The current acceleration vector of the chassis in field-relative coordinates (m/s²).
    * @param loopLatencySec     The time delay of the control loop (seconds) for preemptive compensation.
+   * @param numLoops           The number of loops to iterate on and estimate the turret constants.
    * * @implNote 
    * <b>Frame of Reference:</b>
    * <ul>
@@ -426,55 +432,57 @@ public class Turret {
    * </ul>
    */
   public static void simulateTurretAngle(Pose2d currPose, 
-                                         Translation2d turretRelative, 
-                                         Translation2d targetPose, 
-                                         double targetHeightRelativeBot,
-                                         double robotFieldYaw,
-                                         double robotYawRate,
-                                         ChassisSpeeds fieldRobotSpeeds,
-                                         ChassisSpeeds fieldRobotAccel,
-                                         double loopLatencySec) 
+                                          Translation2d turretRelative, 
+                                          Translation2d targetPose, 
+                                          double targetHeightRelativeBot,
+                                          double robotFieldYaw,
+                                          double robotYawRate,
+                                          ChassisSpeeds fieldRobotSpeeds,
+                                          double loopLatencySec,
+                                          int numLoops) 
   {
     Pose2d turretPose = getTurretPosition(currPose, turretRelative);
-    // Logger.recordOutput("Turret/ Turret Sim/ Turret2dPose", turretPose);
-
     Translation2d transformedTarget = transformTarget(turretPose.getTranslation(), targetPose, 0.25);
+    
     double xSpeeds = fieldRobotSpeeds.vxMetersPerSecond;
     double ySpeeds = fieldRobotSpeeds.vyMetersPerSecond;
 
     double dx = transformedTarget.getX() - turretPose.getX();
     double dy = transformedTarget.getY() - turretPose.getY();
-    double r2 = dx * dx + dy * dy;
-    double r = Math.sqrt(r2);
+    double currentR = Math.sqrt(dx * dx + dy * dy);
 
-    double preliminaryV = sampleVelocity(r, targetHeightRelativeBot);
-    double preliminaryTheta = calculateLaunchAngleRad(preliminaryV, r, targetHeightRelativeBot);
-    double timeOFlight = Math.sqrt(r2) / (preliminaryV * Math.cos(preliminaryTheta));
+    double currentV = sampleVelocity(currentR, targetHeightRelativeBot);
+    double currentTheta = calculateLaunchAngleRad(currentV, currentR, targetHeightRelativeBot);
+    double timeOFlight = currentR / (currentV * Math.cos(currentTheta));
 
-    //iteration 1 ended, culminating to the TOF estimation.
+    Pose3d fakePose = new Pose3d(); 
 
-    Translation2d targetOffset = new Translation2d(xSpeeds, ySpeeds).times(timeOFlight);
-    Translation2d imaginaryTarget = transformedTarget.minus(targetOffset);
-    Pose3d FAKEPOSE = new Pose3d(new Translation3d(imaginaryTarget).plus(new Translation3d(0, 0, targetHeightRelativeBot)), new Rotation3d());
-    
-    double newDX = FAKEPOSE.getX() - turretPose.getX();
-    double newDY = FAKEPOSE.getY() - turretPose.getY();
-    double newR2 = newDX * newDX + newDY * newDY;
-    double newR = Math.sqrt(newR2);
+    for (int i = 0; i < numLoops; i++) {
+        Translation2d targetOffset = new Translation2d(xSpeeds, ySpeeds).times(timeOFlight);
+        Translation2d imaginaryTarget = transformedTarget.minus(targetOffset);
+        
+        fakePose = new Pose3d(new Translation3d(imaginaryTarget.getX(), imaginaryTarget.getY(), targetHeightRelativeBot), new Rotation3d());
 
-    SimulationObjects.desiredTurretAngleRobotRelRad = wrapAngle(Math.atan2(newDY, newDX) - robotFieldYaw);
-    SimulationObjects.totalShotVelocity = sampleVelocity(newR, targetHeightRelativeBot);
-    SimulationObjects.desiredHoodAngleRobotRelDeg = calculateHoodAngle(SimulationObjects.totalShotVelocity, newR, targetHeightRelativeBot);
-    SimulationObjects.literalShotHoodRad = calculateLaunchAngleRad(SimulationObjects.totalShotVelocity, newR, targetHeightRelativeBot);
+        double newDX = imaginaryTarget.getX() - turretPose.getX();
+        double newDY = imaginaryTarget.getY() - turretPose.getY();
+        double newR = Math.sqrt(newDX * newDX + newDY * newDY);
 
-    //iteration 2, the actual target using iteration 1's TOF estimation.
-    // Logger.recordOutput("Turret/ Turret Sim/ Fake Target", FAKEPOSE);
-    // Logger.recordOutput("Turret/ Turret Sim/ Turret 3D Pose", new Pose3d(Constants.Hood.TURRET_ROBOT_OFFSET.getX(), Constants.Hood.TURRET_ROBOT_OFFSET.getY(), 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));
-    // Logger.recordOutput("Turret/ Turret Sim/ Shot Velocity", preliminaryV);
-    // Logger.recordOutput("Turret/ Turret Sim/ Hood Angle", SimulationObjects.desiredHoodAngleRobotRelDeg);
-    // Logger.recordOutput("Turret/ Turret Sim/ Shot-Angle (Adjusted)", Math.toDegrees(SimulationObjects.literalShotHoodRad));
+        double newV = sampleVelocity(newR, targetHeightRelativeBot);
+        double newTheta = calculateLaunchAngleRad(newV, newR, targetHeightRelativeBot);
+
+        timeOFlight = newR / newV * Math.cos(newTheta);
+
+        SimulationObjects.desiredTurretAngleRobotRelRad = wrapAngle(Math.atan2(newDY, newDX) - robotFieldYaw);
+        SimulationObjects.totalShotVelocity = newV;
+        SimulationObjects.desiredHoodAngleRobotRelDeg = calculateHoodAngle(newV, newR, targetHeightRelativeBot);
+        SimulationObjects.literalShotHoodRad = newTheta;
+    }
+
+    Logger.recordOutput("Turret/ Turret Sim/ Fake Target", fakePose);
+    Logger.recordOutput("Turret/ Turret Sim/ Turret 3D Pose", new Pose3d(turretPose.getX(), turretPose.getY(), 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad + robotFieldYaw)));
+
     launchFuel();
-  }
+}
 
   /**
    * These two methods are only used for simulation. Can be deleted afterwards.

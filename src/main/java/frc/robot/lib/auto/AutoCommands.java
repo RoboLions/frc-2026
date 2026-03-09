@@ -37,6 +37,10 @@ public class AutoCommands {
         return Commands.run(() -> Turret.turretTrackHub());
     }
 
+    public static Command setTurretToZero() {
+        return Commands.run(() -> Turret.setAzimuthZero()); 
+    }
+
     public static Command startShooter() {
         return Commands.run(() ->  Shooter.setShootSpeed(SimulationObjects.totalShotVelocity));
     }
