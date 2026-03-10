@@ -38,7 +38,7 @@ public class Intake {
 
     indexMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     indexMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
-    indexMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    indexMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     mSpindexMotor.getConfigurator().apply(indexMotorConfiguration);
 
@@ -96,7 +96,7 @@ public class Intake {
   }
 
   public static void intake() {
-    set(3.5);
+    set(8);
   }
 
   public static void outtake() {
