@@ -455,33 +455,23 @@ public class Turret {
     double currentTheta = calculateLaunchAngleRad(currentV, currentR, targetHeightRelativeBot);
     double timeOFlight = currentR / (currentV * Math.cos(currentTheta));
 
-    Pose3d fakePose = new Pose3d(); 
-
-    for (int i = 0; i < numLoops; i++) {
-        Translation2d targetOffset = new Translation2d(xSpeeds, ySpeeds).times(timeOFlight);
-        Translation2d imaginaryTarget = transformedTarget.minus(targetOffset);
+    Translation2d targetOffset = new Translation2d(xSpeeds, ySpeeds).times(timeOFlight);
+    Translation2d imaginaryTarget = transformedTarget.minus(targetOffset);
         
-        fakePose = new Pose3d(new Translation3d(imaginaryTarget.getX(), imaginaryTarget.getY(), targetHeightRelativeBot), new Rotation3d());
+    double newDX = imaginaryTarget.getX() - turretPose.getX();
+    double newDY = imaginaryTarget.getY() - turretPose.getY();
+    double newR = Math.sqrt(newDX * newDX + newDY * newDY);
+    double newV = sampleVelocity(newR, targetHeightRelativeBot);
+    
+    double newTheta = calculateLaunchAngleRad(newV, newR, targetHeightRelativeBot);
+    timeOFlight = newR / newV * Math.cos(newTheta);
+    
+    SimulationObjects.desiredTurretAngleRobotRelRad = wrapAngle(Math.atan2(newDY, newDX) - robotFieldYaw);
+    SimulationObjects.totalShotVelocity = newV;
+    SimulationObjects.desiredHoodAngleRobotRelDeg = calculateHoodAngle(newV, newR, targetHeightRelativeBot);
+    SimulationObjects.literalShotHoodRad = newTheta;
 
-        double newDX = imaginaryTarget.getX() - turretPose.getX();
-        double newDY = imaginaryTarget.getY() - turretPose.getY();
-        double newR = Math.sqrt(newDX * newDX + newDY * newDY);
-
-        double newV = sampleVelocity(newR, targetHeightRelativeBot);
-        double newTheta = calculateLaunchAngleRad(newV, newR, targetHeightRelativeBot);
-
-        timeOFlight = newR / newV * Math.cos(newTheta);
-
-        SimulationObjects.desiredTurretAngleRobotRelRad = wrapAngle(Math.atan2(newDY, newDX) - robotFieldYaw);
-        SimulationObjects.totalShotVelocity = newV;
-        SimulationObjects.desiredHoodAngleRobotRelDeg = calculateHoodAngle(newV, newR, targetHeightRelativeBot);
-        SimulationObjects.literalShotHoodRad = newTheta;
-    }
-
-    Logger.recordOutput("Turret/ Turret Sim/ Fake Target", fakePose);
     Logger.recordOutput("Turret/ Turret Sim/ Turret 3D Pose", new Pose3d(turretPose.getX(), turretPose.getY(), 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad + robotFieldYaw)));
-
-    launchFuel();
 }
 
   /**

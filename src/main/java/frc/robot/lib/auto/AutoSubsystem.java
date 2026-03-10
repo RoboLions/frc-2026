@@ -18,7 +18,7 @@ public class AutoSubsystem {
         autoFactory = createAutoFactory;
         autoChooser = new AutoChooser();
 
-        // autoChooser.addRoutine("testPath", testRoutine());
+        autoChooser.addRoutine("Left 2 Piece", left2Piece());
 
         SmartDashboard.putData("AutoChooser", autoChooser);
     }
@@ -30,14 +30,23 @@ public class AutoSubsystem {
     private Supplier<AutoRoutine> left2Piece() {
         AutoRoutine routine = autoFactory.newRoutine("testPath");
 
+        AutoTrajectory LEFT_START_TO_NEUTRAL_ZONE = routine.trajectory("LEFT_START_TO_NEUTRAL_ZONE");
+            LEFT_START_TO_NEUTRAL_ZONE.atPose("Intake_OUT", 0.5, 0.5)
+                .onTrue(AutoCommands.intakeOutRollersIn());
+
         AutoTrajectory Neutral_Zone_TO_LEFT_TRENCH = routine.trajectory("Neutral_Zone_TO_LEFT_TRENCH");
-            // Neutral_Zone_TO_LEFT_TRENCH.atTime(0.1);
-        
+            Neutral_Zone_TO_LEFT_TRENCH.atPose("INTAKE_MID", 0.5, 0.5)
+                .onTrue(AutoCommands.intakeMidRollersStop())
+                .onTrue(AutoCommands.startShooter());
+
         return () -> {
             routine.active().onTrue(
                 Commands.sequence(
+                    LEFT_START_TO_NEUTRAL_ZONE.cmd(),
                     Neutral_Zone_TO_LEFT_TRENCH.cmd(),
                     AutoCommands.SwerveStop()
+                        .alongWith(AutoCommands.shootAndTrackHub())
+                        .alongWith(Commands.waitSeconds(2))
                 )
             );
         

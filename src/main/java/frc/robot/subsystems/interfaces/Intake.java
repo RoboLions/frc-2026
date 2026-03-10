@@ -103,6 +103,10 @@ public class Intake {
     set(-4);
   }
 
+  public static void stopIntake() {
+    set(0);
+  }
+
   public static void setRack(double target) {
     mRackMotor.setControl(new MotionMagicVoltage(target).withEnableFOC(true));
   }
@@ -119,10 +123,6 @@ public class Intake {
     setRack(DOWN_POS);
   }
 
-  public static void intakePivotStop() {
-    mRackMotor.set(0.0);
-  }
-
   public static void setIndex(double voltageOut) {
     mSpindexMotor.setControl(new VoltageOut(voltageOut).withEnableFOC(true));
   }
@@ -133,6 +133,10 @@ public class Intake {
 
   public static void IndexOut() {
     setIndex(-4);
+  }
+
+  public static void stopIndex() {
+    setIndex(0);
   }
 
   public static void setFeed(double rpm) {
@@ -173,5 +177,11 @@ public class Intake {
     outtake();
     IndexOut();
     FeedOut();
+  }
+
+  public static void allRollersStop() {
+    stopIntake();
+    stopIndex();
+    stopFeed();
   }
 }

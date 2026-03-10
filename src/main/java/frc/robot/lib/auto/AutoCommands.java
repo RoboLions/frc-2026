@@ -42,7 +42,22 @@ public class AutoCommands {
     }
 
     public static Command startShooter() {
-        return Commands.run(() ->  Shooter.setShootSpeed(SimulationObjects.totalShotVelocity));
+        return Commands.run(() ->  Shooter.idlerShooter());
+    }
+
+    public static Command shootAndTrackHub() {
+        return Commands.run(() ->  Shooter.setShootSpeed(SimulationObjects.totalShotVelocity))
+                       .alongWith(Commands.run(() -> Turret.turretTrackHub()));
+    }
+
+    public static Command intakeOutRollersIn() {
+        return Commands.run(() -> Intake.allRollersIn())
+                       .alongWith(Commands.run(() -> Intake.intakeDown()));
+    }
+
+    public static Command intakeMidRollersStop() {
+        return Commands.run(() -> Intake.allRollersStop())
+                       .alongWith(Commands.run(() -> Intake.intakeMid()));
     }
 
     public static Command feedIn() {

@@ -72,7 +72,7 @@ public class GeneratedConstants {
 
     // Theoretical free speed (m/s) at 12 V applied output;
     // This needs to be tuned to your individual robot
-    public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(6.53);
+    public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(6.25);
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
@@ -88,8 +88,8 @@ public class GeneratedConstants {
     private static final int kPigeonId = 0;
 
     // These are only used for simulation
-    private static final MomentOfInertia kSteerInertia = KilogramSquareMeters.of(0.01);
-    private static final MomentOfInertia kDriveInertia = KilogramSquareMeters.of(0.01);
+    private static final MomentOfInertia kSteerInertia = KilogramSquareMeters.of(0.003);
+    private static final MomentOfInertia kDriveInertia = KilogramSquareMeters.of(0.075);
     // Simulated voltage necessary to overcome friction
     private static final Voltage kSteerFrictionVoltage = Volts.of(0.2);
     private static final Voltage kDriveFrictionVoltage = Volts.of(0.2);
