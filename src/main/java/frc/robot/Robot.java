@@ -11,7 +11,6 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.lib.util.FuelSim;
 import frc.robot.subsystems.statemachines.drivetrain.DrivetrainStateMachine;
@@ -120,7 +119,6 @@ public class Robot extends LoggedRobot {
   public void simulationPeriodic() {
     Swerve.simulationPeriodic();
 
-    RobotMap.simulateFuelPeriodics();
     FuelSim.getInstance().updateSim();
   }
 }

@@ -1,7 +1,5 @@
 package frc.robot;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -64,11 +62,6 @@ public class RobotMap {
 
   public static void scheduleAuto() {
     autoSubsystem.scheduleAuto();
-  }
-
-  public static void simulateFuelPeriodics() {
-    Logger.recordOutput("Fuel Sim/ BLUE SCORE", FuelSim.Hub.BLUE_HUB.getScore()); // get number of fuel scored in blue hub
-    Logger.recordOutput("Fuel Sim/ RED SCORE",FuelSim.Hub.RED_HUB.getScore()); // get number of fuel scored in red hub
   }
 
   public static void configureFuelSim() {
