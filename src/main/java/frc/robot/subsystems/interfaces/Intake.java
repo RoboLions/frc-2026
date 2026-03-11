@@ -22,8 +22,8 @@ public class Intake {
     new TalonFX(Constants.CAN_IDS.RACK_MOTOR, "CANexternal");
 
   private static final double STOW_POS = 0.5;
-  private static final double MIDDLE_POS = 5.0;
-  private static final double DOWN_POS = 46.0;
+  private static final double MIDDLE_POS = 20.0;
+  private static final double DOWN_POS = 48.0;
 
   public static void init() {    
     TalonFXConfiguration masterIntakeMotorConfiguration = new TalonFXConfiguration();
@@ -84,11 +84,11 @@ public class Intake {
     rackMotorConfiguration.Slot0.kG = 0.0;
 
     rackMotorConfiguration.ClosedLoopGeneral.ContinuousWrap = false;
-    rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 125.0;
-    rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 100.0;
+    rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 175.0;
+    rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 200.0;
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
-    mRackMotor.setPosition(0.0);
+    // mRackMotor.setPosition(0.0);
   }
 
   public static void set(double outputVoltage) {

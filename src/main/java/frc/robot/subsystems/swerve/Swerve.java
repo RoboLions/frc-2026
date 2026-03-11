@@ -63,7 +63,7 @@ public class Swerve {
                 .withDeadband(SwerveConstants.MaxSpeed * 0.075).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.075) // Add a 7.5% deadband
                 .withDriveRequestType(DriveRequestType.Velocity);  
 
-        private static final PIDController pointDriveController = new PIDController(1, 0, 0);
+        private static final PIDController pointDriveController = new PIDController(0.45, 0, 0.01);
         private static final PIDController headingController = new PIDController(2.0, 0, 0.04);
     }
 
@@ -268,14 +268,14 @@ public class Swerve {
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
 
-    public static void driveToPoint(Pose2d targetPose, double maxVelocity) {
+    public static void driveToPoint(Pose2d targetPose, double percentMaxSpeed) {
         Pose2d currPose = getPose();
         double dy = targetPose.getY() - currPose.getY();
         double dx = targetPose.getX() - currPose.getX();
         double distance = targetPose.getTranslation().getDistance(currPose.getTranslation());
 
         SwerveObjects.pointDriveController.setSetpoint(distance);
-        double velocity = Math.min(SwerveObjects.pointDriveController.calculate(0), maxVelocity);
+        double velocity = Math.min(SwerveObjects.pointDriveController.calculate(0), percentMaxSpeed);
 
         SwerveObjects.headingController.setSetpoint(targetPose.getRotation().getRadians());
         double omega = SwerveObjects.headingController.calculate(currPose.getRotation().getRadians());

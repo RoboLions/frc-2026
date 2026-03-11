@@ -27,7 +27,7 @@ public class AlignState extends State {
 
     @Override
     public void execute() {
-        Swerve.driveToPoint(new Pose2d(new Translation2d(1.475, 4), new Rotation2d(0)), 1);
+        Swerve.driveToPoint(new Pose2d(new Translation2d(2.25, 6.5), Rotation2d.fromDegrees(-45)), 0.75);
     }   
     
     @Override
