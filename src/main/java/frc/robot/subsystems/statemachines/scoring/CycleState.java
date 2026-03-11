@@ -1,5 +1,6 @@
 package frc.robot.subsystems.statemachines.scoring;
 
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
@@ -14,6 +15,8 @@ import frc.robot.subsystems.swerve.Swerve;
 // the WPILib BSD license file in the root directory of this project.
 
 public class CycleState extends State {
+
+  Timer timer = new Timer();
 
   @Override
   public void build() {
@@ -35,16 +38,19 @@ public class CycleState extends State {
   @Override
   public void execute() {
     if (RobotMap.driverController.getRightBumperButton() && !(Turret.getAzimuthAngularVelocity() > 20) && !(Turret.getAzimuthError() > 1.5)) {
+      timer.start();
       Intake.allRollersIn();
+
+      if (Intake.getRackPosition() > 30 && timer.hasElapsed(1.5)) {
+        Intake.intakeMid();
+        timer.reset();
+      } else if (Intake.getRackPosition() < 30 && timer.hasElapsed(1.5)) {
+        Intake.intakeDown();
+        timer.reset();
+      }
     } else {
       Intake.stopIndex();
       Intake.stopFeed();
-    }
-
-    if (RobotMap.driverController.getAButton()) {
-      Intake.intakeMid();
-    } else {
-      Intake.intakeDown();
     }
 
     if (Swerve.getPose().getX() >= 4.75 && Swerve.getPose().getX() <= 11.75) {

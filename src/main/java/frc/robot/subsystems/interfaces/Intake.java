@@ -21,8 +21,8 @@ public class Intake {
   private static final TalonFX mRackMotor = 
     new TalonFX(Constants.CAN_IDS.RACK_MOTOR, "CANexternal");
 
-  private static final double STOW_POS = 0.5;
-  private static final double MIDDLE_POS = 20.0;
+  private static final double STOW_POS = 0.25;
+  private static final double MIDDLE_POS = 25.0;
   private static final double DOWN_POS = 48.0;
 
   public static void init() {    
@@ -121,6 +121,10 @@ public class Intake {
 
   public static void intakeDown() {
     setRack(DOWN_POS);
+  }
+
+  public static double getRackPosition() {
+    return mRackMotor.getPosition().getValueAsDouble();
   }
 
   public static void setIndex(double voltageOut) {

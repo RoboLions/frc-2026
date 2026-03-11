@@ -16,7 +16,7 @@ public class Constants {
         public static final double BASE_HOOD_ANGLE_DEG = 18.75;
         public static final double DEGREE_RATIO = 30.1;
 
-        public static final double HEIGHT_FROM_BOT_TO_TARGET = 0.7; //meters
+        public static final double HEIGHT_FROM_BOT_TO_TARGET = 1.117; //meters
         public static final Translation2d TURRET_ROBOT_OFFSET = new Translation2d(0.14605, -0.14605); //meters
 
         public static final Translation2d HUB_POSE =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation2d(4.62744, 4.03648) : new Translation2d(11.91642, 4.03814);
@@ -26,15 +26,12 @@ public class Constants {
     }
 
     public class Shooter {
-        public static final double POWER_GAIN_MULTIPLIER = 2.2;
+        public static final double POWER_GAIN_MULTIPLIER = 1.5;
     }
 
     public class LimeLight {
         public static final Pose3d known_pose_blue_left =
             new Pose3d(new Translation3d(1.252857, 5.547879, 0.0), new Rotation3d(0, 0, Math.PI));
-
-        // aidan proj
-        public static final String example = "hi";
     }
     
     public class CAN_IDS {
