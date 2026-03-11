@@ -149,6 +149,9 @@ public class Turret {
     Logger.recordOutput("Turret/ setAngleAzimuth", setAngle);
   }
 
+  /**
+   * Tells the motor to return to the zero position.
+   */
   public static void setAzimuthZero() {
     mAzimuthTurretMotor.setControl(new MotionMagicVoltage(0).withEnableFOC(true));
   }
@@ -159,6 +162,14 @@ public class Turret {
    */
   private static double getAzimuthAngle() {
     return mAzimuthTurretMotor.getPosition().getValueAsDouble();
+  }
+
+  /**
+   * Retrieves the current rotational error of the turret azimuth.
+   * * @return The current positional error of the azimuth motor in rotations.
+   */
+  public static double getAzimuthError() {
+    return (SimulationObjects.desiredTurretAngleRobotRelRad / TurretConstants.azimuthRotationstoRadians) - getAzimuthAngle();
   }
 
   /**
@@ -175,7 +186,7 @@ public class Turret {
 
   /** 
    * 
-   * The fully abstracted method that tracks the turret, no nonsense and all setup already.
+   * The fully abstracted method that tracks the turret azimuth and hood, no nonsense and all setup already.
    * Call to update the turret position.
    */
   public static void turretTrackHub() {
@@ -191,13 +202,10 @@ public class Turret {
     
     setHoodAngle();
     setAzimuthAngle();
-
-    // Logger.recordOutput("Turret/ Realoutputs/ Turret Azimuth", getAzimuthAngle());
   }
 
-    /** 
-   * 
-   * The fully abstracted method that tracks the turret, no nonsense and all setup already.
+  /** 
+   * The fully abstracted method that tracks the turret to the Hub without the Hood angle changing., no nonsense and all setup already.
    * Call to update the turret position.
    */
   public static void turretTrackHubAzimuth() {
@@ -214,6 +222,10 @@ public class Turret {
     setAzimuthAngle();
   }
 
+  /** 
+   * The fully abstracted method that tracks the turret to the respective alliance pass poses, no nonsense and all setup already.
+   * Call to update the turret position.
+   */
   public static void turretTrackPassPose() {
     Translation2d passPose = (Swerve.getPose().getY() <= 4) ? Constants.Hood.PASS_LOWER.toTranslation2d() : Constants.Hood.PASS_UPPER.toTranslation2d();
 
@@ -231,7 +243,11 @@ public class Turret {
     setAzimuthAngle();
   }
 
-    public static void turretTrackPassPoseAzimuth() {
+  /** 
+   * The fully abstracted method that tracks the turret azimuth to respective alliance pass poses, no nonsense and all setup already.
+   * Call to update the turret position.
+   */
+  public static void turretTrackPassPoseAzimuth() {
     Translation2d passPose = (Swerve.getPose().getY() <= 4) ? Constants.Hood.PASS_LOWER.toTranslation2d() : Constants.Hood.PASS_UPPER.toTranslation2d();
 
     simulateTurretAngle(Swerve.getPose(), 
@@ -248,7 +264,11 @@ public class Turret {
     setAzimuthAngle();
   }
 
-    public static void turretTrackPassPose(Translation2d poseToTrack) {
+  /** 
+   * The fully abstracted method that tracks the turret to a specified Translation2d.
+   * Call to update the turret position.
+   */
+  public static void turretTrackPassPose(Translation2d poseToTrack) {
     simulateTurretAngle(Swerve.getPose(), 
                         Constants.Hood.TURRET_ROBOT_OFFSET,
                         poseToTrack, 
