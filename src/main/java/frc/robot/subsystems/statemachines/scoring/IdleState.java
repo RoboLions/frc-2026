@@ -41,18 +41,15 @@ public class IdleState extends State {
   public void init(State prevState) {
     Intake.allRollersStop();
     Shooter.idlerShooter();
+    Intake.intakeMid();
   }
 
   @Override
   public void execute() {
     if (Swerve.getPose().getX() >= 4.75 && Swerve.getPose().getX() <= 11.75) {
-      // Turret.turretTrackPassPoseAzimuth();
+      Turret.turretTrackPassPoseAzimuth();
     } else {
-      // Turret.turretTrackHubAzimuth();
-    }
-    
-    if (RobotMap.driverController.getYButton()) {
-      Intake.intakeMid();
+      Turret.turretTrackHubAzimuth();
     }
   }
 

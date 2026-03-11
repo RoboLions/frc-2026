@@ -35,7 +35,8 @@ public class OuttakeState extends State {
   @Override
   public void init(State prevState) {
     Intake.intakeDown();
-    Intake.allRollersOut();
+    Intake.outtake();
+    
   }
 
   @Override

@@ -3,6 +3,7 @@ package frc.robot.subsystems.interfaces;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -23,13 +24,18 @@ public class Intake {
 
   private static final double STOW_POS = 0.25;
   private static final double MIDDLE_POS = 25.0;
-  private static final double DOWN_POS = 48.0;
+  private static final double DOWN_POS = 49.9;
 
   public static void init() {    
     TalonFXConfiguration masterIntakeMotorConfiguration = new TalonFXConfiguration();
 
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+
+    masterIntakeMotorConfiguration.Slot0.kP = 0.25;
+    masterIntakeMotorConfiguration.Slot0.kS = 0.4;
+    masterIntakeMotorConfiguration.Slot0.kV = 0.115;
+
     masterIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     mIntakeRollerMotor.getConfigurator().apply(masterIntakeMotorConfiguration);
@@ -38,6 +44,11 @@ public class Intake {
 
     indexMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     indexMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+
+    indexMotorConfiguration.Slot0.kP = 0.3;
+    indexMotorConfiguration.Slot0.kS = 0.35;
+    indexMotorConfiguration.Slot0.kV = 0.095;
+
     indexMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     mSpindexMotor.getConfigurator().apply(indexMotorConfiguration);
@@ -71,9 +82,9 @@ public class Intake {
     rackMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     rackMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    rackMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 49.9;
+    rackMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = DOWN_POS;
     rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.25;
+    rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = STOW_POS;
     
     rackMotorConfiguration.Slot0.kP = 0.5;
     rackMotorConfiguration.Slot0.kI = 0.0;
@@ -88,7 +99,6 @@ public class Intake {
     rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 200.0;
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
-    // mRackMotor.setPosition(0.0);
   }
 
   public static void set(double outputVoltage) {
@@ -96,11 +106,13 @@ public class Intake {
   }
 
   public static void intake() {
-    set(8);
+    mIntakeRollerMotor.setControl(new VelocityVoltage(20)
+                      .withEnableFOC(true));
   }
 
   public static void outtake() {
-    set(-4);
+    mIntakeRollerMotor.setControl(new VelocityVoltage(-15)
+                      .withEnableFOC(true));
   }
 
   public static void stopIntake() {
@@ -132,11 +144,13 @@ public class Intake {
   }
 
   public static void IndexIn() {
-    setIndex(10);
+    mSpindexMotor.setControl(new VelocityVoltage(40)
+                 .withEnableFOC(true));
   }
 
   public static void IndexOut() {
-    setIndex(-4);
+    mSpindexMotor.setControl(new VelocityVoltage(-20)
+                 .withEnableFOC(true));
   }
 
   public static void stopIndex() {
@@ -160,16 +174,6 @@ public class Intake {
   public static void stopFeed() {
     mFeedMotor.setControl(new VoltageOut(0).withEnableFOC(true));
   }
-
-  // public static void simulateIntakeUp() {
-  //   Logger.recordOutput("Intake Sim/ Intake Component 1", new Pose3d(0.1225, 0, -0.0825, new Rotation3d(0, -30 * Math.PI / 180, 0)));
-  //   Logger.recordOutput("Intake Sim/ Intake Component 2", new Pose3d(-0.3675, 0, 0.5025, new Rotation3d(0, 40 * Math.PI / 180, 0)));
-  // }
-
-  // public static void simulateIntakeDown() {
-  //   Logger.recordOutput("Intake Sim/ Intake Component 1", new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)));
-  //   Logger.recordOutput("Intake Sim/ Intake Component 2", new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)));
-  // }
 
   public static void allRollersIn() {
     intake();
