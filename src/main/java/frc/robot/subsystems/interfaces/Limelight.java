@@ -47,14 +47,10 @@ public class Limelight {
    */
   public static void periodic() {
     if (DriverStation.isDisabled()) {
-      disabledPoseSetup(FRONT_CAMERA_MODEL4, 0);
-      Logger.recordOutput("LIMELIGHTS /IS ENABLED?", false);
-      
+      disabledPoseSetup(FRONT_CAMERA_MODEL4, 0);      
       return;
-    } else {
-      Logger.recordOutput("LIMELIGHTS /IS ENABLED?", true);
     }
-
+    
     for (LimeLightObject camera : cameras) {
 
       camera.results = updateCameraResults(camera, camera.yawOffset, Swerve.getYawAsDegrees(), Swerve.getYawRateAsDeg());

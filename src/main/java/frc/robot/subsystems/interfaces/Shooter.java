@@ -78,8 +78,6 @@ public class Shooter {
     // https://en.wikipedia.org/wiki/Angular_velocity
     double setSpeed = Conversions.linearSpeedToRotationalSpeed(speed, (WHEEL_DIAMETER / 2.0)) * Constants.Shooter.POWER_GAIN_MULTIPLIER;
 
-    Logger.recordOutput("Shooter/ Flywheel setspeed", setSpeed);
-
     mMasterFlywheelMotor.setControl(
         new MotionMagicVelocityTorqueCurrentFOC(setSpeed)
             .withUpdateFreqHz(750));

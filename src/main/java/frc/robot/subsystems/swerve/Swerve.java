@@ -63,7 +63,7 @@ public class Swerve {
                 .withDeadband(SwerveConstants.MaxSpeed * 0.075).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.075) // Add a 7.5% deadband
                 .withDriveRequestType(DriveRequestType.Velocity);  
 
-        private static final PIDController pointDriveController = new PIDController(0.45, 0, 0.01);
+        private static final PIDController pointDriveController = new PIDController(0.6, 0, 0.01);
         private static final PIDController headingController = new PIDController(2.0, 0, 0.04);
     }
 
@@ -88,7 +88,7 @@ public class Swerve {
         updateChassisAcceleration(Swerve.getFieldSpeeds()); // used for moving shots estimation
 
         Logger.recordOutput("Swerve/ 2D CTRE Pose-Estimate", Swerve.getPose());
-        Logger.recordOutput("Swerve/ 3D CTRE Swerve Pose", Swerve.getPose3d());
+        Logger.recordOutput("Swerve/ Velocity", getFieldSpeeds());
     }
 
     public static void simulationPeriodic() {
