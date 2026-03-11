@@ -52,8 +52,6 @@ public class IdleState extends State {
     }
     
     if (RobotMap.driverController.getYButton()) {
-      Intake.intakeUp();
-    } else if (RobotMap.driverController.getAButton()) {
       Intake.intakeMid();
     }
   }

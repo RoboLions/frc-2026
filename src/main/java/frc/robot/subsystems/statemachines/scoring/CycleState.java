@@ -34,8 +34,11 @@ public class CycleState extends State {
 
   @Override
   public void execute() {
-    if (RobotMap.driverController.getRightBumperButton() && !(Turret.getAzimuthAngularVelocity() > 20)) {
+    if (RobotMap.driverController.getRightBumperButton() && !(Turret.getAzimuthAngularVelocity() > 20) && !(Turret.getAzimuthError() > 1.5)) {
       Intake.allRollersIn();
+    } else {
+      Intake.stopIndex();
+      Intake.stopFeed();
     }
 
     if (RobotMap.driverController.getAButton()) {
