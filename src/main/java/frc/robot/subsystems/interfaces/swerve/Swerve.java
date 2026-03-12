@@ -14,6 +14,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -65,6 +66,10 @@ public class Swerve {
 
         private static final PIDController pointDriveController = new PIDController(1, 0, 0);
         private static final PIDController headingController = new PIDController(2.5, 0, 0.04);
+
+        private static final SlewRateLimiter xLimiter = new SlewRateLimiter(1.5); // units/sec²
+        private static final SlewRateLimiter yLimiter = new SlewRateLimiter(1.5);
+        private static final SlewRateLimiter omegaLimiter = new SlewRateLimiter(2);
     }
 
     private class TelemetryObjects{
@@ -244,6 +249,24 @@ public class Swerve {
             SwerveObjects.teleopDrive.withVelocityX(vx * SwerveConstants.MaxSpeed)
                 .withVelocityY(vy * SwerveConstants.MaxSpeed)
                 .withRotationalRate(omega * SwerveConstants.MaxAngularRate));
+
+        SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
+    }
+
+    public static void teleopDriveSlewed(double percentSpeed) {
+        double vy = -RobotMap.driverController.getLeftX() * percentSpeed;
+        double vx = -RobotMap.driverController.getLeftY() * percentSpeed;
+        double omega = -RobotMap.driverController.getRightX() * percentSpeed;
+
+        double vxSlewed = SwerveObjects.xLimiter.calculate(vx);
+        double vySlewed = SwerveObjects.yLimiter.calculate(vy);
+        double omegaSlewed = SwerveObjects.omegaLimiter.calculate(omega);
+
+        SwerveObjects.Swerve.setControl(
+            SwerveObjects.teleopDrive
+                .withVelocityX(vxSlewed * SwerveConstants.MaxSpeed)
+                .withVelocityY(vySlewed * SwerveConstants.MaxSpeed)
+                .withRotationalRate(omegaSlewed * SwerveConstants.MaxAngularRate));
 
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
