@@ -39,8 +39,6 @@ public class Turret {
     public static double literalShotHoodRad;
 
     private static Timer simTimer = new Timer();
-
-    private static final int numLoops = 2;
   }
   
   public static void init() {
@@ -195,8 +193,7 @@ public class Turret {
                         Swerve.getYawAsRadians(), 
                         Swerve.getYawRateAsRad(),
                         Swerve.getFieldSpeeds(),
-                        Swerve.getLoopLatencySec(),
-                        1);
+                        Swerve.getLoopLatencySec());
     
     setHoodAngle();
     setAzimuthAngle();
@@ -214,8 +211,7 @@ public class Turret {
                         Swerve.getYawAsRadians(), 
                         Swerve.getYawRateAsRad(),
                         Swerve.getFieldSpeeds(),
-                        Swerve.getLoopLatencySec(),
-                        SimulationObjects.numLoops);
+                        Swerve.getLoopLatencySec());
     
     setAzimuthAngle();
   }
@@ -234,8 +230,7 @@ public class Turret {
                         Swerve.getYawAsRadians(), 
                         Swerve.getYawRateAsRad(),
                         Swerve.getFieldSpeeds(),
-                        Swerve.getLoopLatencySec(),
-                        SimulationObjects.numLoops);
+                        Swerve.getLoopLatencySec());
     
     setHoodAngle();
     setAzimuthAngle();
@@ -255,8 +250,7 @@ public class Turret {
                         Swerve.getYawAsRadians(), 
                         Swerve.getYawRateAsRad(),
                         Swerve.getFieldSpeeds(),
-                        Swerve.getLoopLatencySec(),
-                        SimulationObjects.numLoops);
+                        Swerve.getLoopLatencySec());
     
     setHoodAngle();
     setAzimuthAngle();
@@ -274,8 +268,7 @@ public class Turret {
                         Swerve.getYawAsRadians(), 
                         Swerve.getYawRateAsRad(),
                         Swerve.getFieldSpeeds(),
-                        Swerve.getLoopLatencySec(),
-                        SimulationObjects.numLoops);
+                        Swerve.getLoopLatencySec());
     
     setHoodAngle();
 
@@ -456,8 +449,7 @@ public class Turret {
                                           double robotFieldYaw,
                                           double robotYawRate,
                                           ChassisSpeeds fieldRobotSpeeds,
-                                          double loopLatencySec,
-                                          int numLoops) 
+                                          double loopLatencySec) 
   {
     Pose2d turretPose = getTurretPosition(currPose, turretRelative);
     Translation2d transformedTarget = transformTarget(turretPose.getTranslation(), targetPose, 0.25);

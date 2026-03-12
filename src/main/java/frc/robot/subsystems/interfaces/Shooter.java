@@ -1,7 +1,5 @@
 package frc.robot.subsystems.interfaces;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
@@ -98,12 +96,4 @@ public class Shooter {
     mMasterFlywheelMotor.setControl(new VoltageOut(0).withEnableFOC(true));
     mFollowerFlywheelMotor.setControl(new VoltageOut(0).withEnableFOC(true));
   }
-
-  public static boolean readyToShoot() {
-    //TODO
-    return false;
-  }
-
-
-
 }
