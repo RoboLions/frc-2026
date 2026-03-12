@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.lib.util.FuelSim;
-import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.interfaces.swerve.Swerve;
 
 public class Turret {
   private static final TalonFX mHoodPivotMotor =

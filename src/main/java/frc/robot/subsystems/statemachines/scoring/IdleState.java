@@ -10,7 +10,7 @@ import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Shooter;
 import frc.robot.subsystems.interfaces.Turret;
-import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.interfaces.swerve.Swerve;
 
 /** Add your docs here. */
 public class IdleState extends State {

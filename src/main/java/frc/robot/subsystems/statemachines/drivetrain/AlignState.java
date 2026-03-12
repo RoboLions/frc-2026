@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
-import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.interfaces.swerve.Swerve;
 
 
 public class AlignState extends State {

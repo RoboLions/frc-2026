@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
-import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.interfaces.swerve.Swerve;
 
 public class SYSIDState extends State{
     @Override

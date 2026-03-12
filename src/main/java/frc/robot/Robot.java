@@ -13,9 +13,9 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.lib.util.FuelSim;
+import frc.robot.subsystems.interfaces.swerve.Swerve;
 import frc.robot.subsystems.statemachines.drivetrain.DrivetrainStateMachine;
 import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
-import frc.robot.subsystems.swerve.Swerve;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
