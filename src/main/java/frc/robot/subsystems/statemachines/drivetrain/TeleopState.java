@@ -1,5 +1,6 @@
 package frc.robot.subsystems.statemachines.drivetrain;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
@@ -15,6 +16,12 @@ public class TeleopState extends State {
                   return RobotMap.driverController.getBButtonPressed();
                 },
                 DrivetrainStateMachine.teleopState));  
+        addTransition(
+            new Transition(
+                () -> {
+                  return RobotMap.driverController.getAButtonPressed();
+                },
+                DrivetrainStateMachine.alignState));  
     }
 
     @Override

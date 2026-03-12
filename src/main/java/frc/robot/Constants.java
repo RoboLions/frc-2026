@@ -16,17 +16,18 @@ public class Constants {
         public static final double BASE_HOOD_ANGLE_DEG = 18.75;
         public static final double DEGREE_RATIO = 30.1;
 
+        public static final double YAW_COMPENSATION_LATENCY_MS = 50;
+
         public static final double HEIGHT_FROM_BOT_TO_TARGET = 1.117; //meters
         public static final Translation2d TURRET_ROBOT_OFFSET = new Translation2d(0.14605, -0.14605); //meters
 
-        public static final Translation2d HUB_POSE =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation2d(4.62744, 4.03648) : new Translation2d(11.91642, 4.03814);
-        public static final Translation3d PASS_UPPER = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.75, 6, 0) : new Translation3d(14.75, 6, 0);
-        public static final Translation3d PASS_LOWER =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.75, 2, 0) : new Translation3d(14.75, 2, 0);
-
+        public static final Translation2d HUB_POSE =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation2d(4.625, 4.025) : new Translation2d(11.91642, 4.03814);
+        public static final Translation3d PASS_UPPER = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.75, 7, 0) : new Translation3d(14.75, 7, 0);
+        public static final Translation3d PASS_LOWER =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.75, 1, 0) : new Translation3d(14.75, 1, 0);
     }
 
     public class Shooter {
-        public static final double POWER_GAIN_MULTIPLIER = 2.0;
+        public static final double POWER_GAIN_MULTIPLIER = 2.1;
     }
 
     public class LimeLight {

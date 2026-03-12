@@ -37,20 +37,15 @@ public class CycleState extends State {
 
   @Override
   public void execute() {
-    if (RobotMap.driverController.getRightBumperButton() && !(Turret.getAzimuthAngularVelocity() > 20) && !(Turret.getAzimuthError() > 1.5)) {
+    if (RobotMap.driverController.getRightTriggerAxis() > 0.25) {
       timer.start();
       Intake.allRollersIn();
+    }
 
-      if (Intake.getRackPosition() > 30 && timer.hasElapsed(1.5)) {
-        Intake.intakeMid();
-        timer.reset();
-      } else if (Intake.getRackPosition() < 30 && timer.hasElapsed(1.5)) {
-        Intake.intakeDown();
-        timer.reset();
-      }
+    if (RobotMap.driverController.getLeftBumperButton()) {
+      Intake.intakeMid();
     } else {
-      Intake.stopIndex();
-      Intake.stopFeed();
+      Intake.intakeDown();
     }
 
     if (Swerve.getPose().getX() >= 4.75 && Swerve.getPose().getX() <= 11.75) {

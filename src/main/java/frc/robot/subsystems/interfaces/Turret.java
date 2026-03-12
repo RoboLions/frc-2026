@@ -114,8 +114,6 @@ public class Turret {
 
     mAzimuthTurretMotor.getConfigurator().apply(turretAzimuthConfig);
     mAzimuthTurretMotor.setPosition(0.0);
-
-    Logger.recordOutput("Turret/ Turret Sim/ Turret 3D Pose", new Pose3d(0, 0, 0, new Rotation3d(0 , 0, SimulationObjects.desiredTurretAngleRobotRelRad)));
   }
 
   /**
@@ -486,7 +484,10 @@ public class Turret {
     double newTheta = calculateLaunchAngleRad(newV, newR, targetHeightRelativeBot);
     timeOFlight = newR / newV * Math.cos(newTheta);
     
-    SimulationObjects.desiredTurretAngleRobotRelRad = wrapAngle(Math.atan2(newDY, newDX) - robotFieldYaw);
+    SimulationObjects.desiredTurretAngleRobotRelRad 
+      = wrapAngle(Math.atan2(newDY, newDX) 
+        - robotFieldYaw 
+        - (robotYawRate * Constants.Hood.YAW_COMPENSATION_LATENCY_MS / 1000));
     SimulationObjects.totalShotVelocity = newV;
     SimulationObjects.desiredHoodAngleRobotRelDeg = calculateHoodAngle(newV, newR, targetHeightRelativeBot);
     SimulationObjects.literalShotHoodRad = newTheta;

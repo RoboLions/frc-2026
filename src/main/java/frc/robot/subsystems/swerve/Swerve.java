@@ -63,8 +63,8 @@ public class Swerve {
                 .withDeadband(SwerveConstants.MaxSpeed * 0.075).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.075) // Add a 7.5% deadband
                 .withDriveRequestType(DriveRequestType.Velocity);  
 
-        private static final PIDController pointDriveController = new PIDController(0.6, 0, 0.01);
-        private static final PIDController headingController = new PIDController(2.0, 0, 0.04);
+        private static final PIDController pointDriveController = new PIDController(1, 0, 0);
+        private static final PIDController headingController = new PIDController(2.5, 0, 0.04);
     }
 
     private class TelemetryObjects{
@@ -81,6 +81,7 @@ public class Swerve {
     
     public static void init() {
         SwerveObjects.headingController.enableContinuousInput(-Math.PI, Math.PI);
+        SwerveObjects.pointDriveController.setTolerance(0.05);
     }
 
     public static void periodic() {

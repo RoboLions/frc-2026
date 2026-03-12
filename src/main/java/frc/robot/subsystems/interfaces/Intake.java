@@ -23,7 +23,7 @@ public class Intake {
     new TalonFX(Constants.CAN_IDS.RACK_MOTOR, "CANexternal");
 
   private static final double STOW_POS = 0.25;
-  private static final double MIDDLE_POS = 25.0;
+  private static final double MIDDLE_POS = 26.9;
   private static final double DOWN_POS = 49.9;
 
   public static void init() {    
@@ -44,10 +44,6 @@ public class Intake {
 
     indexMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     indexMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
-
-    indexMotorConfiguration.Slot0.kP = 0.3;
-    indexMotorConfiguration.Slot0.kS = 0.35;
-    indexMotorConfiguration.Slot0.kV = 0.095;
 
     indexMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
@@ -95,8 +91,8 @@ public class Intake {
     rackMotorConfiguration.Slot0.kG = 0.0;
 
     rackMotorConfiguration.ClosedLoopGeneral.ContinuousWrap = false;
-    rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 175.0;
-    rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 200.0;
+    rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 200.0;
+    rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 300.0;
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
   }
@@ -106,7 +102,7 @@ public class Intake {
   }
 
   public static void intake() {
-    mIntakeRollerMotor.setControl(new VelocityVoltage(20)
+    mIntakeRollerMotor.setControl(new VelocityVoltage(90)
                       .withEnableFOC(true));
   }
 
@@ -144,13 +140,11 @@ public class Intake {
   }
 
   public static void IndexIn() {
-    mSpindexMotor.setControl(new VelocityVoltage(40)
-                 .withEnableFOC(true));
+    setIndex(10);
   }
 
   public static void IndexOut() {
-    mSpindexMotor.setControl(new VelocityVoltage(-20)
-                 .withEnableFOC(true));
+    setIndex(-5);
   }
 
   public static void stopIndex() {
