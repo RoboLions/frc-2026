@@ -40,7 +40,7 @@ public class IntakeState extends State {
     Intake.intake();
     Intake.intakeDown();
     Shooter.idlerShooter();
-    RobotMap.driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.1);
+    RobotMap.driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.05);
   }
 
   @Override

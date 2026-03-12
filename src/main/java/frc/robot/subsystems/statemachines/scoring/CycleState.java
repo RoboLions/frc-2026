@@ -38,12 +38,12 @@ public class CycleState extends State {
 
   @Override
   public void execute() {
-    RobotMap.driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.25);
+    RobotMap.driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.1);
 
     if (RobotMap.driverController.getRightTriggerAxis() > 0.25) { // SHOOT
       timer.start();
       Intake.allRollersIn();
-      RobotMap.driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
+      RobotMap.driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.25);
     }
 
     if (RobotMap.driverController.getLeftBumperButton()) { // INTAKE UP AND DOWN

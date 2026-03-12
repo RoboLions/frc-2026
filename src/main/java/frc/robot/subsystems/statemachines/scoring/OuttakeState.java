@@ -37,7 +37,7 @@ public class OuttakeState extends State {
   public void init(State prevState) {
     Intake.intakeDown();
     Intake.outtake();
-    RobotMap.driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.1);
+    RobotMap.driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.05);
   }
 
   @Override

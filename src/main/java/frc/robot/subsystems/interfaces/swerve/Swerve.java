@@ -28,8 +28,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -183,10 +185,17 @@ public class Swerve {
 	}
 
     public static void resetOdometry() {
-        resetPose(
-            new Pose2d(
-                getPose().getTranslation(), 
-                new Rotation2d(0))); 
+        if (DriverStation.getAlliance().get() == Alliance.Red) {
+            resetPose(
+                new Pose2d(
+                    getPose().getTranslation(), 
+                    new Rotation2d(0))); 
+        } else {
+            resetPose(
+                new Pose2d(
+                    getPose().getTranslation(), 
+                    Rotation2d.fromDegrees(180))); 
+        }
     }
 
     public static void zeroPose() {

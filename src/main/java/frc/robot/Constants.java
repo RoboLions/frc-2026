@@ -10,7 +10,7 @@ public class Constants {
 
     public class Hood {
         public static final double G = 9.80665;
-        public static final double THETA_ANGLE_FROM_SHOOTER = 98.75; //this is measured angled which the ball exits the shooter
+        public static final double THETA_ANGLE_FROM_SHOOTER = 99; //this is measured angled which the ball exits the shooter
 
         public static final double MAX_HOOD_ANGLE_DEG = 42.0;
         public static final double BASE_HOOD_ANGLE_DEG = 18.75;
@@ -27,7 +27,7 @@ public class Constants {
     }
 
     public class Shooter {
-        public static final double POWER_GAIN_MULTIPLIER = 2.1;
+        public static final double POWER_GAIN_MULTIPLIER = 2.19;
     }
 
     public class LimeLight {
