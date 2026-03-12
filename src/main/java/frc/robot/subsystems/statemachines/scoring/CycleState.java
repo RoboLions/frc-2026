@@ -1,5 +1,6 @@
 package frc.robot.subsystems.statemachines.scoring;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
@@ -37,18 +38,21 @@ public class CycleState extends State {
 
   @Override
   public void execute() {
-    if (RobotMap.driverController.getRightTriggerAxis() > 0.25) {
+    RobotMap.driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.25);
+
+    if (RobotMap.driverController.getRightTriggerAxis() > 0.25) { // SHOOT
       timer.start();
       Intake.allRollersIn();
+      RobotMap.driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
     }
 
-    if (RobotMap.driverController.getLeftBumperButton()) {
+    if (RobotMap.driverController.getLeftBumperButton()) { // INTAKE UP AND DOWN
       Intake.intakeMid();
     } else {
       Intake.intakeDown();
     }
 
-    if (Swerve.getPose().getX() >= 4.75 && Swerve.getPose().getX() <= 11.75) {
+    if (Swerve.getPose().getX() >= 4.75 && Swerve.getPose().getX() <= 11.75) { // PASS LOGIC VS HUB
       Turret.turretTrackPassPose();
     } else {
       Turret.turretTrackHub();

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.statemachines.scoring;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
@@ -42,6 +43,8 @@ public class IdleState extends State {
     Intake.allRollersStop();
     Shooter.idlerShooter();
     Intake.intakeMid();
+
+    RobotMap.driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
   }
 
   @Override

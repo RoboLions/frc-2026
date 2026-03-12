@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.statemachines.scoring;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
@@ -27,12 +28,19 @@ public class IntakeState extends State {
               return RobotMap.driverController.getBButton();
             },
             ScoringStateMachine.idleState));
+    addTransition(
+        new Transition(
+            () -> {
+              return RobotMap.driverController.getLeftTriggerAxis() > 0.25;
+            },
+            ScoringStateMachine.cycleState));
   }
   @Override
   public void init(State prevState) {
     Intake.intake();
     Intake.intakeDown();
     Shooter.idlerShooter();
+    RobotMap.driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.1);
   }
 
   @Override
