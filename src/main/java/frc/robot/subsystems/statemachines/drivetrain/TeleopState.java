@@ -16,12 +16,6 @@ public class TeleopState extends State {
                   return RobotMap.driverController.getBButtonPressed();
                 },
                 DrivetrainStateMachine.teleopState));  
-        addTransition(
-            new Transition(
-                () -> {
-                  return RobotMap.driverController.getAButtonPressed();
-                },
-                DrivetrainStateMachine.alignState));  
     }
 
     @Override

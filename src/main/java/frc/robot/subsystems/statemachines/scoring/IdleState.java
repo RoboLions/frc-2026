@@ -47,9 +47,9 @@ public class IdleState extends State {
   @Override
   public void execute() {
     if (Swerve.getPose().getX() >= 4.75 && Swerve.getPose().getX() <= 11.75) {
-      // Turret.turretTrackPassPoseAzimuth();
+      Turret.turretTrackPassPoseAzimuth();
     } else {
-      // Turret.turretTrackHubAzimuth();
+      Turret.turretTrackHubAzimuth();
     }
   }
 
