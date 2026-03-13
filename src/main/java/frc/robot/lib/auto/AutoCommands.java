@@ -45,19 +45,25 @@ public class AutoCommands {
         return Commands.run(() ->  Shooter.idlerShooter());
     }
 
-    public static Command shootAndTrackHub() {
+    public static Command setShooterAndTrackHub() {
         return Commands.run(() ->  Turret.turretTrackHub())
-                       .alongWith(Commands.run(() ->  Shooter.setShootSpeed(SimulationObjects.totalShotVelocity)))
-                       .repeatedly();
+                       .alongWith(Commands.run(() ->  Shooter.setShootSpeed(SimulationObjects.totalShotVelocity)));
     }
 
-    public static Command shootSequence() {
+    public static Command shootSequenceWithRamp() {
         return Commands.sequence(AutoCommands.SwerveStop()
                         .alongWith(AutoCommands.setTurretTrack())
                         .alongWith(AutoCommands.setShooter())
                         .withTimeout(0.35),
                 
                     AutoCommands.feedIn());
+    }
+
+        public static Command shootSequenceNoRamp() {
+        return Commands.sequence(AutoCommands.SwerveStop()
+                        .alongWith(AutoCommands.setTurretTrack())
+                        .alongWith(AutoCommands.setShooter()),
+                        AutoCommands.feedIn());
     }
 
     public static Command setShooter() {
