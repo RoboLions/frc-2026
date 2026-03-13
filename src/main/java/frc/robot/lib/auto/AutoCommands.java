@@ -46,22 +46,42 @@ public class AutoCommands {
     }
 
     public static Command shootAndTrackHub() {
-        return Commands.run(() ->  Shooter.setShootSpeed(SimulationObjects.totalShotVelocity))
-                       .alongWith(Commands.run(() -> Turret.turretTrackHub()));
+        return Commands.run(() ->  Turret.turretTrackHub())
+                       .alongWith(Commands.run(() ->  Shooter.setShootSpeed(SimulationObjects.totalShotVelocity)))
+                       .repeatedly();
+    }
+
+    public static Command shootSequence() {
+        return Commands.sequence(AutoCommands.SwerveStop()
+                        .alongWith(AutoCommands.setTurretTrack())
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.35),
+                
+                    AutoCommands.feedIn());
+    }
+
+    public static Command setShooter() {
+        return Commands.run(() ->  Shooter.setShootSpeed(SimulationObjects.totalShotVelocity));
     }
 
     public static Command intakeOutRollersIn() {
-        return Commands.run(() -> Intake.allRollersIn())
+        return Commands.run(() -> Intake.intake())
                        .alongWith(Commands.run(() -> Intake.intakeDown()));
     }
 
     public static Command intakeMidRollersStop() {
-        return Commands.run(() -> Intake.allRollersStop())
+        return Commands.run(() -> Intake.stopIntake())
                        .alongWith(Commands.run(() -> Intake.intakeMid()));
     }
 
     public static Command feedIn() {
-        return Commands.run(() -> Intake.allRollersIn());
+        return Commands.run(() -> Intake.FeedIn())
+                       .alongWith(Commands.run(() -> Intake.IndexIn()));
+    }
+
+    public static Command feedStop() {
+        return Commands.run(() -> Intake.stopFeed())
+                       .alongWith(Commands.run(() -> Intake.stopIndex()));
     }
 
     public static BooleanSupplier timerAt(double time, Timer timer) {

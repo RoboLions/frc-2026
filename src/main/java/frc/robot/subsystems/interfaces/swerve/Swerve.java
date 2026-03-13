@@ -71,7 +71,7 @@ public class Swerve {
 
         private static final SlewRateLimiter xLimiter = new SlewRateLimiter(1.5); // units/sec²
         private static final SlewRateLimiter yLimiter = new SlewRateLimiter(1.5);
-        private static final SlewRateLimiter omegaLimiter = new SlewRateLimiter(2);
+        private static final SlewRateLimiter omegaLimiter = new SlewRateLimiter(4);
     }
 
     private class TelemetryObjects{

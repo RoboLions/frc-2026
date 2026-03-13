@@ -33,24 +33,41 @@ public class AutoSubsystem {
 
         AutoTrajectory LEFT_START_TO_NEUTRAL_ZONE = routine.trajectory("LEFT_START_TO_NEUTRAL_ZONE");
             LEFT_START_TO_NEUTRAL_ZONE.atPose("Intake_OUT", 0.5, 0.5)
-                .onTrue(AutoCommands.intakeOutRollersIn());
+                .onTrue(AutoCommands.intakeOutRollersIn()
+                .withTimeout(0.01));
 
         AutoTrajectory Neutral_Zone_TO_LEFT_TRENCH = routine.trajectory("Neutral_Zone_TO_LEFT_TRENCH");
             Neutral_Zone_TO_LEFT_TRENCH.atPose("INTAKE_MID", 0.5, 0.5)
                 .onTrue(AutoCommands.intakeMidRollersStop())
-                .onTrue(AutoCommands.startShooter());
+                .onTrue(AutoCommands.startShooter()
+                .withTimeout(0.01));
 
         return () -> {
             routine.active().onTrue(
                 Commands.sequence(
+                    AutoCommands.shootSequence()
+                        .withTimeout(1.5),
+
+                    AutoCommands.feedStop()
+                        .withTimeout(0.05),
+                    
+                    AutoCommands.startShooter()
+                        .withTimeout(0.05),
+                    
                     LEFT_START_TO_NEUTRAL_ZONE.cmd(),
                     Neutral_Zone_TO_LEFT_TRENCH.cmd(),
+
                     AutoCommands.SwerveStop()
-                        .alongWith(AutoCommands.shootAndTrackHub())
-                        .alongWith(Commands.waitSeconds(2))
+                        .withTimeout(0.01),
+
+                    AutoCommands.shootSequence()
+                        .withTimeout(2),
+
+                    AutoCommands.feedIn()
+                        .withTimeout(3)
                 )
             );
-        
+
             return routine;
         };
     }
@@ -58,12 +75,13 @@ public class AutoSubsystem {
     private Supplier<AutoRoutine> test() {
         AutoRoutine routine = autoFactory.newRoutine("TEST");
 
-        AutoTrajectory TEST = routine.trajectory("TEST");
-
         return () -> {
             routine.active().onTrue(
                 Commands.sequence(
-                    TEST.cmd(),
+                    AutoCommands.setTurretTrack()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.5),
+                    AutoCommands.feedIn(),
                     AutoCommands.SwerveStop()
                 )
             );

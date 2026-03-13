@@ -95,6 +95,7 @@ public class Intake {
     rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 300.0;
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
+    mRackMotor.setPosition(0);
   }
 
   public static void set(double outputVoltage) {
