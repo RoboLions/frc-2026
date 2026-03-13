@@ -22,12 +22,12 @@ public class Constants {
         public static final Translation2d TURRET_ROBOT_OFFSET = new Translation2d(0.14605, -0.14605); //meters
 
         public static final Translation2d HUB_POSE =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation2d(4.625, 4.025) : new Translation2d(11.91642, 4.03814);
-        public static final Translation3d PASS_UPPER = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.75, 6.75, 0) : new Translation3d(14.75, 6.75, 0);
-        public static final Translation3d PASS_LOWER =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.75, 1.25, 0) : new Translation3d(14.75, 1.25, 0);
+        public static final Translation3d PASS_UPPER = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.5, 6.75, 0) : new Translation3d(14.5, 6.75, 0);
+        public static final Translation3d PASS_LOWER =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.5, 1.25, 0) : new Translation3d(14.5, 1.25, 0);
     }
 
     public class Shooter {
-        public static final double POWER_GAIN_MULTIPLIER = 2.215;
+        public static final double POWER_GAIN_MULTIPLIER = 2.2075;
     }
 
     public class LimeLight {

@@ -44,7 +44,7 @@ public class CycleState extends State {
       RobotMap.driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.25);
     }
 
-    if (RobotMap.driverController.getLeftBumperButton()) { // INTAKE UP AND DOWN
+    if (RobotMap.driverController.getLeftBumperButton() || RobotMap.manipulatorController.getLeftBumperButton()) { // INTAKE UP AND DOWN
       Intake.intakeMid();
     } else {
       Intake.intakeDown();

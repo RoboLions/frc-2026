@@ -24,17 +24,13 @@ public class Intake {
 
   private static final double STOW_POS = 0.25;
   private static final double MIDDLE_POS = 26.9;
-  private static final double DOWN_POS = 50;
+  private static final double DOWN_POS = 48.4;
 
   public static void init() {    
     TalonFXConfiguration masterIntakeMotorConfiguration = new TalonFXConfiguration();
 
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
-
-    masterIntakeMotorConfiguration.Slot0.kP = 0.25;
-    masterIntakeMotorConfiguration.Slot0.kS = 0.4;
-    masterIntakeMotorConfiguration.Slot0.kV = 0.115;
 
     masterIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
@@ -108,13 +104,11 @@ public class Intake {
   }
 
   public static void intake() {
-    mIntakeRollerMotor.setControl(new VelocityVoltage(90)
-                      .withEnableFOC(true));
+    set(7);
   }
 
   public static void outtake() {
-    mIntakeRollerMotor.setControl(new VelocityVoltage(-15)
-                      .withEnableFOC(true));
+    set(-5);
   }
 
   public static void stopIntake() {

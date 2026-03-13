@@ -69,8 +69,8 @@ public class Swerve {
         private static final PIDController pointDriveController = new PIDController(1, 0, 0);
         private static final PIDController headingController = new PIDController(2.5, 0, 0.04);
 
-        private static final SlewRateLimiter xLimiter = new SlewRateLimiter(1.5); // units/sec²
-        private static final SlewRateLimiter yLimiter = new SlewRateLimiter(1.5);
+        private static final SlewRateLimiter xLimiter = new SlewRateLimiter(1.25); // units/sec²
+        private static final SlewRateLimiter yLimiter = new SlewRateLimiter(1.25);
         private static final SlewRateLimiter omegaLimiter = new SlewRateLimiter(4);
     }
 

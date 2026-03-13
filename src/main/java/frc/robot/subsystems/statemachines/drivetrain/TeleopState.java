@@ -25,8 +25,8 @@ public class TeleopState extends State {
 
     @Override
     public void execute() {
-        if (RobotMap.scoringStateMachine.getCurrentState().equals(ScoringStateMachine.cycleState) && CycleState.isPass) {
-            Swerve.teleopDriveSlewed(0.5);
+        if (RobotMap.scoringStateMachine.getCurrentState().equals(ScoringStateMachine.cycleState) && !CycleState.isPass) {
+            Swerve.teleopDriveSlewed(0.6);
             return;
         }
 
