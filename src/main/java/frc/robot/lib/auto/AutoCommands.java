@@ -41,7 +41,7 @@ public class AutoCommands {
         return Commands.run(() -> Turret.setAzimuthZero()); 
     }
 
-    public static Command startShooter() {
+    public static Command idleShooter() {
         return Commands.run(() ->  Shooter.idlerShooter());
     }
 
@@ -62,8 +62,8 @@ public class AutoCommands {
         public static Command shootSequenceNoRamp() {
         return Commands.sequence(AutoCommands.SwerveStop()
                         .alongWith(AutoCommands.setTurretTrack())
-                        .alongWith(AutoCommands.setShooter()),
-                        AutoCommands.feedIn());
+                        .alongWith(AutoCommands.setShooter())
+                        .alongWith(AutoCommands.feedIn()));
     }
 
     public static Command setShooter() {
@@ -71,7 +71,7 @@ public class AutoCommands {
     }
 
     public static Command intakeOutRollersIn() {
-        return Commands.run(() -> Intake.intake())
+        return Commands.run(() -> Intake.intakeFastAuto())
                        .alongWith(Commands.run(() -> Intake.intakeDown()));
     }
 
@@ -82,12 +82,17 @@ public class AutoCommands {
 
     public static Command feedIn() {
         return Commands.run(() -> Intake.FeedIn())
-                       .alongWith(Commands.run(() -> Intake.IndexIn()));
+                       .alongWith(Commands.run(() -> Intake.IndexIn()))
+                       .alongWith(Commands.run(() -> Intake.intake()));
     }
 
     public static Command feedStop() {
         return Commands.run(() -> Intake.stopFeed())
                        .alongWith(Commands.run(() -> Intake.stopIndex()));
+    }
+
+    public static Command intakeZeroPosition() {
+        return Commands.run(() -> Intake.intakeUp());
     }
 
     public static BooleanSupplier timerAt(double time, Timer timer) {

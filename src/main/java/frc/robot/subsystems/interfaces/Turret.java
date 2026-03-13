@@ -314,7 +314,7 @@ public class Turret {
   private static double sampleVelocity(double d, double h) {
     double velocity = Math.sqrt(
       Constants.Hood.G * (Math.sqrt(d * d + h * h) + h)) // the minimum line. go below this velocity and we will hit the SIDE.
-       + 0.5 + 4 * Math.pow(Math.E, -(1 * d)); // the offset line, adjust as desired
+       + 0.5 + 5 * Math.pow(Math.E, -(1 * d)); // the offset line, adjust as desired
         
     return velocity;
   }

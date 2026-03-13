@@ -107,6 +107,10 @@ public class Intake {
     set(7);
   }
 
+  public static void intakeFastAuto() {
+    set(10);
+  }
+
   public static void outtake() {
     set(-5);
   }
