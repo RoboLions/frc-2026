@@ -24,7 +24,7 @@ public class Intake {
 
   private static final double STOW_POS = 0.25;
   private static final double MIDDLE_POS = 26.9;
-  private static final double DOWN_POS = 49.9;
+  private static final double DOWN_POS = 50;
 
   public static void init() {    
     TalonFXConfiguration masterIntakeMotorConfiguration = new TalonFXConfiguration();
@@ -44,6 +44,11 @@ public class Intake {
 
     indexMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     indexMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+
+    indexMotorConfiguration.Slot0.kP = 0.2;
+    indexMotorConfiguration.Slot0.kS = 0.375;
+    indexMotorConfiguration.Slot0.kV = 0.094;
+    indexMotorConfiguration.Slot0.kA = 0.001;
 
     indexMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
@@ -136,20 +141,20 @@ public class Intake {
     return mRackMotor.getPosition().getValueAsDouble();
   }
 
-  public static void setIndex(double voltageOut) {
-    mSpindexMotor.setControl(new VoltageOut(voltageOut).withEnableFOC(true));
+  public static void setIndex(double velocity) {
+    mSpindexMotor.setControl(new VelocityVoltage(velocity).withEnableFOC(true));
   }
 
   public static void IndexIn() {
-    setIndex(10);
+    setIndex(95);
   }
 
   public static void IndexOut() {
-    setIndex(-5);
+    setIndex(-50);
   }
 
   public static void stopIndex() {
-    setIndex(0);
+   mSpindexMotor.setControl(new VoltageOut(0).withEnableFOC(true)); 
   }
 
   public static void setFeed(double rpm) {
