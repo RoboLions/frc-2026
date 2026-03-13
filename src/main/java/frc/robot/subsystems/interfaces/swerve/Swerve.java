@@ -41,7 +41,7 @@ import frc.robot.RobotMap;
 public class Swerve {
 
     public class SwerveConstants{
-        public static final double ODOMETRY_FREQUENCY = 325.0;
+        public static final double ODOMETRY_FREQUENCY = 250.0;
 
         private static final double MaxSpeed = GeneratedConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
         private static final double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -69,8 +69,8 @@ public class Swerve {
         private static final PIDController pointDriveController = new PIDController(1, 0, 0);
         private static final PIDController headingController = new PIDController(2.5, 0, 0.04);
 
-        private static final SlewRateLimiter xLimiter = new SlewRateLimiter(1.25); // units/sec²
-        private static final SlewRateLimiter yLimiter = new SlewRateLimiter(1.25);
+        private static final SlewRateLimiter xLimiter = new SlewRateLimiter(1.0); // units/sec²
+        private static final SlewRateLimiter yLimiter = new SlewRateLimiter(1.0);
         private static final SlewRateLimiter omegaLimiter = new SlewRateLimiter(4);
     }
 
@@ -89,13 +89,15 @@ public class Swerve {
     public static void init() {
         SwerveObjects.headingController.enableContinuousInput(-Math.PI, Math.PI);
         SwerveObjects.pointDriveController.setTolerance(0.05);
+
+        SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
 
     public static void periodic() {
         SwerveObjects.Swerve.periodic(); // look at the function comment and see that this is actually just a reorientation tool
         updateChassisAcceleration(Swerve.getFieldSpeeds()); // used for moving shots estimation
 
-        Logger.recordOutput("Swerve/ 2D CTRE Pose-Estimate", Swerve.getPose());
+        Logger.recordOutput("Swerve/ 2D CTRE Pose-Estimate", getPose());
         Logger.recordOutput("Swerve/ Velocity", getFieldSpeeds());
     }
 
@@ -245,8 +247,6 @@ public class Swerve {
             SwerveObjects.teleopDrive.withVelocityX(vx * SwerveConstants.MaxSpeed)
                 .withVelocityY(vy * SwerveConstants.MaxSpeed)
                 .withRotationalRate(omega * SwerveConstants.MaxAngularRate));
-
-        SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
 
     public static void teleopDrive(double percentSpeed) {
@@ -258,8 +258,6 @@ public class Swerve {
             SwerveObjects.teleopDrive.withVelocityX(vx * SwerveConstants.MaxSpeed)
                 .withVelocityY(vy * SwerveConstants.MaxSpeed)
                 .withRotationalRate(omega * SwerveConstants.MaxAngularRate));
-
-        SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
 
     public static void teleopDriveSlewed(double percentSpeed) {
@@ -276,8 +274,6 @@ public class Swerve {
                 .withVelocityX(vxSlewed * SwerveConstants.MaxSpeed)
                 .withVelocityY(vySlewed * SwerveConstants.MaxSpeed)
                 .withRotationalRate(omegaSlewed * SwerveConstants.MaxAngularRate));
-
-        SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
 
     public static void maxVoltForward() {
@@ -285,8 +281,6 @@ public class Swerve {
             SwerveObjects.teleopDrive.withVelocityX(0)
                 .withVelocityY(GeneratedConstants.kSpeedAt12Volts)
                 .withRotationalRate(0));
-
-        SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
 
     private static void automaticDrive(double velocity, Rotation2d heading, double omega) {
@@ -297,8 +291,6 @@ public class Swerve {
             SwerveObjects.closedLoopDrive.withVelocityX(vx * SwerveConstants.MaxSpeed)
                 .withVelocityY(vy * SwerveConstants.MaxSpeed)
                 .withRotationalRate(omega * SwerveConstants.MaxAngularRate));
-
-        SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
 
     public static void driveToPoint(Pose2d targetPose, double percentMaxSpeed) {

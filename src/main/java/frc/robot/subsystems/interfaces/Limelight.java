@@ -161,7 +161,7 @@ public class Limelight {
     LogForPositionTuning(limelightPose3d, Constants.LimeLight.known_pose_blue_left, limelight_name, false);
 
     double angleStdDev = 10000000;
-    double distanceStdDev = 3.5;
+    double distanceStdDev = 2.0;
 
     Logger.recordOutput(limelight_name + "RETURNS/ "  + "/Distance Deviation", distanceStdDev);
     Logger.recordOutput(limelight_name + "RETURNS/ "  + "/Angle Deviation", angleStdDev);
