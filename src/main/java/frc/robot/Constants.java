@@ -41,10 +41,10 @@ public class Constants {
         public static final int FLYWHEEL_MOTOR_LEFT = 56;
         public static final int TURRET_AZIMUTH_MOTOR = 54;
 
-        public static final int FOLLOWER_INTAKE_MOTOR = 0;
         public static final int INDEX_MOTOR = 50;
         public static final int FEED_MOTOR = 52;
         public static final int INTAKE_ROLLER = 53;
+        public static final int INTAKE_FOLLOWER_ROLLER = 59;
         public static final int RACK_MOTOR = 51;
 
         public static final int CLIMB_MOTOR = 0;

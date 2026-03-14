@@ -1,12 +1,14 @@
 package frc.robot.subsystems.interfaces;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.robot.Constants;
@@ -15,6 +17,8 @@ public class Intake {
 
   private static final TalonFX mIntakeRollerMotor =
     new TalonFX(Constants.CAN_IDS.INTAKE_ROLLER, "CANexternal");  
+  private static final TalonFX mIntakeRollerMotorFollow = 
+    new TalonFX(Constants.CAN_IDS.INTAKE_FOLLOWER_ROLLER, "CANexternal");
   private static final TalonFX mSpindexMotor = 
     new TalonFX(Constants.CAN_IDS.INDEX_MOTOR, "CANexternal");
   private static final TalonFX mFeedMotor = 
@@ -32,8 +36,12 @@ public class Intake {
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
+    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
+    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 80;
+
     masterIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
+    mIntakeRollerMotorFollow.getConfigurator().apply(masterIntakeMotorConfiguration);
     mIntakeRollerMotor.getConfigurator().apply(masterIntakeMotorConfiguration);
 
     TalonFXConfiguration indexMotorConfiguration = new TalonFXConfiguration();
@@ -96,23 +104,24 @@ public class Intake {
     rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 300.0;
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
-    // mRackMotor.setPosition(0);
+    mRackMotor.setPosition(0);
   }
 
   public static void set(double outputVoltage) {
     mIntakeRollerMotor.setControl(new VoltageOut(outputVoltage).withEnableFOC(true));
+    mIntakeRollerMotorFollow.setControl(new Follower(mIntakeRollerMotor.getDeviceID(), MotorAlignmentValue.Opposed));
   }
 
   public static void intake() {
-    set(7);
+    set(12);
   }
 
   public static void intakeFastAuto() {
-    set(10);
+    set(12);
   }
 
   public static void outtake() {
-    set(-5);
+    set(-12);
   }
 
   public static void stopIntake() {
