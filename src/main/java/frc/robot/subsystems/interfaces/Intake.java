@@ -37,7 +37,7 @@ public class Intake {
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 10;
+    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 20;
 
     masterIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
