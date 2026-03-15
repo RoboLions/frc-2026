@@ -41,7 +41,7 @@ import frc.robot.RobotMap;
 public class Swerve {
 
     public class SwerveConstants{
-        public static final double ODOMETRY_FREQUENCY = 250.0;
+        public static final double ODOMETRY_FREQUENCY = 150.0;
 
         private static final double MaxSpeed = GeneratedConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
         private static final double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -95,10 +95,8 @@ public class Swerve {
 
     public static void periodic() {
         SwerveObjects.Swerve.periodic(); // look at the function comment and see that this is actually just a reorientation tool
-        updateChassisAcceleration(Swerve.getFieldSpeeds()); // used for moving shots estimation
 
         Logger.recordOutput("Swerve/ 2D CTRE Pose-Estimate", getPose());
-        Logger.recordOutput("Swerve/ Velocity", getFieldSpeeds());
     }
 
     public static void simulationPeriodic() {

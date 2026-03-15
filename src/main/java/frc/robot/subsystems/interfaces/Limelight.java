@@ -51,37 +51,16 @@ public class Limelight {
       return;
     }
     
-    for (LimeLightObject camera : cameras) {
-
-      camera.results = updateCameraResults(camera, camera.yawOffset, Swerve.getYawAsDegrees(), Swerve.getYawRateAsDeg());
-
-      if (camera.results == null) {
-        continue;
-      }
-
-      double distStdDev = camera.results.distanceStdDev;
-      double angleStdDev = camera.results.angleStdDev;
-      
-      Swerve.addLimelightMeasurement(camera.results.latestReadPose, 
-                                     camera.results.timeStamp, 
-                                     VecBuilder.fill(distStdDev, distStdDev, angleStdDev));
-    }
+    periodicEnabled(FRONT_CAMERA_MODEL4, 0);
   }
 
-  private static PosewithDeviation updateCameraResults(LimeLightObject limeLight, double yawOffset, double yawDeg, double yawRate) {
-    String limelight_name = limeLight.cameraName;
+  private static void periodicEnabled(LimeLightObject limeLight, double yawOffset) {
+    LimelightHelpers.PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(limeLight.cameraName);
     
-    if (limeLight.usePigeon) {
-      double adjustedYaw = yawDeg - yawOffset;
-
-      LimelightHelpers.SetRobotOrientation(
-        limelight_name, adjustedYaw, 0, 0, 0, 0, 0);
-    }
-
     double shortestDistance = Double.POSITIVE_INFINITY;
     int shortest_fidx = -1;
 
-    LimelightResults results = LimelightHelpers.getLatestResults(limelight_name);
+    LimelightResults results = LimelightHelpers.getLatestResults(limeLight.cameraName);
     var num_targets = results.targets_Fiducials.length;
 
     for (int fidx = 0; fidx < num_targets; fidx++) {
@@ -94,82 +73,28 @@ public class Limelight {
     }   
 
     if (shortest_fidx == -1) {
-      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "SHORTEST FIDX UNDETECTED");
-      return null;
-    }
-
-    if (shortestDistance > 6) {
-      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "SHORTEST DISTANCE THRESHOLD: " + shortestDistance);
-      return null;
+      Logger.recordOutput(limeLight.cameraName + "RETURNS/ " + "DISABLED ERROR STATUS", "SHORTEST FIDX UNDETECTED");
+      return;
     }
 
     if (!results.valid) {
-      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "INVALID RESULTS");
-      return null;
+      Logger.recordOutput(limeLight.cameraName + "RETURNS/ " + "DISABLED ERROR STATUS", "INVALID RESULTS");
+      return;
     }
 
     if (num_targets < 1) {
-      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "NO TARGETS BUT FIDX DETECTED, NUM TARGETS");
-      return null;
-    }
-    
-    if (Math.abs(yawRate) > 720) {
-      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "ROTATION TOO FAST: " + yawRate);
-      return null;
+      Logger.recordOutput(limeLight.cameraName + "RETURNS/ " + "DISABLED ERROR STATUS", "NO TARGETS BUT FIDX DETECTED, NUM TARGETS");
+      return;
     }
 
-    LimelightHelpers.PoseEstimate megaTagPoseEstimate =
-        LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelight_name);
-    Pose2d botPose = megaTagPoseEstimate.pose;
-
-    
-    if (megaTagPoseEstimate.tagCount < 1) {
-      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "NO TARGETS BUT FIDX DETECTED, FROM MT2");
-      return null;
+    if (poseEstimate == null || poseEstimate.pose == null) {
+      Logger.recordOutput(limeLight.cameraName + "RETURNS/ "  + "DISABLED ERROR STATUS", "NULLED POSE MT DISABLED");
+      return;
     }
 
-    if (megaTagPoseEstimate.pose == null) {
-      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "NULLED POSE MT2");
-      return null;
-    }
+    Pose2d feedPose = new Pose2d(poseEstimate.pose.getTranslation(), new Rotation2d(poseEstimate.pose.getRotation().getRadians() - yawOffset));
 
-    if (Math.abs(megaTagPoseEstimate.pose.getRotation().getDegrees() - yawDeg) > 10) {
-      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "YAW DEVIATION TOO LARGE"  );
-      return null;
-    }
-
-
-    if (botPose.getX() >= 17 // TODO: GET A NEW FIELD RANGE
-        || botPose.getY() >= 9
-        || botPose.getX() <= -0.5
-        || botPose.getY() <= -0.5) {
-      Logger.recordOutput(limelight_name + "RETURNS/ "  + " ERROR STATUS", "POSE OUT OF FIELD");
-      return null;
-    }
-
-    Logger.recordOutput(limelight_name + "RETURNS/ "  + "/Last Raw-Pose", botPose);
-    Logger.recordOutput(limelight_name + "RETURNS/ "  + "/Shortest Distance", shortestDistance);
-
-    /**
-     * This not part of LimelightLib! When repasting LimelightLib, do not forget to repaste this
-     * specific method! This converts a MegaTag2 array into a Pose3d so that we can use it to derive
-     * our pysical limelight Camera Offsets. We will leave the loggers commented as they are only
-     * nessecary when finding Camera Offsets.
-     */
-    Pose3d limelightPose3d = LimelightHelpers.getMT2BotPose3d(limelight_name);
-
-    LogForPositionTuning(limelightPose3d, Constants.LimeLight.known_pose_blue_left, limelight_name, false);
-
-    double angleStdDev = 10000000;
-    double distanceStdDev = 2.0;
-
-    Logger.recordOutput(limelight_name + "RETURNS/ "  + "/Distance Deviation", distanceStdDev);
-    Logger.recordOutput(limelight_name + "RETURNS/ "  + "/Angle Deviation", angleStdDev);
-    
-    return new PosewithDeviation(botPose, 
-                                 distanceStdDev, 
-                                 angleStdDev, 
-                                 megaTagPoseEstimate.timestampSeconds);
+    Swerve.addLimelightMeasurement(feedPose, poseEstimate.timestampSeconds, VecBuilder.fill(4, 4, 10000));
   }
 
   private static void disabledPoseSetup(LimeLightObject limeLight, double yawOffset) {

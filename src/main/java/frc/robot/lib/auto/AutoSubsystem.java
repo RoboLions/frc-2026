@@ -134,11 +134,15 @@ public class AutoSubsystem {
             N2.atPose("INTAKE_MID_TURRET", 1, 1)
                 .onTrue(AutoCommands.intakeMidRollersStop()
                 .alongWith(AutoCommands.setShooterAndTrackHub())
-                .withTimeout(0.01));
+                .alongWith(AutoCommands.feedStop())
+                .until(N2.done()));
 
         return () -> {
             routine.active().onTrue(
                 Commands.sequence(
+                    AutoCommands.intakeZeroPosition()
+                        .withTimeout(0.01),
+
                     AutoCommands.shootSequenceWithRamp()
                         .withTimeout(2),
 
@@ -168,7 +172,7 @@ public class AutoSubsystem {
                     N2.cmd(),
 
                     AutoCommands.SwerveStop()
-                        .withTimeout(0.01),
+                        .withTimeout(0.1),
 
                     AutoCommands.setShooterAndTrackHub()
                         .alongWith(AutoCommands.feedIn())

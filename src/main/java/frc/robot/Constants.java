@@ -46,7 +46,5 @@ public class Constants {
         public static final int INTAKE_ROLLER = 53;
         public static final int INTAKE_FOLLOWER_ROLLER = 59;
         public static final int RACK_MOTOR = 51;
-
-        public static final int CLIMB_MOTOR = 0;
     }
 }

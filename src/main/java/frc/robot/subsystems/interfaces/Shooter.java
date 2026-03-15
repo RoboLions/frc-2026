@@ -25,15 +25,14 @@ public class Shooter {
 
     TalonFXConfiguration frontShooterMotorConfig = new TalonFXConfiguration();
 
-    frontShooterMotorConfig.CurrentLimits.StatorCurrentLimitEnable = false;
-    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
     frontShooterMotorConfig.TorqueCurrent.PeakForwardTorqueCurrent = 800;
     frontShooterMotorConfig.TorqueCurrent.PeakReverseTorqueCurrent = -800;
 
-    frontShooterMotorConfig.CurrentLimits.StatorCurrentLimitEnable = false;
+    frontShooterMotorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 80;
+    frontShooterMotorConfig.CurrentLimits.StatorCurrentLimit = 80;
+    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 60;
     frontShooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
     frontShooterMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 1.0;
 
@@ -78,18 +77,18 @@ public class Shooter {
 
     mMasterFlywheelMotor.setControl(
         new MotionMagicVelocityTorqueCurrentFOC(setSpeed)
-            .withUpdateFreqHz(750));
+            .withUpdateFreqHz(50));
     
     mFollowerFlywheelMotor.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-            .withUpdateFreqHz(750));
+            .withUpdateFreqHz(50));
   }
 
   public static void idlerShooter() {
     mMasterFlywheelMotor.setControl(new VoltageOut(0.9).withEnableFOC(true));
     mFollowerFlywheelMotor.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-            .withUpdateFreqHz(50));
+            .withUpdateFreqHz(20));
   }
 
   public static void stopAll() {

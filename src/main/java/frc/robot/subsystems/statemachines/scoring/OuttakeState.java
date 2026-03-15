@@ -21,10 +21,7 @@ public class OuttakeState extends State {
               return RobotMap.driverController.getBButton();
             },
             ScoringStateMachine.idleState));
-
-
     addTransition(
-      
         new Transition(
             () -> {
               return RobotMap.driverController.getRightBumper();

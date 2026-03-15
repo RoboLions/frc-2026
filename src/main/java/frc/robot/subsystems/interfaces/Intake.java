@@ -37,7 +37,7 @@ public class Intake {
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 80;
+    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 10;
 
     masterIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
@@ -48,6 +48,9 @@ public class Intake {
 
     indexMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     indexMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+
+    indexMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
+    indexMotorConfiguration.CurrentLimits.StatorCurrentLimit = 50;
 
     indexMotorConfiguration.Slot0.kP = 0.2;
     indexMotorConfiguration.Slot0.kS = 0.375;
@@ -121,7 +124,7 @@ public class Intake {
   }
 
   public static void outtake() {
-    set(-12);
+    set(-9);
   }
 
   public static void stopIntake() {
@@ -149,7 +152,7 @@ public class Intake {
   }
 
   public static void setIndex(double velocity) {
-    mSpindexMotor.setControl(new VelocityVoltage(velocity).withEnableFOC(true));
+    mSpindexMotor.setControl(new VelocityVoltage(velocity).withEnableFOC(true).withUpdateFreqHz(20));
   }
 
   public static void IndexIn() {
@@ -161,12 +164,12 @@ public class Intake {
   }
 
   public static void stopIndex() {
-   mSpindexMotor.setControl(new VoltageOut(0).withEnableFOC(true)); 
+   mSpindexMotor.setControl(new VoltageOut(0)); 
   }
 
   public static void setFeed(double rpm) {
     mFeedMotor.setControl(new MotionMagicVelocityVoltage(rpm)
-              .withUpdateFreqHz(200)
+              .withUpdateFreqHz(20)
               .withEnableFOC(true));
   }
 
@@ -179,7 +182,7 @@ public class Intake {
   }
 
   public static void stopFeed() {
-    mFeedMotor.setControl(new VoltageOut(0).withEnableFOC(true));
+    mFeedMotor.setControl(new VoltageOut(0));
   }
 
   public static void allRollersIn() {

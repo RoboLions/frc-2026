@@ -42,6 +42,10 @@ public class CycleState extends State {
     if (RobotMap.driverController.getRightTriggerAxis() > 0.25) { // SHOOT
       Intake.allRollersIn();
       RobotMap.driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.25);
+    } else if (RobotMap.manipulatorController.getRightTriggerAxis() > 0.25) {
+      Intake.FeedOut();
+      Intake.IndexOut();
+      RobotMap.driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.25);
     }
 
     if (RobotMap.driverController.getLeftBumperButton() || RobotMap.manipulatorController.getLeftBumperButton()) { // INTAKE UP AND DOWN

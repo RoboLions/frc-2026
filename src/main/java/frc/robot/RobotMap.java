@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.lib.auto.AutoSubsystem;
-import frc.robot.lib.util.FuelSim;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Limelight;
 import frc.robot.subsystems.interfaces.Shooter;
@@ -41,8 +40,7 @@ public class RobotMap {
     scoringStateMachine.enable();
 
     drivetrainStateMachine.setCurrentState(DrivetrainStateMachine.teleopState);
-    scoringStateMachine.setCurrentState
-    (ScoringStateMachine.idleState);;
+    scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);;
 
     scheduleAuto();
   }
@@ -51,10 +49,6 @@ public class RobotMap {
     Swerve.periodic();
     Limelight.periodic();
 
-    if (Robot.isSimulation() && driverController.getXButtonPressed()) {
-      FuelSim.getInstance().clearFuel();
-    }
-
     if (driverController.getXButtonPressed()) {
       Swerve.zeroGyro();
     }
@@ -62,31 +56,6 @@ public class RobotMap {
 
   public static void scheduleAuto() {
     autoSubsystem.scheduleAuto();
-  }
-
-  public static void configureFuelSim() {
-    FuelSim instance = FuelSim.getInstance();
-    instance.spawnStartingFuel();
-    instance.registerRobot(
-            0.25,
-            0.25,
-            0.1,
-            Swerve::getPose,
-            Swerve::getFieldSpeeds);
-    instance.registerIntake(
-            0.3429,
-            0.8429,
-            -0.3429,
-            0.3429);
-
-    instance.start();
-
-    SmartDashboard.putData(Commands.runOnce(() -> {
-                FuelSim.getInstance().clearFuel();
-                FuelSim.getInstance().spawnStartingFuel();
-            })
-            .withName("Reset Fuel")
-            .ignoringDisable(true));
   }
 }
 
