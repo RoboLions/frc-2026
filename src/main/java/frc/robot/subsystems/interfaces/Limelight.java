@@ -55,7 +55,8 @@ public class Limelight {
   }
 
   private static void periodicEnabled(LimeLightObject limeLight, double yawOffset) {
-    LimelightHelpers.PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(limeLight.cameraName);
+    LimelightHelpers.SetRobotOrientation(FRONT_CAMERA_MODEL4.cameraName, Swerve.getYawAsDegrees(), Swerve.getYawRateAsDeg(), 0, 0, 0, 0);
+    LimelightHelpers.PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limeLight.cameraName);
     
     double shortestDistance = Double.POSITIVE_INFINITY;
     int shortest_fidx = -1;
