@@ -17,6 +17,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.lib.util.FuelSim;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 
 public class Turret {
@@ -481,5 +482,46 @@ public class Turret {
     SimulationObjects.totalShotVelocity = newV;
     SimulationObjects.desiredHoodAngleRobotRelDeg = calculateHoodAngle(newV, newR, targetHeightRelativeBot);
     SimulationObjects.literalShotHoodRad = newTheta;
+  }
+
+  /**
+   * These two methods are only used for simulation. Can be deleted afterwards.
+   */
+  private static void launchFuel() {
+
+    if (Robot.isReal()) {
+      return;
+    }
+
+    SimulationObjects.simTimer.start();
+
+    if (!SimulationObjects.simTimer.hasElapsed(0.2)) {
+      return;
+    }
+
+    Translation2d turret = getTurretPosition(Swerve.getPose(), Constants.Hood.TURRET_ROBOT_OFFSET).getTranslation();
+
+    Translation3d initialPosition = new Translation3d(turret).plus(new Translation3d(0, 0, 0.3));
+    FuelSim.getInstance().spawnFuel(initialPosition, launchVectorSim().plus(
+      new Translation3d(Swerve.getFieldSpeeds().vxMetersPerSecond, Swerve.getFieldSpeeds().vyMetersPerSecond, 0)));
+
+    SimulationObjects.simTimer.reset();
+  }
+
+  /**
+   * These two methods are only used for simulation. Can be deleted afterwards.
+   */
+  private static Translation3d launchVectorSim() {
+    double hoodAngleRad = SimulationObjects.literalShotHoodRad;
+    double turretThetaRad = SimulationObjects.desiredTurretAngleRobotRelRad + Swerve.getYawAsRadians(); // make this field relative again
+
+    double z = SimulationObjects.totalShotVelocity * Math.sin(hoodAngleRad);
+    double x = SimulationObjects.totalShotVelocity * Math.cos (hoodAngleRad) * Math.cos(turretThetaRad);
+    double y = SimulationObjects.totalShotVelocity * Math.cos (hoodAngleRad) * Math.sin(turretThetaRad);
+
+    Translation3d shotVec = new Translation3d(x, y, z);
+
+    Logger.recordOutput("Turret/ Turret Sim/ Shot Vector", shotVec);
+    return shotVec;
   }
 }
