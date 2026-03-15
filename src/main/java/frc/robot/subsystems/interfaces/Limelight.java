@@ -29,7 +29,7 @@ public class Limelight {
     
     LimelightHelpers.SetIMUMode(FRONT_CAMERA_MODEL4.cameraName, 3);
     LimelightHelpers.SetIMUAssistAlpha(FRONT_CAMERA_MODEL4.cameraName, 0.001);
-    LimelightHelpers.setRewindEnabled(FRONT_CAMERA_MODEL4.cameraName, false);
+    LimelightHelpers.setRewindEnabled(FRONT_CAMERA_MODEL4.cameraName, true);
 
     cameras.add(FRONT_CAMERA_MODEL4);
 
@@ -55,8 +55,7 @@ public class Limelight {
   }
 
   private static void periodicEnabled(LimeLightObject limeLight, double yawOffset) {
-    LimelightHelpers.SetRobotOrientation(FRONT_CAMERA_MODEL4.cameraName, Swerve.getYawAsDegrees(), Swerve.getYawRateAsDeg(), 0, 0, 0, 0);
-    LimelightHelpers.PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limeLight.cameraName);
+    LimelightHelpers.PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(limeLight.cameraName);
     
     double shortestDistance = Double.POSITIVE_INFINITY;
     int shortest_fidx = -1;
