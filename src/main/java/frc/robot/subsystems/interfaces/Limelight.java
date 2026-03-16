@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants;
 import frc.robot.lib.util.LimelightHelpers;
 import frc.robot.lib.util.LimelightHelpers.LimelightResults;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
@@ -19,16 +18,14 @@ import org.littletonrobotics.junction.Logger;
 
 public class Limelight {
   private static ArrayList<LimeLightObject> cameras;
-  private static LimeLightObject FRONT_CAMERA_MODEL4; // TODO: RENAME CAMERAS;
+  private static LimeLightObject FRONT_CAMERA_MODEL4; 
 
   public static void init() {
     cameras = new ArrayList<>();
 
-    FRONT_CAMERA_MODEL4 = new LimeLightObject("limelight-front", 0); // TODO: RENAME CAMERAS;
+    FRONT_CAMERA_MODEL4 = new LimeLightObject("limelight-front", 0);
     FRONT_CAMERA_MODEL4.usePigeon = false; // IMPORTANT TO DISABLE THE YAW CORRECTION FROM PIGEON
-    
-    LimelightHelpers.SetIMUMode(FRONT_CAMERA_MODEL4.cameraName, 3);
-    LimelightHelpers.SetIMUAssistAlpha(FRONT_CAMERA_MODEL4.cameraName, 0.001);
+
     LimelightHelpers.setRewindEnabled(FRONT_CAMERA_MODEL4.cameraName, true);
 
     cameras.add(FRONT_CAMERA_MODEL4);
@@ -94,7 +91,7 @@ public class Limelight {
 
     Pose2d feedPose = new Pose2d(poseEstimate.pose.getTranslation(), new Rotation2d(poseEstimate.pose.getRotation().getRadians() - yawOffset));
 
-    Swerve.addLimelightMeasurement(feedPose, poseEstimate.timestampSeconds, VecBuilder.fill(4, 4, 10000));
+    Swerve.addLimelightMeasurement(feedPose, poseEstimate.timestampSeconds, VecBuilder.fill(3, 3, 10000));
   }
 
   private static void disabledPoseSetup(LimeLightObject limeLight, double yawOffset) {

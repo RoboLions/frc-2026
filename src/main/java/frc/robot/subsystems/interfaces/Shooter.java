@@ -31,7 +31,7 @@ public class Shooter {
     frontShooterMotorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-    frontShooterMotorConfig.CurrentLimits.StatorCurrentLimit = 80;
+    frontShooterMotorConfig.CurrentLimits.StatorCurrentLimit = 100;
     frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 60;
     frontShooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
     frontShooterMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 1.0;

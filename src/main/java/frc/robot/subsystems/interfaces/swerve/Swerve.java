@@ -30,7 +30,6 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -52,10 +51,6 @@ public class Swerve {
             GeneratedConstants.createDrivetrain();
 
         private static SwerveDriveState lastReadState = new SwerveDriveState();
-
-        private static ChassisSpeeds lastSpeeds = new ChassisSpeeds();
-        private static ChassisSpeeds accelerationSpeeds = new ChassisSpeeds();
-        private static double lastTimestamp;
         private static double loopLatencySec;
 
         private static final SwerveRequest.FieldCentric teleopDrive = new SwerveRequest.FieldCentric()
@@ -138,28 +133,6 @@ public class Swerve {
 
     public static double getYawRateAsDeg() {
         return Math.toDegrees(Swerve.getState().Speeds.omegaRadiansPerSecond);
-    }
-
-    private static void updateChassisAcceleration(ChassisSpeeds currentSpeeds) {
-        double now = Timer.getFPGATimestamp();
-        double dt = now - SwerveObjects.lastTimestamp;
-
-        if (dt <= 0.0) return;
-
-        ChassisSpeeds accel = new ChassisSpeeds(
-            (currentSpeeds.vxMetersPerSecond - SwerveObjects.lastSpeeds.vxMetersPerSecond) / dt,
-            (currentSpeeds.vyMetersPerSecond - SwerveObjects.lastSpeeds.vyMetersPerSecond) / dt,
-            (currentSpeeds.omegaRadiansPerSecond - SwerveObjects.lastSpeeds.omegaRadiansPerSecond) / dt
-        );
-
-        SwerveObjects.lastSpeeds = currentSpeeds;
-        SwerveObjects.lastTimestamp = now;
-        SwerveObjects.loopLatencySec = dt;
-        SwerveObjects.accelerationSpeeds = accel;
-    }
-
-    public static ChassisSpeeds getChassisAcceleration() {
-        return SwerveObjects.accelerationSpeeds;
     }
 
     public static double getLoopLatencySec() {

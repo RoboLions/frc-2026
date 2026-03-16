@@ -11,7 +11,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 
@@ -32,8 +31,6 @@ public class Turret {
     public static double desiredHoodAngleRobotRelDeg;
     public static double totalShotVelocity;
     public static double literalShotHoodRad;
-
-    private static Timer simTimer = new Timer();
   }
   
   public static void init() {

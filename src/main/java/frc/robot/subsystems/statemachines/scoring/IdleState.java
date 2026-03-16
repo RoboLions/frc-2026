@@ -11,7 +11,6 @@ import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Shooter;
 import frc.robot.subsystems.interfaces.Turret;
-import frc.robot.subsystems.interfaces.swerve.Swerve;
 
 /** Add your docs here. */
 public class IdleState extends State {
@@ -53,6 +52,11 @@ public class IdleState extends State {
     if (RobotMap.manipulatorController.getRightTriggerAxis() > 0.25) {
       Intake.FeedOut();
       Intake.IndexOut();
+    }
+
+    if (RobotMap.manipulatorController.getAButton()) {
+      Intake.intakeUp();
+      Turret.setAzimuthZero();
     }
   }
 

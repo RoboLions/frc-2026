@@ -37,7 +37,7 @@ public class Intake {
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 20;
+    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 25;
 
     masterIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
@@ -111,8 +111,8 @@ public class Intake {
   }
 
   public static void set(double outputVoltage) {
-    mIntakeRollerMotor.setControl(new VoltageOut(outputVoltage).withEnableFOC(true));
-    mIntakeRollerMotorFollow.setControl(new Follower(mIntakeRollerMotor.getDeviceID(), MotorAlignmentValue.Opposed));
+    mIntakeRollerMotor.setControl(new VoltageOut(outputVoltage).withEnableFOC(true).withUpdateFreqHz(20));
+    mIntakeRollerMotorFollow.setControl(new Follower(mIntakeRollerMotor.getDeviceID(), MotorAlignmentValue.Opposed).withUpdateFreqHz(20));
   }
 
   public static void intake() {
