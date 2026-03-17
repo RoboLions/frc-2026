@@ -14,6 +14,8 @@ public class Limelight {
     LimelightHelpers.setCameraPose_RobotSpace(FRONT_CAM, 0.349510, -0.048847, 0, 0, 0, 0);
     LimelightHelpers.SetIMUAssistAlpha(FRONT_CAM, 0.001);
     LimelightHelpers.SetIMUMode(FRONT_CAM, 4);
+    LimelightHelpers.SetThrottle(FRONT_CAM, 0);
+    LimelightHelpers.setRewindEnabled(FRONT_CAM, true);
   }
 
   public static void periodic() {
@@ -28,7 +30,7 @@ public class Limelight {
     LimelightHelpers.PoseEstimate mt1Pose = LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
 
     if (isValid(mt1Pose)) {
-      double xyStdDev = 4;
+      double xyStdDev = 4; 
       double rotStdDev = 5;
       
       if (mt1Pose.tagCount == 1) {
