@@ -73,26 +73,29 @@ public class Shooter {
   // speed in meters per second
   public static void setShootSpeed(double speed) {
     // https://en.wikipedia.org/wiki/Angular_velocity
-    double setSpeed = Conversions.linearSpeedToRotationalSpeed(speed, (WHEEL_DIAMETER / 2.0)) * Constants.Shooter.POWER_GAIN_MULTIPLIER;
+    double adjustedSpeed = speed * Constants.Shooter.POWER_GAIN_MULTIPLIER;
+
+    double setRotationalSpeed = Conversions.linearSpeedToRotationalSpeed(adjustedSpeed, (WHEEL_DIAMETER / 2.0));
 
     mMasterFlywheelMotor.setControl(
-        new MotionMagicVelocityTorqueCurrentFOC(setSpeed)
-            .withUpdateFreqHz(50));
+        new MotionMagicVelocityTorqueCurrentFOC(setRotationalSpeed)
+            .withUpdateFreqHz(100));
     
     mFollowerFlywheelMotor.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-            .withUpdateFreqHz(50));
+            .withUpdateFreqHz(100));
   }
 
   public static void idlerShooter() {
-    mMasterFlywheelMotor.setControl(new VoltageOut(0.9).withEnableFOC(true));
-    mFollowerFlywheelMotor.setControl(
-        new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-            .withUpdateFreqHz(20));
+    mMasterFlywheelMotor.setControl(new VoltageOut(0.9)
+        .withEnableFOC(true)
+        .withUpdateFreqHz(20));
+    mFollowerFlywheelMotor.setControl(new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
+        .withUpdateFreqHz(20));
   }
 
   public static void stopAll() {
-    mMasterFlywheelMotor.setControl(new VoltageOut(0).withEnableFOC(true));
-    mFollowerFlywheelMotor.setControl(new VoltageOut(0).withEnableFOC(true));
+    mMasterFlywheelMotor.setControl(new VoltageOut(0));
+    mFollowerFlywheelMotor.setControl(new VoltageOut(0));
   }
 }
