@@ -18,94 +18,14 @@ public class AutoSubsystem {
         autoFactory = createAutoFactory;
         autoChooser = new AutoChooser();
 
-        autoChooser.addRoutine("Left 1 Piece", left1Trip());
-        autoChooser.addRoutine("Left 2 Piece DEPOT", left2TripDepot());
         autoChooser.addRoutine("Left 2 Piece ONLY", left2TripONLY());
-        // autoChooser.addRoutine("TEST", test());
+        autoChooser.addRoutine("TEST", test());
 
         SmartDashboard.putData("AutoChooser", autoChooser);
     }
 
     public void scheduleAuto() {
         RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
-    }
-
-    private Supplier<AutoRoutine> left2TripDepot() {
-        AutoRoutine routine = autoFactory.newRoutine("LEFT 2 PIECE");
-
-        AutoTrajectory L1 = routine.trajectory("L1");
-            L1.atPose("Intake_OUT", 1, 1)
-                .onTrue(AutoCommands.intakeOutRollersIn()
-                .withTimeout(0.01));
-
-        AutoTrajectory N1 = routine.trajectory("N1");
-            N1.atPose("INTAKE_MID", 1, 1)
-                .onTrue(AutoCommands.intakeMidRollersStop()
-                .alongWith(AutoCommands.idleShooter())
-                .withTimeout(0.01));
-            N1.atPose("SHOOT_RAMP", 1, 1)
-                .onTrue(AutoCommands.setShooterAndTrackHub()
-                .until(N1.done()));
-
-        AutoTrajectory L2 = routine.trajectory("L2");
-            L2.atPose("INTAKE_OUT", 1, 1)
-                .onTrue(AutoCommands.intakeOutRollersIn()
-                .withTimeout(0.01));
-
-        AutoTrajectory N2 = routine.trajectory("N2");
-            N2.atPose("INTAKE_MID_TURRET", 1, 1)
-                .onTrue(AutoCommands.intakeMidRollersStop()
-                .alongWith(AutoCommands.setShooterAndTrackHub())
-                .withTimeout(0.01));
-
-        AutoTrajectory LD = routine.trajectory("LD");
-            LD.atPose("INTAKE_OUT", 1, 1)
-                .onTrue(AutoCommands.intakeOutRollersIn()
-                .withTimeout(0.01));
-
-        return () -> {
-            routine.active().onTrue(
-                Commands.sequence(
-                    AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(2),
-
-                    AutoCommands.feedStop()
-                        .withTimeout(0.01),
-                    
-                    AutoCommands.idleShooter()
-                        .withTimeout(0.01),
-                    
-                    L1.cmd(),
-                    N1.cmd(),
-
-                    AutoCommands.SwerveStop()
-                        .withTimeout(0.01),
-
-                    AutoCommands.setShooterAndTrackHub()
-                        .alongWith(AutoCommands.feedIn())
-                        .alongWith(AutoCommands.intakeZeroPosition()
-                        .beforeStarting(Commands.waitSeconds(0.75)))
-                        .withTimeout(2.75),
-
-                    AutoCommands.idleShooter()
-                        .alongWith(AutoCommands.feedStop())
-                        .withTimeout(0.01),
-
-                    L2.cmd(),
-                    N2.cmd(),
-
-                    LD.cmd()
-                        .alongWith(
-                            AutoCommands.shootSequenceNoRamp().repeatedly())
-                        .alongWith(AutoCommands.feedIn()
-                            .withTimeout(0.01)),
-                    
-                    AutoCommands.SwerveStop()
-                )
-            );
-
-            return routine;
-        };
     }
 
     private Supplier<AutoRoutine> left2TripONLY() {
@@ -184,12 +104,6 @@ public class AutoSubsystem {
 
             return routine;
         };
-    }
-
-    private Supplier<AutoRoutine> left1Trip() {
-        AutoRoutine routine = autoFactory.newRoutine("LEFT 1 PIECE");
-
-        return null;
     }
 
     private Supplier<AutoRoutine> test() {
