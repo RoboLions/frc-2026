@@ -13,7 +13,7 @@ public class Limelight {
   public static void init() {
     LimelightHelpers.setCameraPose_RobotSpace(FRONT_CAM, 0.349510, -0.048847, 0, 0, 0, 0);
     LimelightHelpers.SetIMUAssistAlpha(FRONT_CAM, 0.001);
-    LimelightHelpers.SetIMUMode(FRONT_CAM, 3);
+    LimelightHelpers.SetIMUMode(FRONT_CAM, 4);
   }
 
   public static void periodic() {
@@ -47,7 +47,7 @@ public class Limelight {
   }
 
   private static void updateWithMegaTag2(String cameraName) {
-    LimelightHelpers.SetRobotOrientation_NoFlush(cameraName, Swerve.getYawAsDegrees(), 0, 0, 0, 0, 0);
+    LimelightHelpers.SetRobotOrientation(cameraName, Swerve.getYawAsDegrees(), 0, 0, 0, 0, 0);
 
     LimelightHelpers.PoseEstimate mt2Pose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(cameraName);
 
