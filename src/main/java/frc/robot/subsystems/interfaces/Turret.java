@@ -204,7 +204,7 @@ public class Turret {
   }
   
   private static double sampleVelocity(double d, double h) {
-    return Math.sqrt(Constants.Hood.G * (Math.hypot(d, h) + h)) + 1.25 + 4.0 * Math.exp(-d);
+    return Math.sqrt(Constants.Hood.G * (Math.hypot(d, h) + h)) + 0.5 + 4.0 * Math.exp(-d);
   }
 
   /**

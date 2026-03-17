@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems.statemachines.scoring;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
@@ -40,7 +39,6 @@ public class IntakeState extends State {
     Intake.intake();
     Intake.intakeDown();
     Shooter.idlerShooter();
-    RobotMap.driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.05);
   }
 
   @Override

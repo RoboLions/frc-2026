@@ -1,6 +1,5 @@
 package frc.robot.subsystems.statemachines.scoring;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
@@ -36,15 +35,11 @@ public class CycleState extends State {
 
   @Override
   public void execute() {
-    RobotMap.driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.1);
-
     if (RobotMap.driverController.getRightTriggerAxis() > 0.25) { // SHOOT
       Intake.allRollersIn();
-      RobotMap.driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.25);
     } else if (RobotMap.manipulatorController.getRightTriggerAxis() > 0.25) {
       Intake.FeedOut();
       Intake.IndexOut();
-      RobotMap.driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.25);
     }
 
     if (RobotMap.driverController.getLeftBumperButton() || RobotMap.manipulatorController.getLeftBumperButton()) { // INTAKE UP AND DOWN
