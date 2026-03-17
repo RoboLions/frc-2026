@@ -13,16 +13,18 @@ public class Limelight {
   public static void init() {
     LimelightHelpers.setCameraPose_RobotSpace(FRONT_CAM, 0.349510, -0.048847, 0, 0, 0, 0);
     LimelightHelpers.SetIMUAssistAlpha(FRONT_CAM, 0.001);
-    LimelightHelpers.SetIMUMode(FRONT_CAM, 4);
+    LimelightHelpers.SetIMUMode(FRONT_CAM, 3);
     LimelightHelpers.SetThrottle(FRONT_CAM, 0);
     LimelightHelpers.setRewindEnabled(FRONT_CAM, true);
   }
 
   public static void periodic() {
+    LimelightHelpers.setCameraPose_RobotSpace(FRONT_CAM, 0.349510, -0.048847, 0, 0, 0, 0);
+
     if (DriverStation.isDisabled()) {
       seedFromMegaTag1(FRONT_CAM);
     } else {
-      updateWithMegaTag2(FRONT_CAM);
+      updateWithMegaTag2(FRONT_CAM, 0.0);
     }
   }
 
@@ -48,8 +50,8 @@ public class Limelight {
     }
   }
 
-  private static void updateWithMegaTag2(String cameraName) {
-    LimelightHelpers.SetRobotOrientation(cameraName, Swerve.getYawAsDegrees(), 0, 0, 0, 0, 0);
+  private static void updateWithMegaTag2(String cameraName, double yawOffset) {
+    LimelightHelpers.SetRobotOrientation(cameraName, Swerve.getYawAsDegrees() + yawOffset, 0, 0, 0, 0, 0);
 
     LimelightHelpers.PoseEstimate mt2Pose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(cameraName);
 
