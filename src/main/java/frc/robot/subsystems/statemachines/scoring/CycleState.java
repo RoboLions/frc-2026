@@ -30,7 +30,6 @@ public class CycleState extends State {
 
   @Override
   public void init(State prevState) {
-    Shooter.setShootSpeed(SimulationObjects.totalShotVelocity);
     Intake.intakeDown();
     Intake.intake();
   }

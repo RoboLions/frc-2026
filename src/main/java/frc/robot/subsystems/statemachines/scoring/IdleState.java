@@ -41,19 +41,13 @@ public class IdleState extends State {
   public void init(State prevState) {
     Shooter.idlerShooter();
     Intake.intakeMid();
+    Intake.allRollersStop();
 
     RobotMap.driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
   }
 
   @Override
   public void execute() {
-    Intake.allRollersStop();
-
-    if (RobotMap.manipulatorController.getRightTriggerAxis() > 0.25) {
-      Intake.FeedOut();
-      Intake.IndexOut();
-    }
-
     if (RobotMap.manipulatorController.getAButton()) {
       Intake.intakeUp();
       Turret.setAzimuthZero();

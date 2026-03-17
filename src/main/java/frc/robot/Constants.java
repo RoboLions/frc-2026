@@ -16,7 +16,7 @@ public class Constants {
         public static final double BASE_HOOD_ANGLE_DEG = 18.75;
         public static final double DEGREE_RATIO = 30.1;
 
-        public static final double YAW_COMPENSATION_LATENCY_MS = 100;
+        public static final double YAW_COMPENSATION_LATENCY_MS = 100.0;
 
         public static final double HEIGHT_FROM_BOT_TO_TARGET = 1.117; //meters
         public static final Translation2d TURRET_ROBOT_OFFSET = new Translation2d(0.14605, -0.14605); //meters

@@ -12,6 +12,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.lib.util.FuelSim;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 import frc.robot.subsystems.statemachines.drivetrain.DrivetrainStateMachine;
 import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
@@ -109,11 +110,33 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+    FuelSim instance = FuelSim.getInstance();
+    instance.spawnStartingFuel();
+    instance.registerRobot(
+            0.25,
+            0.25,
+            0.1,
+            Swerve::getPose,
+            Swerve::getFieldSpeeds);
+    instance.registerIntake(
+            0.3429,
+            0.8429,
+            -0.3429,
+            0.3429);
+
+    instance.start();
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {
     Swerve.simulationPeriodic();
+
+    FuelSim.getInstance().updateSim();
+
+    if (RobotMap.driverController.getBButton()) {
+      FuelSim.getInstance().clearFuel();
+    }
   }
 }
