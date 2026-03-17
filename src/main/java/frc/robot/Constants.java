@@ -1,7 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -28,11 +26,6 @@ public class Constants {
 
     public class Shooter {
         public static final double POWER_GAIN_MULTIPLIER = 2.025;
-    }
-
-    public class LimeLight {
-        public static final Pose3d known_pose_blue_left =
-            new Pose3d(new Translation3d(1.252857, 5.547879, 0.0), new Rotation3d(0, 0, Math.PI));
     }
     
     public class CAN_IDS {
