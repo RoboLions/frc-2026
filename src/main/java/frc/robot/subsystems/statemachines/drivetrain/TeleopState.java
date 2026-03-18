@@ -28,6 +28,11 @@ public class TeleopState extends State {
             return;
         }
 
+        if (RobotMap.scoringStateMachine.getCurrentState().equals(ScoringStateMachine.cycleState) && !CycleState.isPass) {
+            Swerve.teleopDrive(0.5);
+            return;
+        }
+
         Swerve.teleopDrive();
     }   
     
