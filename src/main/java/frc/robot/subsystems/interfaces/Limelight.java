@@ -12,7 +12,7 @@ public class Limelight {
 
   public static void init() {
     LimelightHelpers.setCameraPose_RobotSpace(FRONT_CAM, 0.349510, -0.048847, 0, 0, 0, 0);
-    LimelightHelpers.SetIMUAssistAlpha(FRONT_CAM, 0.001);
+    LimelightHelpers.SetIMUAssistAlpha(FRONT_CAM, 0.0005);
     LimelightHelpers.SetIMUMode(FRONT_CAM, 3);
     LimelightHelpers.SetThrottle(FRONT_CAM, 0);
     LimelightHelpers.setRewindEnabled(FRONT_CAM, true);
@@ -56,10 +56,10 @@ public class Limelight {
     LimelightHelpers.PoseEstimate mt2Pose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(cameraName);
 
     if (isValid(mt2Pose)) {
-      double xyStdDev = 0.5 + (Math.pow(mt2Pose.avgTagDist, 2) * 0.1);
-      
+      double xyStdDev = 5.0 + (Math.pow(mt2Pose.avgTagDist, 2) * 0.1);
+
       if (mt2Pose.tagCount > 1) {
-        xyStdDev *= 0.2;
+        xyStdDev *= 0.5;
       }
 
       if (Swerve.getYawRateAsDeg() > 720) {

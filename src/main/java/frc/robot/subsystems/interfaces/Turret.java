@@ -72,7 +72,7 @@ public class Turret {
     hoodPivotConfig.MotionMagic.MotionMagicCruiseVelocity = 15;
 
     mHoodPivotMotor.getConfigurator().apply(hoodPivotConfig);
-    mHoodPivotMotor.setPosition(0.0);
+    // mHoodPivotMotor.setPosition(0.0);
 
     TalonFXConfiguration turretAzimuthConfig = new TalonFXConfiguration();
     turretAzimuthConfig.CurrentLimits.StatorCurrentLimitEnable = false;
@@ -108,7 +108,7 @@ public class Turret {
     turretAzimuthConfig.ClosedLoopGeneral.ContinuousWrap = false;
 
     mAzimuthTurretMotor.getConfigurator().apply(turretAzimuthConfig);
-    mAzimuthTurretMotor.setPosition(0.0);
+    // mAzimuthTurretMotor.setPosition(0.0);
   }
 
   private static void setHoodAngle() {    
@@ -204,7 +204,7 @@ public class Turret {
   }
   
   private static double sampleVelocity(double d, double h) {
-    return Math.sqrt(Constants.Hood.G * (Math.hypot(d, h) + h)) + 0.5 + 4.0 * Math.exp(-d);
+    return Math.sqrt(Constants.Hood.G * (Math.hypot(d, h) + h)) + 1.0 + 4.0 * Math.exp(-d);
   }
 
   /**

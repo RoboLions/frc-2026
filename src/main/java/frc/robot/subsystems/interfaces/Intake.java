@@ -1,6 +1,7 @@
 package frc.robot.subsystems.interfaces;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -36,8 +37,9 @@ public class Intake {
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
-    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 25;
+    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = false;
+    masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = false;
+    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 40;
 
     masterIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
@@ -107,24 +109,24 @@ public class Intake {
     rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 300.0;
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
-    mRackMotor.setPosition(0);
+    // mRackMotor.setPosition(0);
   }
 
   public static void set(double outputVoltage) {
-    mIntakeRollerMotor.setControl(new VoltageOut(outputVoltage).withEnableFOC(true).withUpdateFreqHz(20));
+    mIntakeRollerMotor.setControl(new DutyCycleOut(outputVoltage).withEnableFOC(true).withUpdateFreqHz(20));
     mIntakeRollerMotorFollow.setControl(new Follower(mIntakeRollerMotor.getDeviceID(), MotorAlignmentValue.Opposed).withUpdateFreqHz(20));
   }
 
   public static void intake() {
-    set(12);
+    set(0.7);
   }
 
   public static void intakeFastAuto() {
-    set(12);
+    set(0.7);
   }
 
   public static void outtake() {
-    set(-9);
+    set(-0.7);
   }
 
   public static void stopIntake() {
