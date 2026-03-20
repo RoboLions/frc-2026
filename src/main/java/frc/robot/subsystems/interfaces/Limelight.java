@@ -25,7 +25,7 @@ public class Limelight {
     if (DriverStation.isDisabled()) {
       seedFromMegaTag1(FRONT_CAM);
     } else {
-      updateWithMegaTag2(FRONT_CAM);
+      updateWithMegaTag1(FRONT_CAM);
     }
   }
 
@@ -51,15 +51,13 @@ public class Limelight {
     }
   }
 
-  private static void updateWithMegaTag2(String cameraName) {
-    LimelightHelpers.SetRobotOrientation(cameraName, Swerve.getYawAsDegrees(), Swerve.getYawRateAsDeg(), 0, 0, 0, 0);
+  private static void updateWithMegaTag1(String cameraName) {
+    LimelightHelpers.PoseEstimate mt1PoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
 
-    LimelightHelpers.PoseEstimate mt2Pose = LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
+    if (isValid(mt1PoseEstimate)) {
+      double xyStdDev = 8.0 + (Math.pow(mt1PoseEstimate.avgTagDist, 2) * 0.1);
 
-    if (isValid(mt2Pose)) {
-      double xyStdDev = 8.0 + (Math.pow(mt2Pose.avgTagDist, 2) * 0.1);
-
-      if (mt2Pose.tagCount > 1) {
+      if (mt1PoseEstimate.tagCount > 1) {
         xyStdDev *= 0.8;
       }
 
@@ -67,13 +65,16 @@ public class Limelight {
         xyStdDev *= 2;
       }
 
+      if (mt1PoseEstimate.pose.getX() < 0 || mt1PoseEstimate.pose.getX() > 16.5 || 
+          mt1PoseEstimate.pose.getY() < 0 || mt1PoseEstimate.pose.getY() > 8.0) return;
+
       Swerve.addLimelightMeasurement(
-          mt2Pose.pose,
-          mt2Pose.timestampSeconds,
+          mt1PoseEstimate.pose,
+          mt1PoseEstimate.timestampSeconds,
           VecBuilder.fill(xyStdDev, xyStdDev, 9999999)
       );
 
-      Logger.recordOutput("Vision/ Enabled Feed, FROM: " + cameraName, mt2Pose.pose);
+      Logger.recordOutput("Vision/ Enabled Feed, FROM: " + cameraName, mt1PoseEstimate.pose);
     }
   }
 
