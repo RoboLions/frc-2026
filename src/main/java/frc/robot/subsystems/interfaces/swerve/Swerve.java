@@ -55,7 +55,7 @@ public class Swerve {
 
         private static final SwerveRequest.FieldCentric teleopDrive = new SwerveRequest.FieldCentric()
                 .withDeadband(SwerveConstants.MaxSpeed * 0.075).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.075) // Add a 7.5% deadband
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+                .withDriveRequestType(DriveRequestType.Velocity);
 
         private static final SwerveRequest.FieldCentric closedLoopDrive = new SwerveRequest.FieldCentric()
                 .withDeadband(SwerveConstants.MaxSpeed * 0.075).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.075) // Add a 7.5% deadband
@@ -92,6 +92,7 @@ public class Swerve {
         SwerveObjects.Swerve.periodic(); // look at the function comment and see that this is actually just a reorientation tool
 
         Logger.recordOutput("Swerve/ 2D CTRE Pose-Estimate", getPose());
+        Logger.recordOutput("Swerve/ FieldSpeeds", getFieldSpeeds());
     }
 
     public static void simulationPeriodic() {
