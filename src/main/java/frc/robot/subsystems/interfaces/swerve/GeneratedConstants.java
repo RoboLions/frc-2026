@@ -29,7 +29,7 @@ public class GeneratedConstants {
     // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
     private static final Slot0Configs driveGains = new Slot0Configs()
         .withKP(8).withKI(0).withKD(0)
-        .withKS(4.7).withKV(0);
+        .withKS(4.7).withKV(0).withKA(0);
 
     // The closed-loop output type to use for the steer motors;
     // This affects the PID/FF gains for the steer motors
@@ -84,7 +84,7 @@ public class GeneratedConstants {
     // This may need to be tuned to your individual robot
     private static final double kCoupleRatio = 4.5;
 
-    private static final double kDriveGearRatio = 4.725;
+    private static final double kDriveGearRatio = 5.1545; // x4 11 tooth
     private static final double kSteerGearRatio = 12.1;
     private static final Distance kWheelRadius = Inches.of(2);
 

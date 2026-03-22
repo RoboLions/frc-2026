@@ -67,6 +67,8 @@ public class Swerve {
         private static final SlewRateLimiter xLimiter = new SlewRateLimiter(1.0); // units/sec²
         private static final SlewRateLimiter yLimiter = new SlewRateLimiter(1.0);
         private static final SlewRateLimiter omegaLimiter = new SlewRateLimiter(4);
+
+        private static final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     }
 
     private class TelemetryObjects{
@@ -208,6 +210,10 @@ public class Swerve {
 
     public static double getDistToPose(Pose2d pose) {
         return 0.0; // TODO: do this
+    }
+
+    public static void brakeX() {
+        SwerveObjects.Swerve.applyRequest(() -> SwerveObjects.brake);
     }
 
     public static void teleopDrive() {
