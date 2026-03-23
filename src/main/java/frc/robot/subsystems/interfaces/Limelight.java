@@ -9,23 +9,40 @@ import frc.robot.subsystems.interfaces.swerve.Swerve;
 import org.littletonrobotics.junction.Logger;
 
 public class Limelight {
-  private static final String FRONT_CAM = "limelight-front";
-  private static final Translation2d FRONT_CAM_OFFSET = new Translation2d(0.5, -0.08);
+  private static final String FRONT_LEFT_CAM = "limelight-fl";
+  private static final Translation2d FL_OFFSET = new Translation2d(0.0, -0.0);
+
+  private static final String FRONT_RIGHT_CAM = "limelight-fr";
+  private static final Translation2d FR_OFFSET = new Translation2d(0.0, 0.0);
+
+  private static final String SIDE_CAM = "limelight-side";
+  private static final Translation2d SIDE_OFFSET = new Translation2d(0.0, -0.0);
+
 
   public static void init() {
-    LimelightHelpers.SetIMUAssistAlpha(FRONT_CAM, 0.0005);
-    LimelightHelpers.SetIMUMode(FRONT_CAM, 0);
-    LimelightHelpers.SetThrottle(FRONT_CAM, 0);
-    LimelightHelpers.setRewindEnabled(FRONT_CAM, true);
+    LimelightHelpers.SetThrottle(FRONT_LEFT_CAM, 0);
+    LimelightHelpers.setRewindEnabled(FRONT_LEFT_CAM, false);
+
+    LimelightHelpers.SetThrottle(FRONT_RIGHT_CAM, 0);
+    LimelightHelpers.setRewindEnabled(FRONT_RIGHT_CAM, false);
+
+    LimelightHelpers.SetThrottle(SIDE_CAM, 0);
+    LimelightHelpers.setRewindEnabled(SIDE_CAM, false);
   }
 
   public static void periodic() {
-    LimelightHelpers.setCameraPose_RobotSpace(FRONT_CAM, FRONT_CAM_OFFSET.getX(), FRONT_CAM_OFFSET.getY(), 0, 0, 0, 0);
+    LimelightHelpers.setCameraPose_RobotSpace(FRONT_LEFT_CAM, FL_OFFSET.getX(), FL_OFFSET.getY(), 0, 0, 0, 0);
+    LimelightHelpers.setCameraPose_RobotSpace(FRONT_RIGHT_CAM, FR_OFFSET.getX(), FR_OFFSET.getY(), 0, 0, 0, 0);
+    LimelightHelpers.setCameraPose_RobotSpace(SIDE_CAM, SIDE_OFFSET.getX(), SIDE_OFFSET.getY(), 0, 0, 0, 0);
 
     if (DriverStation.isDisabled()) {
-      seedFromMegaTag1(FRONT_CAM);
+      seedFromMegaTag1(FRONT_LEFT_CAM);
+      seedFromMegaTag1(FRONT_RIGHT_CAM);
+      seedFromMegaTag1(SIDE_CAM);
     } else {
-      updateWithMegaTag1(FRONT_CAM);
+      updateWithMegaTag1(FRONT_LEFT_CAM);
+      updateWithMegaTag1(FRONT_RIGHT_CAM);
+      updateWithMegaTag1(SIDE_CAM);
     }
   }
 
