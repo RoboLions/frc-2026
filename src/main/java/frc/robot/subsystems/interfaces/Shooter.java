@@ -87,7 +87,7 @@ public class Shooter {
   }
 
   public static void idlerShooter() {
-    mMasterFlywheelMotor.setControl(new VoltageOut(0.9)
+    mMasterFlywheelMotor.setControl(new VoltageOut(0.5)
         .withEnableFOC(true)
         .withUpdateFreqHz(20));
     mFollowerFlywheelMotor.setControl(new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)

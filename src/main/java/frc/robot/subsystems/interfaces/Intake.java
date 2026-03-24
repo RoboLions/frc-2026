@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -37,9 +38,14 @@ public class Intake {
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
-    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = false;
-    masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = false;
-    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 40;
+    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
+    masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
+    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 120;
+
+    masterIntakeMotorConfiguration.Slot0.kP = 3.0;
+    masterIntakeMotorConfiguration.Slot0.kS = 3.25;
+    masterIntakeMotorConfiguration.Slot0.kV = 0.001;
+    masterIntakeMotorConfiguration.Slot0.kA = 0.0;
 
     masterIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
@@ -89,7 +95,7 @@ public class Intake {
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60;
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 70;
+    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 60;
 
     rackMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
@@ -114,25 +120,26 @@ public class Intake {
     // mRackMotor.setPosition(0);
   }
 
-  public static void set(double outputVoltage) {
-    mIntakeRollerMotor.setControl(new DutyCycleOut(outputVoltage).withEnableFOC(true).withUpdateFreqHz(20));
+  public static void set(double speed) {
+    mIntakeRollerMotor.setControl(new VelocityTorqueCurrentFOC(speed).withUpdateFreqHz(40));
     mIntakeRollerMotorFollow.setControl(new Follower(mIntakeRollerMotor.getDeviceID(), MotorAlignmentValue.Opposed).withUpdateFreqHz(20));
   }
 
   public static void intake() {
-    set(0.7);
+    set(70);
   }
 
   public static void intakeFastAuto() {
-    set(0.7);
+    set(85);
   }
 
   public static void outtake() {
-    set(-0.7);
+    set(-50);
   }
 
   public static void stopIntake() {
-    set(0);
+    mIntakeRollerMotor.setControl(new VoltageOut(0).withUpdateFreqHz(20));
+    mIntakeRollerMotorFollow.setControl(new Follower(mIntakeRollerMotor.getDeviceID(), MotorAlignmentValue.Opposed).withUpdateFreqHz(20));
   }
 
   public static void setRack(double target) {
