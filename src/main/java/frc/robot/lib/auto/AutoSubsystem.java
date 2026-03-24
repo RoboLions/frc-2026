@@ -63,16 +63,13 @@ public class AutoSubsystem {
             routine.active().onTrue(
                 Commands.sequence(
                     AutoCommands.intakeZeroPosition()
-                        .withTimeout(0.01),
-
-                    AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(2),
+                        .withTimeout(0.001),
 
                     AutoCommands.feedStop()
-                        .withTimeout(0.01),
+                        .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.01),
+                        .withTimeout(0.001),
                     
                     L1.cmd(),
                     N1.cmd(),
