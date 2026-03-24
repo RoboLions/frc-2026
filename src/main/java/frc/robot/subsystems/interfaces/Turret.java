@@ -90,8 +90,8 @@ public class Turret {
     turretAzimuthConfig.Slot0.kA = 0.001;
     turretAzimuthConfig.Slot0.kG = 0;
 
-    turretAzimuthConfig.MotionMagic.MotionMagicAcceleration = 175;
-    turretAzimuthConfig.MotionMagic.MotionMagicCruiseVelocity = 300;
+    turretAzimuthConfig.MotionMagic.MotionMagicAcceleration = 250;
+    turretAzimuthConfig.MotionMagic.MotionMagicCruiseVelocity = 250;
     turretAzimuthConfig.MotionMagic.MotionMagicJerk = 0.0;
 
     turretAzimuthConfig.Feedback.SensorToMechanismRatio = 1 / 1;

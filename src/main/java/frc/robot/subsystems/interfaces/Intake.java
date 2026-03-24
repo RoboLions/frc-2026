@@ -87,7 +87,9 @@ public class Intake {
     rackMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 70;
+    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60;
+    rackMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
+    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 70;
 
     rackMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 

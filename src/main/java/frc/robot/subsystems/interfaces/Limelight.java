@@ -1,7 +1,7 @@
 package frc.robot.subsystems.interfaces;
 
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.lib.util.LimelightHelpers;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
@@ -9,36 +9,34 @@ import frc.robot.subsystems.interfaces.swerve.Swerve;
 import org.littletonrobotics.junction.Logger;
 
 public class Limelight {
-  private static final String FRONT_LEFT_CAM = "limelight-fl";
-  private static final Translation2d FL_OFFSET = new Translation2d(0.0, -0.0);
+  private static final String FRONT_LEFT_CAM = "limelight-fl"; 
+  private static final Translation3d FL_OFFSET = new Translation3d(0.3290062, -0.24765, 0.288417);
 
   private static final String FRONT_RIGHT_CAM = "limelight-fr";
-  private static final Translation2d FR_OFFSET = new Translation2d(0.0, 0.0);
+  private static final Translation3d FR_OFFSET = new Translation3d(0.3251962, 0.263525, 0.2633472);
 
   private static final String SIDE_CAM = "limelight-side";
-  private static final Translation2d SIDE_OFFSET = new Translation2d(0.0, -0.0);
+  private static final Translation3d SIDE_OFFSET = new Translation3d(0.269, -0.340, 0.362);
 
 
   public static void init() {
     LimelightHelpers.SetThrottle(FRONT_LEFT_CAM, 0);
-    LimelightHelpers.setRewindEnabled(FRONT_LEFT_CAM, false);
-
     LimelightHelpers.SetThrottle(FRONT_RIGHT_CAM, 0);
-    LimelightHelpers.setRewindEnabled(FRONT_RIGHT_CAM, false);
-
     LimelightHelpers.SetThrottle(SIDE_CAM, 0);
+
+    LimelightHelpers.setRewindEnabled(FRONT_LEFT_CAM, false);
+    LimelightHelpers.setRewindEnabled(FRONT_RIGHT_CAM, false);
     LimelightHelpers.setRewindEnabled(SIDE_CAM, false);
   }
 
   public static void periodic() {
-    LimelightHelpers.setCameraPose_RobotSpace(FRONT_LEFT_CAM, FL_OFFSET.getX(), FL_OFFSET.getY(), 0, 0, 0, 0);
-    LimelightHelpers.setCameraPose_RobotSpace(FRONT_RIGHT_CAM, FR_OFFSET.getX(), FR_OFFSET.getY(), 0, 0, 0, 0);
-    LimelightHelpers.setCameraPose_RobotSpace(SIDE_CAM, SIDE_OFFSET.getX(), SIDE_OFFSET.getY(), 0, 0, 0, 0);
+    LimelightHelpers.setCameraPose_RobotSpace(FRONT_LEFT_CAM, FL_OFFSET.getX(), FL_OFFSET.getY(), 0, 0, 20, 0);
+    LimelightHelpers.setCameraPose_RobotSpace(FRONT_RIGHT_CAM, FR_OFFSET.getX(), FR_OFFSET.getY(), 0, 0, 20, 0);
+    LimelightHelpers.setCameraPose_RobotSpace(SIDE_CAM, SIDE_OFFSET.getX(), SIDE_OFFSET.getY(), 0, 0, 0, 90);
 
     if (DriverStation.isDisabled()) {
       seedFromMegaTag1(FRONT_LEFT_CAM);
-      seedFromMegaTag1(FRONT_RIGHT_CAM);
-      seedFromMegaTag1(SIDE_CAM);
+      seedFromMegaTag1(FRONT_RIGHT_CAM); //only seed from front 2
     } else {
       updateWithMegaTag1(FRONT_LEFT_CAM);
       updateWithMegaTag1(FRONT_RIGHT_CAM);
