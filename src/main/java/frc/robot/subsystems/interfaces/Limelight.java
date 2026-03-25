@@ -18,6 +18,7 @@ public class Limelight {
   private static final String SIDE_CAM = "limelight-side";
   private static final Translation3d SIDE_OFFSET = new Translation3d(0.269, -0.340, 0.362);
 
+  private static final int[] VALID_IDS = {2, 3, 4, 5, 8, 9, 10, 11, 13, 14, 18, 19, 20, 21, 24, 25, 26, 27, 29, 30};
 
   public static void init() {
     LimelightHelpers.SetThrottle(FRONT_LEFT_CAM, 0);
@@ -27,6 +28,10 @@ public class Limelight {
     LimelightHelpers.setRewindEnabled(FRONT_LEFT_CAM, false);
     LimelightHelpers.setRewindEnabled(FRONT_RIGHT_CAM, false);
     LimelightHelpers.setRewindEnabled(SIDE_CAM, false);
+
+    LimelightHelpers.SetFiducialIDFiltersOverride(FRONT_LEFT_CAM, VALID_IDS);
+    LimelightHelpers.SetFiducialIDFiltersOverride(FRONT_RIGHT_CAM, VALID_IDS);
+    LimelightHelpers.SetFiducialIDFiltersOverride(SIDE_CAM, VALID_IDS);
   }
 
   public static void periodic() {
@@ -36,7 +41,8 @@ public class Limelight {
 
     if (DriverStation.isDisabled()) {
       seedFromMegaTag1(FRONT_LEFT_CAM);
-      seedFromMegaTag1(FRONT_RIGHT_CAM); //only seed from front 2
+      seedFromMegaTag1(FRONT_RIGHT_CAM); 
+      seedFromMegaTag1(SIDE_CAM); 
     } else {
       updateWithMegaTag1(FRONT_LEFT_CAM);
       updateWithMegaTag1(FRONT_RIGHT_CAM);
@@ -70,7 +76,7 @@ public class Limelight {
     LimelightHelpers.PoseEstimate mt1PoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
 
     if (isValid(mt1PoseEstimate)) {
-      double xyStdDev = 8.0 + (Math.pow(mt1PoseEstimate.avgTagDist, 2) * 0.1);
+      double xyStdDev = 8.0 + (Math.pow(mt1PoseEstimate.avgTagDist, 2) * 0.75);
 
       if (mt1PoseEstimate.tagCount > 1) {
         xyStdDev *= 0.8;

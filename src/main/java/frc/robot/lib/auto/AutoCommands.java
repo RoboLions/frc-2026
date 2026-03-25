@@ -75,6 +75,18 @@ public class AutoCommands {
                        .alongWith(Commands.run(() -> Intake.intakeDown()));
     }
 
+    public static Command intakeOutOnly() {
+        return Commands.run(() -> Intake.intakeDown());
+    }
+
+    public static Command intakeMidOnly() {
+        return Commands.run(() -> Intake.intakeMid());
+    }
+
+    public static Command intakeRollersIn() {
+        return Commands.run(() -> Intake.intake());
+    }
+
     public static Command intakeMidRollersStop() {
         return Commands.run(() -> Intake.stopIntake())
                        .alongWith(Commands.run(() -> Intake.intakeMid()));

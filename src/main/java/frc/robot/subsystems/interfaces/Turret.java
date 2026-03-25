@@ -45,6 +45,7 @@ public class Turret {
     hoodPivotConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     hoodPivotConfig.CurrentLimits.SupplyCurrentLimit = 60;
+    hoodPivotConfig.CurrentLimits.StatorCurrentLimit = 60;
     hoodPivotConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
     hoodPivotConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5;
 
@@ -90,8 +91,8 @@ public class Turret {
     turretAzimuthConfig.Slot0.kA = 0.001;
     turretAzimuthConfig.Slot0.kG = 0;
 
-    turretAzimuthConfig.MotionMagic.MotionMagicAcceleration = 250;
-    turretAzimuthConfig.MotionMagic.MotionMagicCruiseVelocity = 250;
+    turretAzimuthConfig.MotionMagic.MotionMagicAcceleration = 300;
+    turretAzimuthConfig.MotionMagic.MotionMagicCruiseVelocity = 225;
     turretAzimuthConfig.MotionMagic.MotionMagicJerk = 0.0;
 
     turretAzimuthConfig.Feedback.SensorToMechanismRatio = 1 / 1;

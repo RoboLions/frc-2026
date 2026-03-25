@@ -33,13 +33,16 @@ public class AutoSubsystem {
 
         AutoTrajectory L1 = routine.trajectory("L1");
             L1.atPose("Intake_OUT", 1, 1)
+                .onTrue(AutoCommands.intakeOutOnly()
+                .withTimeout(0.01));
+            L1.atPose("ROLLERS_IN", 0.5, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.01));
 
         AutoTrajectory N1 = routine.trajectory("N1");
             N1.atPose("INTAKE_MID", 1, 1)
                 .onTrue(AutoCommands.intakeMidRollersStop()
-                .alongWith(AutoCommands.intakeZeroPosition())
+                .alongWith(AutoCommands.intakeOutOnly())
                 .alongWith(AutoCommands.idleShooter())
                 .withTimeout(0.01));
             N1.atPose("SHOOT_RAMP", 1, 1)
@@ -48,6 +51,9 @@ public class AutoSubsystem {
 
         AutoTrajectory L2 = routine.trajectory("L2");
             L2.atPose("INTAKE_OUT", 1, 1)
+                .onTrue(AutoCommands.intakeOutOnly()
+                .withTimeout(0.01));
+            L2.atPose("ROLLERS_IN", 0.5, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.01));
 
@@ -55,7 +61,7 @@ public class AutoSubsystem {
             N2.atPose("INTAKE_MID_TURRET", 1, 1)
                 .onTrue(AutoCommands.intakeMidRollersStop()
                 .alongWith(AutoCommands.setShooterAndTrackHub())
-                .alongWith(AutoCommands.intakeZeroPosition())
+                .alongWith(AutoCommands.intakeOutOnly())
                 .alongWith(AutoCommands.feedStop())
                 .until(N2.done()));
 
@@ -79,9 +85,10 @@ public class AutoSubsystem {
 
                     AutoCommands.setShooterAndTrackHub()
                         .alongWith(AutoCommands.feedIn())
-                        .alongWith(AutoCommands.intakeZeroPosition()
-                        .beforeStarting(Commands.waitSeconds(1.75)))
-                        .withTimeout(2.75),
+                        .alongWith(AutoCommands.intakeRollersIn())
+                        .alongWith(AutoCommands.intakeMidOnly()
+                        .beforeStarting(Commands.waitSeconds(2)))
+                        .withTimeout(3.5),
 
                     AutoCommands.idleShooter()
                         .alongWith(AutoCommands.feedStop())
@@ -95,9 +102,10 @@ public class AutoSubsystem {
 
                     AutoCommands.setShooterAndTrackHub()
                         .alongWith(AutoCommands.feedIn())
-                        .alongWith(AutoCommands.intakeZeroPosition()
-                        .beforeStarting(Commands.waitSeconds(1.75)))
-                        .withTimeout(2.75)
+                        .alongWith(AutoCommands.intakeRollersIn())
+                        .alongWith(AutoCommands.intakeMidOnly()
+                        .beforeStarting(Commands.waitSeconds(2)))
+                        .withTimeout(3.5)
                 )
             );
 
