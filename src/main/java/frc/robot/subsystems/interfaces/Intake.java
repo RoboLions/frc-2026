@@ -120,7 +120,7 @@ public class Intake {
   }
 
   public static void set(double speed) {
-    mIntakeRollerMotor.setControl(new VelocityTorqueCurrentFOC(speed).withUpdateFreqHz(40));
+    mIntakeRollerMotor.setControl(new VelocityTorqueCurrentFOC(speed).withUpdateFreqHz(20));
     mIntakeRollerMotorFollow.setControl(new Follower(mIntakeRollerMotor.getDeviceID(), MotorAlignmentValue.Opposed).withUpdateFreqHz(20));
   }
 
@@ -142,7 +142,7 @@ public class Intake {
   }
 
   public static void setRack(double target) {
-    mRackMotor.setControl(new MotionMagicVoltage(target).withEnableFOC(true));
+    mRackMotor.setControl(new MotionMagicVoltage(target).withEnableFOC(true).withUpdateFreqHz(20));
   }
 
   public static void intakeUp() {

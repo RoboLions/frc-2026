@@ -119,7 +119,9 @@ public class Turret {
         Constants.Hood.MAX_HOOD_ANGLE_DEG
     );
 
-    mHoodPivotMotor.setControl(new MotionMagicVoltage((angle - Constants.Hood.BASE_HOOD_ANGLE_DEG) / Constants.Hood.DEGREE_RATIO).withEnableFOC(true));
+    mHoodPivotMotor.setControl(new MotionMagicVoltage((angle - Constants.Hood.BASE_HOOD_ANGLE_DEG) / Constants.Hood.DEGREE_RATIO)
+                   .withEnableFOC(true)
+                   .withUpdateFreqHz(50));
     Logger.recordOutput("Turret/ setAngleForHood", SimulationObjects.desiredHoodAngleRobotRelDeg - Constants.Hood.BASE_HOOD_ANGLE_DEG);
   }
 
@@ -130,7 +132,9 @@ public class Turret {
    */
   private static void setAzimuthAngle() {
     double setAngle = (SimulationObjects.desiredTurretAngleRobotRelRad / TurretConstants.azimuthRotationstoRadians);    
-    mAzimuthTurretMotor.setControl(new MotionMagicVoltage(setAngle).withEnableFOC(true));
+    mAzimuthTurretMotor.setControl(new MotionMagicVoltage(setAngle)
+                       .withEnableFOC(true)
+                       .withUpdateFreqHz(100));
 
     Logger.recordOutput("Turret/ setAngleAzimuth", setAngle);
   }
@@ -139,7 +143,9 @@ public class Turret {
    * Tells the motor to return to the zero position.
    */
   public static void setAzimuthZero() {
-    mAzimuthTurretMotor.setControl(new MotionMagicVoltage(0).withEnableFOC(true));
+    mAzimuthTurretMotor.setControl(new MotionMagicVoltage(0)
+                       .withEnableFOC(true)
+                       .withUpdateFreqHz(20));
   }
 
   /**
@@ -201,7 +207,6 @@ public class Turret {
                         0.0, Swerve.getYawAsRadians(), Swerve.getYawRateAsRad(), Swerve.getFieldSpeeds(), true);
     setHoodAngle();
     setAzimuthAngle();
-    Logger.recordOutput("Turret/ Realoutputs/ Turret Azimuth", getAzimuthAngle());
   }
   
   private static double sampleVelocity(double d, double h) {

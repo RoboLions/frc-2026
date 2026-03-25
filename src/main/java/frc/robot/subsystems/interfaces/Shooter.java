@@ -79,11 +79,11 @@ public class Shooter {
 
     mMasterFlywheelMotor.setControl(
         new MotionMagicVelocityTorqueCurrentFOC(setRotationalSpeed)
-            .withUpdateFreqHz(100));
+            .withUpdateFreqHz(75));
     
     mFollowerFlywheelMotor.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-            .withUpdateFreqHz(100));
+            .withUpdateFreqHz(75));
   }
 
   public static void idlerShooter() {
