@@ -19,7 +19,7 @@ public class AutoSubsystem {
         autoChooser = new AutoChooser();
 
         autoChooser.addRoutine("Left 2 Piece ONLY", left2TripONLY());
-        autoChooser.addRoutine("TEST", test());
+        autoChooser.addRoutine("Right 2 Piece ONLY", right2TripONLY());
 
         SmartDashboard.putData("AutoChooser", autoChooser);
     }
@@ -113,20 +113,87 @@ public class AutoSubsystem {
         };
     }
 
-    private Supplier<AutoRoutine> test() {
-        AutoRoutine routine = autoFactory.newRoutine("TEST");
+    private Supplier<AutoRoutine> right2TripONLY() {
+        AutoRoutine routine = autoFactory.newRoutine("RIGHT 2 PIECE");
+
+        AutoTrajectory R1 = routine.trajectory("R1");
+            R1.atPose("Intake_OUT", 1, 1)
+                .onTrue(AutoCommands.intakeOutOnly()
+                .withTimeout(0.01));
+            R1.atPose("ROLLERS_IN", 0.5, 1)
+                .onTrue(AutoCommands.intakeOutRollersIn()
+                .withTimeout(0.01));
+
+        AutoTrajectory N1 = routine.trajectory("NR1");
+            N1.atPose("INTAKE_MID", 1, 1)
+                .onTrue(AutoCommands.intakeMidRollersStop()
+                .alongWith(AutoCommands.intakeOutOnly())
+                .alongWith(AutoCommands.idleShooter())
+                .withTimeout(0.01));
+            N1.atPose("SHOOT_RAMP", 1, 1)
+                .onTrue(AutoCommands.setShooterAndTrackHub()
+                .until(N1.done()));
+
+        AutoTrajectory R2 = routine.trajectory("R2");
+            R2.atPose("INTAKE_OUT", 1, 1)
+                .onTrue(AutoCommands.intakeOutOnly()
+                .withTimeout(0.01));
+            R2.atPose("ROLLERS_IN", 0.5, 1)
+                .onTrue(AutoCommands.intakeOutRollersIn()
+                .withTimeout(0.01));
+
+        AutoTrajectory N2 = routine.trajectory("NR2");
+            N2.atPose("INTAKE_MID_TURRET", 1, 1)
+                .onTrue(AutoCommands.intakeMidRollersStop()
+                .alongWith(AutoCommands.setShooterAndTrackHub())
+                .alongWith(AutoCommands.intakeOutOnly())
+                .alongWith(AutoCommands.feedStop())
+                .until(N2.done()));
 
         return () -> {
             routine.active().onTrue(
                 Commands.sequence(
-                    AutoCommands.setTurretTrack()
-                        .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.5),
-                    AutoCommands.feedIn(),
+                    AutoCommands.intakeZeroPosition()
+                        .withTimeout(0.001),
+
+                    AutoCommands.feedStop()
+                        .withTimeout(0.001),
+                    
+                    AutoCommands.idleShooter()
+                        .withTimeout(0.001),
+                    
+                    R1.cmd(),
+                    N1.cmd(),
+
                     AutoCommands.SwerveStop()
+                        .withTimeout(0.01),
+
+                    AutoCommands.setShooterAndTrackHub()
+                        .alongWith(AutoCommands.feedIn())
+                        .alongWith(AutoCommands.intakeRollersIn())
+                        .alongWith(AutoCommands.intakeMidOnly()
+                        .beforeStarting(Commands.waitSeconds(2)))
+                        .withTimeout(3.5),
+
+                    AutoCommands.idleShooter()
+                        .alongWith(AutoCommands.feedStop())
+                        .withTimeout(0.01),
+
+                    R2.cmd(),
+                    N2.cmd(),
+
+                    AutoCommands.SwerveStop()
+                        .withTimeout(0.1),
+
+                    AutoCommands.setShooterAndTrackHub()
+                        .alongWith(AutoCommands.feedIn())
+                        .alongWith(AutoCommands.intakeRollersIn())
+                        .alongWith(AutoCommands.intakeMidOnly()
+                        .beforeStarting(Commands.waitSeconds(2)))
+                        .withTimeout(3.5)
                 )
             );
-        
+
             return routine;
         };
     }
