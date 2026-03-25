@@ -141,6 +141,6 @@
   "splits":[0]
  },
  "events":[
-   {"name":"INTAKE_MID", "from":{"target":null, "targetTimestamp":null, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
+   {"name":"INTAKE_MID", "from":{"target":0, "targetTimestamp":0.0, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
    {"name":"SHOOT_RAMP", "from":{"target":3, "targetTimestamp":0.83099, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
 }
