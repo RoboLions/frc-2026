@@ -148,26 +148,6 @@ public class Turret {
                        .withUpdateFreqHz(20));
   }
 
-  /**
-   * Retrieves the current rotational position of the turret azimuth.
-   * * @return The current position of the azimuth motor in rotations.
-   */
-  private static double getAzimuthAngle() {
-    return mAzimuthTurretMotor.getPosition().getValueAsDouble();
-  }
-
-  /**
-   * Retrieves the current rotational error of the turret azimuth.
-   * * @return The current positional error of the azimuth motor in rotations.
-   */
-  public static double getAzimuthError() {
-    return (SimulationObjects.desiredTurretAngleRobotRelRad / TurretConstants.azimuthRotationstoRadians) - getAzimuthAngle();
-  }
-
-  public static double getAzimuthAngularVelocity() {
-    return mAzimuthTurretMotor.getVelocity().getValueAsDouble();
-  }
-
   public static void turretTrackHub() {
     simulateTurretAngle(Swerve.getPose(), Constants.Hood.TURRET_ROBOT_OFFSET, Constants.Hood.HUB_POSE,
                         Constants.Hood.HEIGHT_FROM_BOT_TO_TARGET, Swerve.getYawAsRadians(), 
