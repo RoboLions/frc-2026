@@ -39,7 +39,7 @@ public class AutoSubsystem {
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.01));
 
-        AutoTrajectory N1 = routine.trajectory("N1");
+        AutoTrajectory N1 = routine.trajectory("NL1");
             N1.atPose("INTAKE_MID", 1, 1)
                 .onTrue(AutoCommands.intakeMidRollersStop()
                 .alongWith(AutoCommands.intakeOutOnly())
@@ -57,7 +57,7 @@ public class AutoSubsystem {
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.01));
 
-        AutoTrajectory N2 = routine.trajectory("N2");
+        AutoTrajectory N2 = routine.trajectory("NL2");
             N2.atPose("INTAKE_MID_TURRET", 1, 1)
                 .onTrue(AutoCommands.intakeMidRollersStop()
                 .alongWith(AutoCommands.setShooterAndTrackHub())

@@ -210,5 +210,6 @@
  },
  "events":[
    {"name":"Intake_OUT", "from":{"target":2, "targetTimestamp":0.73838, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
-   {"name":"ROLLERS_IN", "from":{"target":3, "targetTimestamp":1.22756, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
+   {"name":"ROLLERS_IN", "from":{"target":3, "targetTimestamp":1.22756, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
+   {"name":"Marker", "from":{"target":6, "targetTimestamp":null, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
 }
