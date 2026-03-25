@@ -57,7 +57,7 @@ public class Intake {
     indexMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     indexMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    indexMotorConfiguration.CurrentLimits.StatorCurrentLimit = 50;
+    indexMotorConfiguration.CurrentLimits.StatorCurrentLimit = 80;
 
     indexMotorConfiguration.Slot0.kP = 0.2;
     indexMotorConfiguration.Slot0.kS = 0.375;
@@ -72,6 +72,9 @@ public class Intake {
 
     feedMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     feedMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+
+    feedMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
+    feedMotorConfiguration.CurrentLimits.StatorCurrentLimit = 100;
 
     feedMotorConfiguration.Slot0.kP = 0.5;
     feedMotorConfiguration.Slot0.kI = 0.0;
