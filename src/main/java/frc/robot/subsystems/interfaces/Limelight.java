@@ -76,7 +76,12 @@ public class Limelight {
     LimelightHelpers.PoseEstimate mt1PoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
 
     if (isValid(mt1PoseEstimate)) {
-      double xyStdDev = 8.0 + (Math.pow(mt1PoseEstimate.avgTagDist, 2) * 0.75);
+      if (mt1PoseEstimate.avgTagDist > 3.75) {
+        Logger.recordOutput("Vision/ ERROR LOG: " + cameraName, "OUT OF RANGE");
+        return;
+      }
+
+      double xyStdDev = 5.0 + (Math.pow(mt1PoseEstimate.avgTagDist, 2.5) * 1.0);
 
       if (mt1PoseEstimate.tagCount > 1) {
         xyStdDev *= 0.8;
@@ -96,6 +101,7 @@ public class Limelight {
       );
 
       Logger.recordOutput("Vision/ Enabled Feed, FROM: " + cameraName, mt1PoseEstimate.pose);
+      Logger.recordOutput("Vision/ AVG Dist to Tag: " + cameraName, mt1PoseEstimate.avgTagDist);
     }
   }
 

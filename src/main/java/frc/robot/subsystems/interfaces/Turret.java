@@ -11,12 +11,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.Timer;
 
-import frc.robot.Robot;
-import frc.robot.lib.util.FuelSim;
 import frc.robot.Constants;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 
@@ -35,8 +31,6 @@ public class Turret {
     public static double desiredHoodAngleRobotRelDeg;
     public static double totalShotVelocity;
     public static double literalShotHoodRad;
-
-    private static Timer simTimer = new Timer();
   }
   
   public static void init() {
@@ -76,7 +70,7 @@ public class Turret {
     // mHoodPivotMotor.setPosition(0.0);
 
     TalonFXConfiguration turretAzimuthConfig = new TalonFXConfiguration();
-    turretAzimuthConfig.CurrentLimits.StatorCurrentLimitEnable = false;
+    turretAzimuthConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     turretAzimuthConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     turretAzimuthConfig.CurrentLimits.SupplyCurrentLimit = 70;
@@ -121,7 +115,7 @@ public class Turret {
 
     mHoodPivotMotor.setControl(new MotionMagicVoltage((angle - Constants.Hood.BASE_HOOD_ANGLE_DEG) / Constants.Hood.DEGREE_RATIO)
                    .withEnableFOC(true)
-                   .withUpdateFreqHz(50));
+                   .withUpdateFreqHz(20));
     Logger.recordOutput("Turret/ setAngleForHood", SimulationObjects.desiredHoodAngleRobotRelDeg - Constants.Hood.BASE_HOOD_ANGLE_DEG);
   }
 
@@ -134,7 +128,7 @@ public class Turret {
     double setAngle = (SimulationObjects.desiredTurretAngleRobotRelRad / TurretConstants.azimuthRotationstoRadians);    
     mAzimuthTurretMotor.setControl(new MotionMagicVoltage(setAngle)
                        .withEnableFOC(true)
-                       .withUpdateFreqHz(100));
+                       .withUpdateFreqHz(50));
 
     Logger.recordOutput("Turret/ setAngleAzimuth", setAngle);
   }
@@ -278,50 +272,5 @@ public class Turret {
     if (!Double.isNaN(newTheta)) {
         SimulationObjects.desiredHoodAngleRobotRelDeg = Constants.Hood.THETA_ANGLE_FROM_SHOOTER - Math.toDegrees(newTheta);
     }
-
-    if (Robot.isSimulation()) {
-      launchFuel();
-    }
-  }
-
-  /**
-   * These two methods are only used for simulation. Can be deleted afterwards.
-   */
-  private static void launchFuel() {
-
-    if (Robot.isReal()) {
-      return;
-    }
-
-    SimulationObjects.simTimer.start();
-
-    if (!SimulationObjects.simTimer.hasElapsed(0.2)) {
-      return;
-    }
-
-    Translation2d turret = getTurretPosition(Swerve.getPose(), Constants.Hood.TURRET_ROBOT_OFFSET).getTranslation();
-
-    Translation3d initialPosition = new Translation3d(turret).plus(new Translation3d(0, 0, 0.3));
-    FuelSim.getInstance().spawnFuel(initialPosition, launchVectorSim().plus(
-      new Translation3d(Swerve.getFieldSpeeds().vxMetersPerSecond, Swerve.getFieldSpeeds().vyMetersPerSecond, 0)));
-
-    SimulationObjects.simTimer.reset();
-  }
-
-  /**
-   * These two methods are only used for simulation. Can be deleted afterwards.
-   */
-  private static Translation3d launchVectorSim() {
-    double hoodAngleRad = SimulationObjects.literalShotHoodRad;
-    double turretThetaRad = SimulationObjects.desiredTurretAngleRobotRelRad + Swerve.getYawAsRadians(); // make this field relative again
-
-    double z = SimulationObjects.totalShotVelocity * Math.sin(hoodAngleRad);
-    double x = SimulationObjects.totalShotVelocity * Math.cos (hoodAngleRad) * Math.cos(turretThetaRad);
-    double y = SimulationObjects.totalShotVelocity * Math.cos (hoodAngleRad) * Math.sin(turretThetaRad);
-
-    Translation3d shotVec = new Translation3d(x, y, z);
-
-    Logger.recordOutput("Turret/ Turret Sim/ Shot Vector", shotVec);
-    return shotVec;
   }
 }

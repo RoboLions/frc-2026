@@ -43,7 +43,7 @@ public class Shooter {
     frontShooterMotorConfig.Slot0.kI = 0.0;
     frontShooterMotorConfig.Slot0.kD = 0.0;
 
-    frontShooterMotorConfig.MotionMagic.MotionMagicAcceleration = 300.0;
+    frontShooterMotorConfig.MotionMagic.MotionMagicAcceleration = 500.0;
 
     frontShooterMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     frontShooterMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
@@ -78,11 +78,11 @@ public class Shooter {
 
     mMasterFlywheelMotor.setControl(
         new MotionMagicVelocityTorqueCurrentFOC(setRotationalSpeed)
-            .withUpdateFreqHz(75));
+            .withUpdateFreqHz(50));
     
     mFollowerFlywheelMotor.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-            .withUpdateFreqHz(75));
+            .withUpdateFreqHz(50));
   }
 
   public static void idlerShooter() {
@@ -91,10 +91,5 @@ public class Shooter {
         .withUpdateFreqHz(20));
     mFollowerFlywheelMotor.setControl(new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
         .withUpdateFreqHz(20));
-  }
-
-  public static void stopAll() {
-    mMasterFlywheelMotor.setControl(new VoltageOut(0));
-    mFollowerFlywheelMotor.setControl(new VoltageOut(0));
   }
 }
