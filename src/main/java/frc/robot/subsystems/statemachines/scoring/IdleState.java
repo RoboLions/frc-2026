@@ -46,11 +46,6 @@ public class IdleState extends State {
   @Override
   public void execute() {
     Turret.turretTrackHub();
-
-    if (RobotMap.manipulatorController.getAButton()) {
-      Intake.intakeUp();
-      Turret.setAzimuthZero();
-    }
   }
 
   @Override

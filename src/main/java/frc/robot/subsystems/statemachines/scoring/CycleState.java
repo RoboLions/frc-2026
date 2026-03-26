@@ -37,7 +37,7 @@ public class CycleState extends State {
   public void execute() {
     if (RobotMap.driverController.getRightTriggerAxis() > 0.25) { // SHOOT
       Intake.allRollersIn();
-    } else if (RobotMap.manipulatorController.getRightTriggerAxis() > 0.25) {
+    } else if (RobotMap.manipulatorController.getRightBumperButton()) {
       Intake.FeedOut();
       Intake.IndexOut();
     }
