@@ -21,6 +21,7 @@ public class Turret {
     new TalonFX(Constants.CAN_IDS.HOOD_PIVOT_MOTOR, "CANexternal");
   private static final TalonFX mAzimuthTurretMotor = 
     new TalonFX(Constants.CAN_IDS.TURRET_AZIMUTH_MOTOR, "CANexternal");
+  public static double FudgeFactor = 0;
 
   private class TurretConstants {
     private static final double azimuthRotationstoRadians = (Math.PI / 20.5);
@@ -67,7 +68,7 @@ public class Turret {
     hoodPivotConfig.MotionMagic.MotionMagicCruiseVelocity = 15;
 
     mHoodPivotMotor.getConfigurator().apply(hoodPivotConfig);
-    // mHoodPivotMotor.setPosition(0.0);
+    mHoodPivotMotor.setPosition(0.0);
 
     TalonFXConfiguration turretAzimuthConfig = new TalonFXConfiguration();
     turretAzimuthConfig.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -103,7 +104,7 @@ public class Turret {
     turretAzimuthConfig.ClosedLoopGeneral.ContinuousWrap = false;
 
     mAzimuthTurretMotor.getConfigurator().apply(turretAzimuthConfig);
-    // mAzimuthTurretMotor.setPosition(0.0);
+    mAzimuthTurretMotor.setPosition(0.0);
   }
 
   private static void setHoodAngle() {    
@@ -264,6 +265,7 @@ public class Turret {
         Math.atan2(newDY, newDX) 
         - robotFieldYaw  
         - (robotYawRate * Constants.Hood.YAW_COMPENSATION_LATENCY_MS / 1000.0)
+        - FudgeFactor
     );
     
     SimulationObjects.totalShotVelocity = newV;

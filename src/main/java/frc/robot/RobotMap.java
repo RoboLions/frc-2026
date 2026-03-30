@@ -50,6 +50,14 @@ public class RobotMap {
     if (driverController.getXButtonPressed()) {
       Swerve.zeroGyro();
     }
+
+    if (manipulatorController.getBButtonPressed()) {
+      Turret.FudgeFactor += 0.1;
+    } else if (manipulatorController.getXButtonPressed()) {
+      Turret.FudgeFactor -= 0.1;
+    } else if (manipulatorController.getAButtonPressed()) {
+      Turret.FudgeFactor = 0;
+    }
   }
 
   public static void scheduleAuto() {

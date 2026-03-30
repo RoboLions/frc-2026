@@ -25,7 +25,7 @@ public class Constants {
     }
 
     public class Shooter {
-        public static final double POWER_GAIN_MULTIPLIER = 2.05;
+        public static final double POWER_GAIN_MULTIPLIER = 2.1;
     }
     
     public class CAN_IDS {

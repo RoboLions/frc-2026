@@ -39,13 +39,16 @@ public class IdleState extends State {
   @Override
   public void init(State prevState) {
     Shooter.idlerShooter();
-    Intake.intakeMid();
     Intake.allRollersStop();
   }
 
   @Override
   public void execute() {
     Turret.turretTrackHub();
+
+    if (RobotMap.driverController.getYButtonPressed()) {
+      Intake.intakeMid();
+    }
   }
 
   @Override

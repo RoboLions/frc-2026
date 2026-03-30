@@ -18,12 +18,16 @@ public class Limelight {
   private static final String SIDE_CAM = "limelight-side";
   private static final Translation3d SIDE_OFFSET = new Translation3d(0.269, -0.340, 0.362);
 
-  private static final int[] VALID_IDS = {2, 3, 4, 5, 8, 9, 10, 11, 13, 14, 18, 19, 20, 21, 24, 25, 26, 27, 29, 30};
+  private static final int[] VALID_IDS = {1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 13, 14, 17, 18, 19, 20, 21, 22, 24, 25, 26, 27, 29, 30};
 
   public static void init() {
     LimelightHelpers.SetThrottle(FRONT_LEFT_CAM, 0);
     LimelightHelpers.SetThrottle(FRONT_RIGHT_CAM, 0);
     LimelightHelpers.SetThrottle(SIDE_CAM, 0);
+
+    LimelightHelpers.SetIMUMode(FRONT_LEFT_CAM, 0);
+    LimelightHelpers.SetIMUMode(FRONT_RIGHT_CAM, 0);
+    LimelightHelpers.SetIMUMode(SIDE_CAM, 0);
 
     LimelightHelpers.setRewindEnabled(FRONT_LEFT_CAM, false);
     LimelightHelpers.setRewindEnabled(FRONT_RIGHT_CAM, false);
@@ -42,7 +46,6 @@ public class Limelight {
     if (DriverStation.isDisabled()) {
       seedFromMegaTag1(FRONT_LEFT_CAM);
       seedFromMegaTag1(FRONT_RIGHT_CAM); 
-      seedFromMegaTag1(SIDE_CAM); 
     } else {
       updateWithMegaTag1(FRONT_LEFT_CAM);
       updateWithMegaTag1(FRONT_RIGHT_CAM);
@@ -73,15 +76,16 @@ public class Limelight {
   }
 
   private static void updateWithMegaTag1(String cameraName) {
-    LimelightHelpers.PoseEstimate mt1PoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
+    LimelightHelpers.SetRobotOrientation(cameraName, Swerve.getYawAsDegrees(), Swerve.getYawRateAsDeg(), 0, 0, 0, 0);
+    LimelightHelpers.PoseEstimate mt1PoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(cameraName);
 
     if (isValid(mt1PoseEstimate)) {
-      if (mt1PoseEstimate.avgTagDist > 3.75) {
+      if (mt1PoseEstimate.avgTagDist > 4.0) {
         Logger.recordOutput("Vision/ ERROR LOG: " + cameraName, "OUT OF RANGE");
         return;
       }
 
-      double xyStdDev = 5.0 + (Math.pow(mt1PoseEstimate.avgTagDist, 2.5) * 1.0);
+      double xyStdDev = 4.0 + (Math.pow(mt1PoseEstimate.avgTagDist, 1.0) * 1.0);
 
       if (mt1PoseEstimate.tagCount > 1) {
         xyStdDev *= 0.8;

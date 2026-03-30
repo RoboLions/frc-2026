@@ -128,11 +128,11 @@ public class Intake {
   }
 
   public static void intake() {
-    set(70);
+    set(90);
   }
 
   public static void intakeFastAuto() {
-    set(85);
+    set(90);
   }
 
   public static void outtake() {
