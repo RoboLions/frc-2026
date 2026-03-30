@@ -79,13 +79,11 @@ public class AutoCommands {
 
     public static Command feedIn() {
         return Commands.run(() -> Intake.FeedIn())
-                       .alongWith(Commands.run(() -> Intake.IndexIn()))
                        .alongWith(Commands.run(() -> Intake.intake()));
     }
 
     public static Command feedStop() {
-        return Commands.run(() -> Intake.stopFeed())
-                       .alongWith(Commands.run(() -> Intake.stopIndex()));
+        return Commands.run(() -> Intake.stopFeed());
     }
 
     public static Command intakeZeroPosition() {

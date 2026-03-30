@@ -5,7 +5,6 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -20,8 +19,6 @@ public class Intake {
     new TalonFX(Constants.CAN_IDS.INTAKE_ROLLER, "CANexternal");  
   private static final TalonFX mIntakeRollerMotorFollow = 
     new TalonFX(Constants.CAN_IDS.INTAKE_FOLLOWER_ROLLER, "CANexternal");
-  private static final TalonFX mSpindexMotor = 
-    new TalonFX(Constants.CAN_IDS.INDEX_MOTOR, "CANexternal");
   private static final TalonFX mFeedMotor = 
     new TalonFX(Constants.CAN_IDS.FEED_MOTOR, "CANexternal");
   private static final TalonFX mRackMotor = 
@@ -50,23 +47,6 @@ public class Intake {
 
     mIntakeRollerMotorFollow.getConfigurator().apply(masterIntakeMotorConfiguration);
     mIntakeRollerMotor.getConfigurator().apply(masterIntakeMotorConfiguration);
-
-    TalonFXConfiguration indexMotorConfiguration = new TalonFXConfiguration();
-
-    indexMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
-    indexMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
-
-    indexMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    indexMotorConfiguration.CurrentLimits.StatorCurrentLimit = 100;
-
-    indexMotorConfiguration.Slot0.kP = 0.2;
-    indexMotorConfiguration.Slot0.kS = 0.375;
-    indexMotorConfiguration.Slot0.kV = 0.094;
-    indexMotorConfiguration.Slot0.kA = 0.001;
-
-    indexMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-
-    mSpindexMotor.getConfigurator().apply(indexMotorConfiguration);
 
     TalonFXConfiguration feedMotorConfiguration = new TalonFXConfiguration();
 
@@ -119,7 +99,6 @@ public class Intake {
     rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 300.0;
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
-    // mRackMotor.setPosition(0);
   }
 
   public static void set(double speed) {
@@ -164,22 +143,6 @@ public class Intake {
     return mRackMotor.getPosition().getValueAsDouble();
   }
 
-  public static void setIndex(double velocity) {
-    mSpindexMotor.setControl(new VelocityVoltage(velocity).withEnableFOC(true).withUpdateFreqHz(20));
-  }
-
-  public static void IndexIn() {
-    setIndex(95);
-  }
-
-  public static void IndexOut() {
-    setIndex(-50);
-  }
-
-  public static void stopIndex() {
-   mSpindexMotor.setControl(new VoltageOut(0)); 
-  }
-
   public static void setFeed(double rpm) {
     mFeedMotor.setControl(new MotionMagicVelocityVoltage(rpm)
               .withUpdateFreqHz(20)
@@ -200,19 +163,16 @@ public class Intake {
 
   public static void allRollersIn() {
     intake();
-    IndexIn();
     FeedIn();
   }
 
   public static void allRollersOut() {
     outtake();
-    IndexOut();
     FeedOut();
   }
 
   public static void allRollersStop() {
     stopIntake();
-    stopIndex();
     stopFeed();
   }
 }

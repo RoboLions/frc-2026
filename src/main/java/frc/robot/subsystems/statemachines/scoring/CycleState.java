@@ -34,10 +34,7 @@ public class CycleState extends State {
   @Override
   public void execute() {
     if (RobotMap.driverController.getRightTriggerAxis() > 0.25) { // SHOOT
-      Intake.allRollersIn();
-    } else if (RobotMap.manipulatorController.getRightBumperButton()) {
-      Intake.FeedOut();
-      Intake.IndexOut();
+      Intake.FeedIn();
     }
 
     if (RobotMap.driverController.getLeftBumperButton() || RobotMap.manipulatorController.getLeftBumperButton()) { // INTAKE UP AND DOWN
