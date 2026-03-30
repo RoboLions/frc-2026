@@ -1,5 +1,7 @@
 package frc.robot.subsystems.interfaces;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
@@ -20,8 +22,29 @@ public class Shooter {
       new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_LEFT, "CANexternal");  
 
   private static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
+  private static ArrayList<ShotPoint> VELOCITY_LOOKUP_TABLE = new ArrayList<>();
+
+  private static class ShotPoint {
+    double distance; //meters
+    double velocity; //mps
+
+    public ShotPoint(double dist, double vel) {
+      this.distance = dist;
+      this.velocity = vel;
+    }
+  }
 
   public static void init() {
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(0.25, 0.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(0.5, 0.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(1.0, 0.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(1.5, 0.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(2.0, 0.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(2.5, 0.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.0, 0.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.5, 0.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.0, 0.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.5, 0.0));
 
     TalonFXConfiguration frontShooterMotorConfig = new TalonFXConfiguration();
 
@@ -58,15 +81,28 @@ public class Shooter {
     mFollowerFlywheelMotor.getConfigurator().apply(frontShooterMotorConfig);
   }
   
+  public static double getInterpolatedVelocity(double currentDistance) {
+      if (VELOCITY_LOOKUP_TABLE.isEmpty()) return 0.0;
 
-  public static double getfrontSpeed() {
-    return Conversions.rotationalSpeedToLinearSpeed(
-        mMasterFlywheelMotor.getVelocity().getValueAsDouble(), (WHEEL_DIAMETER / 2.0));
-  }
+      //handle out-of-bounds close
+      if (currentDistance <= VELOCITY_LOOKUP_TABLE.get(0).distance) {
+          return VELOCITY_LOOKUP_TABLE.get(0).velocity;
+      }
 
-  public static double getbackSpeed() {
-    return Conversions.rotationalSpeedToLinearSpeed(
-        mMasterFlywheelMotor.getVelocity().getValueAsDouble(), (WHEEL_DIAMETER / 2.0));
+      //iterate through the table to find the "gap"
+      for (int i = 0; i < VELOCITY_LOOKUP_TABLE.size() - 1; i++) {
+          ShotPoint p1 = VELOCITY_LOOKUP_TABLE.get(i);
+          ShotPoint p2 = VELOCITY_LOOKUP_TABLE.get(i + 1);
+
+          if (currentDistance <= p2.distance) {
+              //linear Interpolation formula: y = y1 + ((x - x1) / (x2 - x1)) * (y2 - y1)
+              double t = (currentDistance - p1.distance) / (p2.distance - p1.distance);
+              return p1.velocity + t * (p2.velocity - p1.velocity);
+          }
+      }
+
+      //handle out-of-bounds far
+      return VELOCITY_LOOKUP_TABLE.get(VELOCITY_LOOKUP_TABLE.size() - 1).velocity;
   }
 
   // speed in meters per second
