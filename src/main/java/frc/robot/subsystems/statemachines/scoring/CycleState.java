@@ -5,8 +5,6 @@ import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Shooter;
-import frc.robot.subsystems.interfaces.Turret;
-import frc.robot.subsystems.interfaces.Turret.SimulationObjects;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 
 // Copyright (c) FIRST and other WPILib contributors.
@@ -49,14 +47,14 @@ public class CycleState extends State {
     }
 
     if (Swerve.getPose().getX() >= 4.75 && Swerve.getPose().getX() <= 11.75) { // PASS LOGIC VS HUB
-      Turret.turretTrackPassPose();
+      // Turret.turretTrackPassPose(); TODO
       isPass = true;
     } else {
-      Turret.turretTrackHub();
+      // Turret.turretTrackHub();
       isPass = false;
     }
 
-    Shooter.setShootSpeed(SimulationObjects.totalShotVelocity);
+    Shooter.setShootSpeed(0.0); //TODO
   }
 
   @Override

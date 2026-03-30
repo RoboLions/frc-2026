@@ -9,7 +9,6 @@ import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Shooter;
-import frc.robot.subsystems.interfaces.Turret;
 
 /** Add your docs here. */
 public class IdleState extends State {
@@ -44,8 +43,6 @@ public class IdleState extends State {
 
   @Override
   public void execute() {
-    Turret.turretTrackHub();
-
     if (RobotMap.driverController.getYButtonPressed()) {
       Intake.intakeMid();
     }

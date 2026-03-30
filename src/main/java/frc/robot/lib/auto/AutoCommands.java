@@ -11,8 +11,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Shooter;
-import frc.robot.subsystems.interfaces.Turret;
-import frc.robot.subsystems.interfaces.Turret.SimulationObjects;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 
 public class AutoCommands {
@@ -33,26 +31,13 @@ public class AutoCommands {
         return Commands.runOnce(() -> System.out.println(string));
     }
 
-    public static Command setTurretTrack() {
-        return Commands.run(() -> Turret.turretTrackHub());
-    }
-
-    public static Command setTurretToZero() {
-        return Commands.run(() -> Turret.setAzimuthZero()); 
-    }
-
     public static Command idleShooter() {
         return Commands.run(() ->  Shooter.idlerShooter());
     }
 
-    public static Command setShooterAndTrackHub() {
-        return Commands.run(() ->  Turret.turretTrackHub())
-                       .alongWith(Commands.run(() ->  Shooter.setShootSpeed(SimulationObjects.totalShotVelocity)));
-    }
-
     public static Command shootSequenceWithRamp() {
         return Commands.sequence(AutoCommands.SwerveStop()
-                        .alongWith(AutoCommands.setTurretTrack())
+                        // .alongWith(AutoCommands.setTurretTrack()) TODO
                         .alongWith(AutoCommands.setShooter())
                         .withTimeout(0.35),
                 
@@ -61,13 +46,13 @@ public class AutoCommands {
 
         public static Command shootSequenceNoRamp() {
         return Commands.sequence(AutoCommands.SwerveStop()
-                        .alongWith(AutoCommands.setTurretTrack())
+                        // .alongWith(AutoCommands.setTurretTrack())
                         .alongWith(AutoCommands.setShooter())
                         .alongWith(AutoCommands.feedIn()));
     }
 
     public static Command setShooter() {
-        return Commands.run(() ->  Shooter.setShootSpeed(SimulationObjects.totalShotVelocity));
+        return null;
     }
 
     public static Command intakeOutRollersIn() {
