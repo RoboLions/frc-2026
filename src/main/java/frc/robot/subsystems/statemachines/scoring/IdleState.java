@@ -49,7 +49,5 @@ public class IdleState extends State {
   }
 
   @Override
-  public void exit(State nextState) {
-
-  }
+  public void exit(State nextState) {}
 }

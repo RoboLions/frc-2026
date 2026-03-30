@@ -29,6 +29,7 @@ public class CycleState extends State {
   public void init(State prevState) {
     Intake.intakeDown();
     Intake.intake();
+    Shooter.setShootSpeed(Shooter.getInterpolatedVelocity(0.0)); //TODO
   }
 
   @Override
@@ -50,8 +51,6 @@ public class CycleState extends State {
       // Turret.turretTrackHub();
       isPass = false;
     }
-
-    Shooter.setShootSpeed(0.0); //TODO
   }
 
   @Override

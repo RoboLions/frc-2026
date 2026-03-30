@@ -28,7 +28,6 @@ public class OuttakeState extends State {
             ScoringStateMachine.intakeState));
   }
 
-
   @Override
   public void init(State prevState) {
     Intake.intakeDown();
@@ -36,12 +35,8 @@ public class OuttakeState extends State {
   }
 
   @Override
-  public void execute() {
-
-  }
+  public void execute() {}
 
   @Override
-  public void exit(State nextState) {
-
-  }
+  public void exit(State nextState) {}
 }
