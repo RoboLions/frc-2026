@@ -107,7 +107,6 @@ public class Shooter {
 
   // speed in meters per second
   public static void setShootSpeed(double speed) {
-    // https://en.wikipedia.org/wiki/Angular_velocity
     double adjustedSpeed = speed * Constants.Shooter.POWER_GAIN_MULTIPLIER;
 
     double setRotationalSpeed = Conversions.linearSpeedToRotationalSpeed(adjustedSpeed, (WHEEL_DIAMETER / 2.0));
