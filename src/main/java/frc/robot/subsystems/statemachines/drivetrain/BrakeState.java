@@ -1,13 +1,12 @@
 package frc.robot.subsystems.statemachines.drivetrain;
 
-import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 
 
-public class AlignState extends State {
+public class BrakeState extends State {
     @Override
     public void build() {
         addTransition(
@@ -15,13 +14,13 @@ public class AlignState extends State {
                 () -> {
                   return RobotMap.driverController.getBButtonPressed();
                 },
-                DrivetrainStateMachine.teleopState));  
+                DrivetrainStateMachine.teleopState));    
         addTransition(
             new Transition(
                 () -> {
-                  return RobotMap.driverController.getRightTriggerAxis() > 0.25;
+                  return RobotMap.driverController.getLeftTriggerAxis() > 0.25;
                 },
-                DrivetrainStateMachine.brakeState));     
+                DrivetrainStateMachine.alignState));   
     }
 
     @Override
@@ -29,7 +28,7 @@ public class AlignState extends State {
 
     @Override
     public void execute() {
-        Swerve.facePose(Constants.FIELD.HUB_POSE);
+        Swerve.brakeX();
     }   
     
     @Override

@@ -213,7 +213,7 @@ public class Swerve {
     }
 
     public static void brakeX() {
-        SwerveObjects.Swerve.applyRequest(() -> SwerveObjects.brake);
+        SwerveObjects.Swerve.setControl(SwerveObjects.brake);
     }
 
     public static void teleopDrive() {
@@ -284,6 +284,18 @@ public class Swerve {
         double omega = SwerveObjects.headingController.calculate(currPose.getRotation().getRadians());
 
         automaticDrive(velocity, new Rotation2d(Math.atan2(dy, dx)), omega);
+    }
+
+    public static void facePose(Translation2d targetPose) {
+        Pose2d currPose = getPose();
+        double dy = targetPose.getY() - currPose.getY();
+        double dx = targetPose.getX() - currPose.getX();
+        Rotation2d target = new Rotation2d(Math.atan2(dy, dx));
+
+        SwerveObjects.headingController.setSetpoint(target.getRadians());
+        double omega = SwerveObjects.headingController.calculate(currPose.getRotation().getRadians());
+
+        automaticDrive(0, new Rotation2d(0), omega);
     }
 
     public static Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
