@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class Constants {
 
-    public class Hood {
+    public class FIELD {
         public static final Translation2d HUB_POSE =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation2d(4.625, 4.0275) : new Translation2d(11.925, 4.0275);
         public static final Translation3d PASS_UPPER = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.5, 6.25, 0) : new Translation3d(14.5, 6.25, 0);
         public static final Translation3d PASS_LOWER =  DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? new Translation3d(1.5, 1.75, 0) : new Translation3d(14.5, 1.75, 0);
