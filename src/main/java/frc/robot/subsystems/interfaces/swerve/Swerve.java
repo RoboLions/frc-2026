@@ -40,7 +40,7 @@ import frc.robot.RobotMap;
 public class Swerve {
 
     public class SwerveConstants{
-        public static final double ODOMETRY_FREQUENCY = 150.0;
+        public static final double ODOMETRY_FREQUENCY = 250.0;
 
         private static final double MaxSpeed = GeneratedConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
         private static final double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity

@@ -57,7 +57,7 @@ public class GeneratedConstants {
         .withCurrentLimits(
             new CurrentLimitsConfigs()
                 // Relatively low stator limit to help with battery performance and no-slip.
-                .withStatorCurrentLimit(Amps.of(70))
+                .withStatorCurrentLimit(Amps.of(80))
                 .withStatorCurrentLimitEnable(true)
         );    
     private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
@@ -98,8 +98,8 @@ public class GeneratedConstants {
     private static final int kPigeonId = 0;
 
     // These are only used for simulation
-    private static final MomentOfInertia kSteerInertia = KilogramSquareMeters.of(0.003);
-    private static final MomentOfInertia kDriveInertia = KilogramSquareMeters.of(0.075);
+    private static final MomentOfInertia kSteerInertia = KilogramSquareMeters.of(0.01);
+    private static final MomentOfInertia kDriveInertia = KilogramSquareMeters.of(0.04);
     // Simulated voltage necessary to overcome friction
     private static final Voltage kSteerFrictionVoltage = Volts.of(0.2);
     private static final Voltage kDriveFrictionVoltage = Volts.of(0.2);
