@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -17,9 +18,13 @@ import frc.robot.lib.util.Conversions;
 public class Shooter {
 
   private static final TalonFX mMasterFlywheelMotor =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_RIGHT, "CANexternal");
-  private static final TalonFX mFollowerFlywheelMotor =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_LEFT, "CANexternal");  
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_MASTER, "CANexternal");
+  private static final TalonFX mFollowerFlywheelMotor1 =
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_ONE, "CANexternal");    
+  private static final TalonFX mFollowerFlywheelMotor2 =
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_TWO, "CANexternal");  
+  private static final TalonFX mFollowerFlywheelMotor3 =
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_THREE, "CANexternal");  
 
   private static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
   private static ArrayList<ShotPoint> VELOCITY_LOOKUP_TABLE = new ArrayList<>();
@@ -66,8 +71,6 @@ public class Shooter {
     frontShooterMotorConfig.Slot0.kI = 0.0;
     frontShooterMotorConfig.Slot0.kD = 0.0;
 
-    frontShooterMotorConfig.MotionMagic.MotionMagicAcceleration = 500.0;
-
     frontShooterMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     frontShooterMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
@@ -78,18 +81,30 @@ public class Shooter {
     frontShooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
     mMasterFlywheelMotor.getConfigurator().apply(frontShooterMotorConfig);
-    mFollowerFlywheelMotor.getConfigurator().apply(frontShooterMotorConfig);
+    mFollowerFlywheelMotor1.getConfigurator().apply(frontShooterMotorConfig);
+    mFollowerFlywheelMotor2.getConfigurator().apply(frontShooterMotorConfig);
+    mFollowerFlywheelMotor3.getConfigurator().apply(frontShooterMotorConfig);
+
+    mFollowerFlywheelMotor1.setControl(
+        new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Aligned)
+            .withUpdateFreqHz(100));
+    
+    mFollowerFlywheelMotor2.setControl(
+        new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
+            .withUpdateFreqHz(100));
+    
+    mFollowerFlywheelMotor3.setControl(
+        new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
+            .withUpdateFreqHz(100));
   }
   
   public static double getInterpolatedVelocity(double currentDistance) {
       if (VELOCITY_LOOKUP_TABLE.isEmpty()) return 0.0;
 
-      //handle out-of-bounds close
       if (currentDistance <= VELOCITY_LOOKUP_TABLE.get(0).distance) {
           return VELOCITY_LOOKUP_TABLE.get(0).velocity;
       }
 
-      //iterate through the table to find the "gap"
       for (int i = 0; i < VELOCITY_LOOKUP_TABLE.size() - 1; i++) {
           ShotPoint p1 = VELOCITY_LOOKUP_TABLE.get(i);
           ShotPoint p2 = VELOCITY_LOOKUP_TABLE.get(i + 1);
@@ -101,30 +116,24 @@ public class Shooter {
           }
       }
 
-      //handle out-of-bounds far
       return VELOCITY_LOOKUP_TABLE.get(VELOCITY_LOOKUP_TABLE.size() - 1).velocity;
   }
 
   // speed in meters per second
   public static void setShootSpeed(double speed) {
-    double adjustedSpeed = speed * Constants.Shooter.POWER_GAIN_MULTIPLIER;
+    double adjustedSpeed = speed;
 
     double setRotationalSpeed = Conversions.linearSpeedToRotationalSpeed(adjustedSpeed, (WHEEL_DIAMETER / 2.0));
 
     mMasterFlywheelMotor.setControl(
-        new MotionMagicVelocityTorqueCurrentFOC(setRotationalSpeed)
-            .withUpdateFreqHz(50));
-    
-    mFollowerFlywheelMotor.setControl(
-        new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-            .withUpdateFreqHz(50));
+        new VelocityTorqueCurrentFOC(setRotationalSpeed)
+            .withUpdateFreqHz(100));
   }
 
   public static void idlerShooter() {
-    mMasterFlywheelMotor.setControl(new VoltageOut(0.5)
-        .withEnableFOC(true)
-        .withUpdateFreqHz(20));
-    mFollowerFlywheelMotor.setControl(new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-        .withUpdateFreqHz(20));
+    mMasterFlywheelMotor.setControl(
+        new VoltageOut(0.5)
+            .withUpdateFreqHz(20)
+            .withEnableFOC(true));
   }
 }
