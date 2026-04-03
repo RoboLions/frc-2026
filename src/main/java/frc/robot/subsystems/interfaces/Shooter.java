@@ -126,13 +126,12 @@ public class Shooter {
 
     mMasterFlywheelMotor.setControl(
         new VelocityTorqueCurrentFOC(setRotationalSpeed)
-            .withUpdateFreqHz(100));
+            .withUpdateFreqHz(50));
   }
 
   public static void idlerShooter() {
     mMasterFlywheelMotor.setControl(
         new VoltageOut(0.5)
-            .withUpdateFreqHz(20)
             .withEnableFOC(true));
   }
 }

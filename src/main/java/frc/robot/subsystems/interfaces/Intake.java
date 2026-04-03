@@ -2,7 +2,6 @@ package frc.robot.subsystems.interfaces;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -15,12 +14,19 @@ import frc.robot.Constants;
 
 public class Intake {
 
-  private static final TalonFX mIntakeRollerMotor =
-    new TalonFX(Constants.CAN_IDS.INTAKE_ROLLER, "CANexternal");  
+  private static final TalonFX mIntakeRollerMotorMaster =
+    new TalonFX(Constants.CAN_IDS.INTAKE_ROLLER_MASTER, "CANexternal");  
   private static final TalonFX mIntakeRollerMotorFollow = 
     new TalonFX(Constants.CAN_IDS.INTAKE_FOLLOWER_ROLLER, "CANexternal");
+
+  private static final TalonFX mIndexMotorMaster = 
+    new TalonFX(Constants.CAN_IDS.INDEX_MOTOR_MASTER, "CANexternal");
+  private static final TalonFX mIndexMotorFollower = 
+    new TalonFX(Constants.CAN_IDS.INDEX_MOTOR_FOLLOWER, "CANexternal");
+
   private static final TalonFX mFeedMotor = 
-    new TalonFX(Constants.CAN_IDS.FEED_MOTOR, "CANexternal");
+    new TalonFX(Constants.CAN_IDS.FEEDER_MOTOR, "CANexternal");
+
   private static final TalonFX mRackMotor = 
     new TalonFX(Constants.CAN_IDS.RACK_MOTOR, "CANexternal");
 
@@ -34,19 +40,41 @@ public class Intake {
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
-    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
     masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 160;
+    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
+    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 120;
 
     masterIntakeMotorConfiguration.Slot0.kP = 3.0;
     masterIntakeMotorConfiguration.Slot0.kS = 3.25;
-    masterIntakeMotorConfiguration.Slot0.kV = 0.001;
+    masterIntakeMotorConfiguration.Slot0.kV = 0.0;
     masterIntakeMotorConfiguration.Slot0.kA = 0.0;
 
     masterIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     mIntakeRollerMotorFollow.getConfigurator().apply(masterIntakeMotorConfiguration);
-    mIntakeRollerMotor.getConfigurator().apply(masterIntakeMotorConfiguration);
+    mIntakeRollerMotorMaster.getConfigurator().apply(masterIntakeMotorConfiguration);
+
+    TalonFXConfiguration indexMotorConfiguration = new TalonFXConfiguration();
+
+    indexMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
+    indexMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+
+    indexMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
+    indexMotorConfiguration.CurrentLimits.StatorCurrentLimit = 100;
+
+    indexMotorConfiguration.Slot0.kP = 0.0;
+    indexMotorConfiguration.Slot0.kI = 0.0;
+    indexMotorConfiguration.Slot0.kD = 0.0;
+    indexMotorConfiguration.Slot0.kS = 0.0;
+    indexMotorConfiguration.Slot0.kA = 0.0;
+    indexMotorConfiguration.Slot0.kV = 0.0;
+    indexMotorConfiguration.Slot0.kG = 0.0;
+
+    indexMotorConfiguration.Feedback.SensorToMechanismRatio = 1 / 1;
+    indexMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+
+    mIndexMotorMaster.getConfigurator().apply(indexMotorConfiguration);
+    mIndexMotorFollower.getConfigurator().apply(indexMotorConfiguration);
 
     TalonFXConfiguration feedMotorConfiguration = new TalonFXConfiguration();
 
@@ -54,17 +82,16 @@ public class Intake {
     feedMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     feedMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    feedMotorConfiguration.CurrentLimits.StatorCurrentLimit = 100;
+    feedMotorConfiguration.CurrentLimits.StatorCurrentLimit = 120;
 
-    feedMotorConfiguration.Slot0.kP = 0.5;
+    feedMotorConfiguration.Slot0.kP = 0.0;
     feedMotorConfiguration.Slot0.kI = 0.0;
     feedMotorConfiguration.Slot0.kD = 0.0;
-    feedMotorConfiguration.Slot0.kS = 0.37;
-    feedMotorConfiguration.Slot0.kA = 0.003;
-    feedMotorConfiguration.Slot0.kV = 0.1185;
+    feedMotorConfiguration.Slot0.kS = 0.0;
+    feedMotorConfiguration.Slot0.kA = 0.0;
+    feedMotorConfiguration.Slot0.kV = 0.0;
     feedMotorConfiguration.Slot0.kG = 0.0;
 
-    feedMotorConfiguration.MotionMagic.MotionMagicAcceleration = 250;
     feedMotorConfiguration.Feedback.SensorToMechanismRatio = 1 / 1;
     feedMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
@@ -77,7 +104,7 @@ public class Intake {
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60;
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 60;
+    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 50;
 
     rackMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
@@ -99,18 +126,16 @@ public class Intake {
     rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 300.0;
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
+
+    mIntakeRollerMotorFollow.setControl(new Follower(mIntakeRollerMotorMaster.getDeviceID(), MotorAlignmentValue.Opposed).withUpdateFreqHz(50));
+    mIndexMotorFollower.setControl(new Follower(mIndexMotorMaster.getDeviceID(), MotorAlignmentValue.Opposed).withUpdateFreqHz(50));
   }
 
   public static void set(double speed) {
-    mIntakeRollerMotor.setControl(new VelocityTorqueCurrentFOC(speed).withUpdateFreqHz(20));
-    mIntakeRollerMotorFollow.setControl(new Follower(mIntakeRollerMotor.getDeviceID(), MotorAlignmentValue.Opposed).withUpdateFreqHz(20));
+    mIntakeRollerMotorMaster.setControl(new VelocityTorqueCurrentFOC(speed));
   }
 
   public static void intake() {
-    set(90);
-  }
-
-  public static void intakeFastAuto() {
     set(90);
   }
 
@@ -119,8 +144,7 @@ public class Intake {
   }
 
   public static void stopIntake() {
-    mIntakeRollerMotor.setControl(new VoltageOut(0).withUpdateFreqHz(20));
-    mIntakeRollerMotorFollow.setControl(new Follower(mIntakeRollerMotor.getDeviceID(), MotorAlignmentValue.Opposed).withUpdateFreqHz(20));
+    mIntakeRollerMotorMaster.setControl(new VoltageOut(0));
   }
 
   public static void setRack(double target) {
@@ -144,9 +168,7 @@ public class Intake {
   }
 
   public static void setFeed(double rpm) {
-    mFeedMotor.setControl(new MotionMagicVelocityVoltage(rpm)
-              .withUpdateFreqHz(20)
-              .withEnableFOC(true));
+    mFeedMotor.setControl(new VelocityTorqueCurrentFOC(rpm));
   }
 
   public static void FeedIn() {
@@ -161,18 +183,37 @@ public class Intake {
     mFeedMotor.setControl(new VoltageOut(0));
   }
 
+  public static void setIndex(double rpm) {
+    mIndexMotorMaster.setControl(new VelocityTorqueCurrentFOC(rpm));
+  }
+
+  public static void IndexIn() {
+    setIndex(50);
+  }
+
+  public static void IndexOut() {
+    setIndex(-10);
+  }
+
+  public static void stopIndex() {
+    mIndexMotorMaster.setControl(new VoltageOut(0));
+  }
+
   public static void allRollersIn() {
     intake();
+    IndexIn();
     FeedIn();
   }
 
   public static void allRollersOut() {
     outtake();
+    IndexOut();
     FeedOut();
   }
 
   public static void allRollersStop() {
     stopIntake();
+    stopIndex();
     stopFeed();
   }
 }

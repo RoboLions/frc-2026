@@ -56,7 +56,7 @@ public class AutoCommands {
     }
 
     public static Command intakeOutRollersIn() {
-        return Commands.run(() -> Intake.intakeFastAuto())
+        return Commands.run(() -> Intake.intake())
                        .alongWith(Commands.run(() -> Intake.intakeDown()));
     }
 
