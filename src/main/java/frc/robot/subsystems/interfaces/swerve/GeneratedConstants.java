@@ -57,7 +57,7 @@ public class GeneratedConstants {
         .withCurrentLimits(
             new CurrentLimitsConfigs()
                 // Relatively low stator limit to help with battery performance and no-slip.
-                .withStatorCurrentLimit(Amps.of(80))
+                .withStatorCurrentLimit(Amps.of(100))
                 .withStatorCurrentLimitEnable(true)
         );    
     private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
