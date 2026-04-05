@@ -30,9 +30,9 @@ public class Intake {
   private static final TalonFX mRackMotor = 
     new TalonFX(Constants.CAN_IDS.RACK_MOTOR, "CANexternal");
 
-  private static final double STOW_POS = 0.25;
-  private static final double MIDDLE_POS = 26.9;
-  private static final double DOWN_POS = 48.4;
+  private static final double STOW_POS = 0.2;
+  private static final double MIDDLE_POS = 5.0;
+  private static final double DOWN_POS = 12.25;
 
   public static void init() {    
     TalonFXConfiguration masterIntakeMotorConfiguration = new TalonFXConfiguration();
@@ -40,9 +40,10 @@ public class Intake {
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
-    masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
     masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
     masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 120;
+    masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
+    masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 70;
 
     masterIntakeMotorConfiguration.Slot0.kP = 3.0;
     masterIntakeMotorConfiguration.Slot0.kS = 3.25;
@@ -61,6 +62,8 @@ public class Intake {
 
     indexMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
     indexMotorConfiguration.CurrentLimits.StatorCurrentLimit = 100;
+    indexMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
+    indexMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60;
 
     indexMotorConfiguration.Slot0.kP = 0.0;
     indexMotorConfiguration.Slot0.kI = 0.0;
@@ -82,7 +85,9 @@ public class Intake {
     feedMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     feedMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    feedMotorConfiguration.CurrentLimits.StatorCurrentLimit = 120;
+    feedMotorConfiguration.CurrentLimits.StatorCurrentLimit = 100;
+    feedMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
+    feedMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60;
 
     feedMotorConfiguration.Slot0.kP = 0.0;
     feedMotorConfiguration.Slot0.kI = 0.0;
@@ -101,10 +106,10 @@ public class Intake {
     
     rackMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60;
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 50;
+    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
+    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 40;
 
     rackMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
@@ -113,17 +118,17 @@ public class Intake {
     rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
     rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = STOW_POS;
     
-    rackMotorConfiguration.Slot0.kP = 0.5;
+    rackMotorConfiguration.Slot0.kP = 3.0;
     rackMotorConfiguration.Slot0.kI = 0.0;
     rackMotorConfiguration.Slot0.kD = 0.0;
-    rackMotorConfiguration.Slot0.kS = 0.8;
-    rackMotorConfiguration.Slot0.kV = 0.105;
+    rackMotorConfiguration.Slot0.kS = 1.0;
+    rackMotorConfiguration.Slot0.kV = 0.675;
     rackMotorConfiguration.Slot0.kA = 0.0;
     rackMotorConfiguration.Slot0.kG = 0.0;
 
     rackMotorConfiguration.ClosedLoopGeneral.ContinuousWrap = false;
-    rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 200.0;
-    rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 300.0;
+    rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 300.0;
+    rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 400.0;
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
 

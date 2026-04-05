@@ -63,10 +63,10 @@ public class Shooter {
     frontShooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
     frontShooterMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 1.0;
 
-    frontShooterMotorConfig.Slot0.kS = 2.3;
-    frontShooterMotorConfig.Slot0.kV = 0.0007;
-    frontShooterMotorConfig.Slot0.kA = 0.0015;
-    frontShooterMotorConfig.Slot0.kP = 7;
+    frontShooterMotorConfig.Slot0.kS = 0;
+    frontShooterMotorConfig.Slot0.kV = 0;
+    frontShooterMotorConfig.Slot0.kA = 0;
+    frontShooterMotorConfig.Slot0.kP = 0;
     frontShooterMotorConfig.Slot0.kI = 0.0;
     frontShooterMotorConfig.Slot0.kD = 0.0;
 

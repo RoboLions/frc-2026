@@ -23,6 +23,6 @@ public class Constants {
         public static final int INDEX_MOTOR_FOLLOWER = 0;
         public static final int INTAKE_ROLLER_MASTER = 0;
         public static final int INTAKE_FOLLOWER_ROLLER = 0;
-        public static final int RACK_MOTOR = 0;
+        public static final int RACK_MOTOR = 50;
     }
 }
