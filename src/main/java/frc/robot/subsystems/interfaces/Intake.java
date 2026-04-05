@@ -118,7 +118,7 @@ public class Intake {
     rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
     rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = STOW_POS;
     
-    rackMotorConfiguration.Slot0.kP = 3.0;
+    rackMotorConfiguration.Slot0.kP = 5.0;
     rackMotorConfiguration.Slot0.kI = 0.0;
     rackMotorConfiguration.Slot0.kD = 0.0;
     rackMotorConfiguration.Slot0.kS = 1.0;
