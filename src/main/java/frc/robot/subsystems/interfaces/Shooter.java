@@ -2,6 +2,8 @@ package frc.robot.subsystems.interfaces;
 
 import java.util.ArrayList;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
@@ -10,9 +12,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
-import frc.robot.lib.util.Conversions;
 
 public class Shooter {
 
@@ -25,7 +25,6 @@ public class Shooter {
   private static final TalonFX mFollowerFlywheelMotor3 =
       new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_THREE, "CANexternal");  
 
-  private static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
   private static ArrayList<ShotPoint> VELOCITY_LOOKUP_TABLE = new ArrayList<>();
 
   private static class ShotPoint {
@@ -96,8 +95,16 @@ public class Shooter {
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
             .withUpdateFreqHz(100));
   }
+
+  public static void interpolateAndShoot(double currentDistance) {
+    double velocity = getInterpolatedVelocity(currentDistance);
+    setShootSpeed(velocity);
+
+    Logger.recordOutput("Shooter/ ShootSpeed (RPS)", velocity);
+    Logger.recordOutput("Shooter/ Dist-To-Target (M)", currentDistance);
+  }
   
-  public static double getInterpolatedVelocity(double currentDistance) {
+  private static double getInterpolatedVelocity(double currentDistance) {
       if (VELOCITY_LOOKUP_TABLE.isEmpty()) return 0.0;
 
       if (currentDistance <= VELOCITY_LOOKUP_TABLE.get(0).distance) {
@@ -119,13 +126,9 @@ public class Shooter {
   }
 
   // speed in meters per second
-  public static void setShootSpeed(double speed) {
-    double adjustedSpeed = speed;
-
-    double setRotationalSpeed = Conversions.linearSpeedToRotationalSpeed(adjustedSpeed, (WHEEL_DIAMETER / 2.0));
-
+  private static void setShootSpeed(double setSpeed) {
     mMasterFlywheelMotor.setControl(
-        new VelocityTorqueCurrentFOC(setRotationalSpeed)
+        new VelocityTorqueCurrentFOC(setSpeed)
             .withUpdateFreqHz(50));
   }
 
