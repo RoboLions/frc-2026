@@ -9,6 +9,7 @@ import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Shooter;
+import frc.robot.subsystems.interfaces.LED;
 
 /** Add your docs here. */
 public class IntakeState extends State {
@@ -39,6 +40,7 @@ public class IntakeState extends State {
     Intake.intake();
     Intake.intakeDown();
     Shooter.idlerShooter();
+    LED.setFlashYellow();
   }
 
   @Override

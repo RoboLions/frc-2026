@@ -70,6 +70,7 @@ public class Limelight {
       
       if (mt1Pose.tagCount < 2) {
         Logger.recordOutput("Vision/ ERROR LOG: " + cameraName, "NOT ENOUGH TAGS");
+        LED.setSolidRed();
         return; // NO READINGS FOR LESS THAN 2 TAGS
       }
 
@@ -78,6 +79,7 @@ public class Limelight {
           mt1Pose.timestampSeconds,
           VecBuilder.fill(xyStdDev, xyStdDev, rotStdDev)
       );
+      LED.setFlashGreen();
     }
   }
 

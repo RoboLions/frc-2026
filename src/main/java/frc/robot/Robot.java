@@ -14,6 +14,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.statemachines.drivetrain.DrivetrainStateMachine;
 import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
+import frc.robot.subsystems.interfaces.LED;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -67,6 +68,7 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void autonomousInit() {
+    LED.setSolidWhite();
     CommandScheduler.getInstance().run(); // we will always need this in auto, command schedulers are not built into the LoggedRobot class, but it is for TimedRobot.
   }
 

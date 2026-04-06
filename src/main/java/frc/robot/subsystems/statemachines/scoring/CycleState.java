@@ -1,10 +1,15 @@
 package frc.robot.subsystems.statemachines.scoring;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+
 import frc.robot.RobotMap;
+import frc.robot.Constants;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Shooter;
+import frc.robot.subsystems.interfaces.LED;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 
 // Copyright (c) FIRST and other WPILib contributors.
@@ -14,6 +19,7 @@ import frc.robot.subsystems.interfaces.swerve.Swerve;
 public class CycleState extends State {
 
   public static boolean isPass = false;
+  private static Pose2d HUB_POSE = new Pose2d(Constants.FIELD.HUB_POSE, new Rotation2d());
 
   @Override
   public void build() {
@@ -29,7 +35,7 @@ public class CycleState extends State {
   public void init(State prevState) {
     Intake.intakeDown();
     Intake.intake();
-    Shooter.setShootSpeed(Shooter.getInterpolatedVelocity(0.0)); //TODO
+    LED.setFlashBlue();
   }
 
   @Override
@@ -45,10 +51,11 @@ public class CycleState extends State {
     }
 
     if (Swerve.getPose().getX() >= 4.75 && Swerve.getPose().getX() <= 11.75) { // PASS LOGIC VS HUB
-      // Turret.turretTrackPassPose(); TODO
+      LED.setFlashRed();
       isPass = true;
     } else {
-      // Turret.turretTrackHub();
+      Shooter.interpolateAndShoot(Swerve.getDistToPose(HUB_POSE));
+      LED.setFlashGreen();
       isPass = false;
     }
   }
