@@ -9,9 +9,11 @@ import com.ctre.phoenix6.hardware.CANdle;
 import com.ctre.phoenix6.signals.RGBWColor;
 import com.ctre.phoenix6.signals.StripTypeValue;
 
+import frc.robot.Constants;
+
 public class LED {
     
-    private static final CANdle mRGB_Candle = new CANdle(0);
+    private static final CANdle mRGB_Candle = new CANdle(Constants.CAN_IDS.CANDLE);
     private static final int MAX_LED_INDEX = 50;
 
     public static void init() {

@@ -13,6 +13,8 @@ public class Constants {
     }
 
     public class CAN_IDS {
+        public static final int CANDLE = 0;
+
         public static final int FLYWHEEL_MOTOR_MASTER = 0;
         public static final int FLYWHEEL_MOTOR_FOLLOWER_ONE = 0;
         public static final int FLYWHEEL_MOTOR_FOLLOWER_TWO = 0;
