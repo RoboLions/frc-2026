@@ -79,6 +79,8 @@ public class Limelight {
           mt1Pose.timestampSeconds,
           VecBuilder.fill(xyStdDev, xyStdDev, rotStdDev)
       );
+
+      Logger.recordOutput("Vision/ ERROR LOG: " + cameraName, "LOOKS GOOD, SEED ACCEPT");
       LED.setFlashGreen();
     }
   }
@@ -115,6 +117,8 @@ public class Limelight {
           mt1PoseEstimate.timestampSeconds,
           VecBuilder.fill(xyStdDev, xyStdDev, 9999999)
       );
+
+      Logger.recordOutput("Vision/ ERROR LOG: " + cameraName, "LOOKS GOOD, POSE ACCEPT");
     }
   }
 
