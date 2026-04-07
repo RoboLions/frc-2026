@@ -4,11 +4,13 @@ import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Shooter;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
@@ -27,6 +29,10 @@ public class AutoCommands {
         return Commands.runOnce(() -> Swerve.zeroCommand());
     }
 
+    public static Command SwerveFaceHUB() {
+        return Commands.run(() -> Swerve.facePose(Constants.FIELD.HUB_POSE, Rotation2d.fromDegrees(180)));
+    }
+
     public static Command PrintItem(String string) {
         return Commands.runOnce(() -> System.out.println(string));
     }
@@ -35,24 +41,31 @@ public class AutoCommands {
         return Commands.run(() ->  Shooter.idlerShooter());
     }
 
+    public static Command setShooter() {
+        return Commands.run(() ->  Shooter.interpolateAndShoot(Swerve.getPose().getTranslation().getDistance(Constants.FIELD.HUB_POSE)));
+    }
+
     public static Command shootSequenceWithRamp() {
-        return Commands.sequence(AutoCommands.SwerveStop()
-                        // .alongWith(AutoCommands.setTurretTrack()) TODO
+        return Commands.sequence(AutoCommands.SwerveFaceHUB()
                         .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.35),
+                        .withTimeout(0.5),
                 
-                    AutoCommands.feedIn());
+                    AutoCommands.feedIn()
+                        .alongWith(AutoCommands.SwerveFaceHUB())
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(1.5),
+
+                    AutoCommands.intakeZeroPosition()
+                        .alongWith(AutoCommands.SwerveFaceHUB())
+                        .alongWith(AutoCommands.setShooter())
+                        .alongWith(AutoCommands.intakeRollersIn())
+                        .withTimeout(0.01));
     }
 
         public static Command shootSequenceNoRamp() {
         return Commands.sequence(AutoCommands.SwerveStop()
-                        // .alongWith(AutoCommands.setTurretTrack())
                         .alongWith(AutoCommands.setShooter())
                         .alongWith(AutoCommands.feedIn()));
-    }
-
-    public static Command setShooter() {
-        return null;
     }
 
     public static Command intakeOutRollersIn() {

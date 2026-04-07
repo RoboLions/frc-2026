@@ -8,6 +8,7 @@ import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
+import frc.robot.subsystems.interfaces.LED;
 import frc.robot.subsystems.interfaces.Shooter;
 
 /** Add your docs here. */
@@ -45,6 +46,7 @@ public class IdleState extends State {
   public void init(State prevState) {
     Intake.allRollersStop();
     Shooter.idlerShooter();
+    LED.setSolidGreen();
   }
 
   @Override

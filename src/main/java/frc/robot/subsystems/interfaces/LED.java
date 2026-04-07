@@ -13,8 +13,8 @@ import frc.robot.Constants;
 
 public class LED {
     
-    private static final CANdle mRGB_Candle = new CANdle(Constants.CAN_IDS.CANDLE);
-    private static final int MAX_LED_INDEX = 50;
+    private static final CANdle mRGB_Candle = new CANdle(Constants.CAN_IDS.CANDLE, "CANivore");
+    private static final int MAX_LED_INDEX = 100;
 
     public static void init() {
         CANdleConfiguration config = new CANdleConfiguration();

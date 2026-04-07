@@ -32,34 +32,17 @@ public class AutoSubsystem {
 
         AutoTrajectory L1 = routine.trajectory("L1");
             L1.atPose("Intake_OUT", 1, 1)
-                .onTrue(AutoCommands.intakeOutOnly()
-                .withTimeout(0.01));
-            L1.atPose("ROLLERS_IN", 0.5, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.01));
 
         AutoTrajectory N1 = routine.trajectory("NL1");
-            N1.atPose("INTAKE_MID", 1, 1)
-                .onTrue(AutoCommands.intakeMidRollersStop()
-                .alongWith(AutoCommands.intakeOutOnly())
-                .alongWith(AutoCommands.idleShooter())
-                .withTimeout(0.01));
-            N1.atPose("SHOOT_RAMP", 1, 1);
 
         AutoTrajectory L2 = routine.trajectory("L2");
             L2.atPose("INTAKE_OUT", 1, 1)
-                .onTrue(AutoCommands.intakeOutOnly()
-                .withTimeout(0.01));
-            L2.atPose("ROLLERS_IN", 0.5, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.01));
 
         AutoTrajectory N2 = routine.trajectory("NL2");
-            N2.atPose("INTAKE_MID_TURRET", 1, 1)
-                .onTrue(AutoCommands.intakeMidRollersStop()
-                .alongWith(AutoCommands.intakeOutOnly())
-                .alongWith(AutoCommands.feedStop())
-                .until(N2.done()));
 
         return () -> {
             routine.active().onTrue(
@@ -76,9 +59,20 @@ public class AutoSubsystem {
                     L1.cmd(),
                     N1.cmd(),
 
+                    AutoCommands.shootSequenceWithRamp()
+                        .withTimeout(3.0),
+
+                    AutoCommands.feedStop()
+                        .withTimeout(0.001),
+                    
+                    AutoCommands.idleShooter()
+                        .withTimeout(0.001),
 
                     L2.cmd(),
-                    N2.cmd()));
+                    N2.cmd(),
+                    
+                    AutoCommands.shootSequenceWithRamp()
+                        .withTimeout(3.0)));
 
             return routine;
         };
