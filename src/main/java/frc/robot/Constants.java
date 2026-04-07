@@ -15,16 +15,16 @@ public class Constants {
     public class CAN_IDS {
         public static final int CANDLE = 0;
 
-        public static final int FLYWHEEL_MOTOR_MASTER = 0;
-        public static final int FLYWHEEL_MOTOR_FOLLOWER_ONE = 0;
-        public static final int FLYWHEEL_MOTOR_FOLLOWER_TWO = 0;
-        public static final int FLYWHEEL_MOTOR_FOLLOWER_THREE = 0;
+        public static final int FLYWHEEL_MOTOR_MASTER = 45;
+        public static final int FLYWHEEL_MOTOR_FOLLOWER_UPPER_RIGHT = 46;
+        public static final int FLYWHEEL_MOTOR_FOLLOWER_LOWER_LEFT = 47;
+        public static final int FLYWHEEL_MOTOR_FOLLOWER_LOWER_RIGHT = 48;
 
-        public static final int FEEDER_MOTOR = 0;
-        public static final int INDEX_MOTOR_MASTER = 0;
-        public static final int INDEX_MOTOR_FOLLOWER = 0;
-        public static final int INTAKE_ROLLER_MASTER = 0;
-        public static final int INTAKE_FOLLOWER_ROLLER = 0;
         public static final int RACK_MOTOR = 50;
+        public static final int FEEDER_MOTOR = 51;
+        public static final int INTAKE_ROLLER_MASTER = 52;
+        public static final int INTAKE_FOLLOWER_ROLLER = 53;
+        public static final int INDEX_MOTOR_MASTER = 54;
+        public static final int INDEX_MOTOR_FOLLOWER = 55;
     }
 }

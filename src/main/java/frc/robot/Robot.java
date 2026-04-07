@@ -81,15 +81,15 @@ public class Robot extends LoggedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    RobotMap.scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);
-    RobotMap.drivetrainStateMachine.setCurrentState(DrivetrainStateMachine.teleopState);
+    // RobotMap.scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);
+    // RobotMap.drivetrainStateMachine.setCurrentState(DrivetrainStateMachine.teleopState);
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    RobotMap.drivetrainStateMachine.setNextState();
-    RobotMap.scoringStateMachine.setNextState();
+    // RobotMap.drivetrainStateMachine.setNextState();
+    // RobotMap.scoringStateMachine.setNextState();
   }
 
   /** This function is called once when the robot is disabled. */

@@ -41,12 +41,12 @@ public class Intake {
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 120;
+    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 100;
     masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 70;
+    masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60;
 
     masterIntakeMotorConfiguration.Slot0.kP = 3.0;
-    masterIntakeMotorConfiguration.Slot0.kS = 3.25;
+    masterIntakeMotorConfiguration.Slot0.kS = 12;
     masterIntakeMotorConfiguration.Slot0.kV = 0.0;
     masterIntakeMotorConfiguration.Slot0.kA = 0.0;
 
@@ -118,7 +118,7 @@ public class Intake {
     rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
     rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = STOW_POS;
     
-    rackMotorConfiguration.Slot0.kP = 5.0;
+    rackMotorConfiguration.Slot0.kP = 3.0;
     rackMotorConfiguration.Slot0.kI = 0.0;
     rackMotorConfiguration.Slot0.kD = 0.0;
     rackMotorConfiguration.Slot0.kS = 1.0;
@@ -127,8 +127,8 @@ public class Intake {
     rackMotorConfiguration.Slot0.kG = 0.0;
 
     rackMotorConfiguration.ClosedLoopGeneral.ContinuousWrap = false;
-    rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 300.0;
-    rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 400.0;
+    rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 50.0;
+    rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 100.0;
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
 
@@ -141,7 +141,7 @@ public class Intake {
   }
 
   public static void intake() {
-    set(90);
+    set(70);
   }
 
   public static void outtake() {

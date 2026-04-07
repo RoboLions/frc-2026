@@ -19,11 +19,11 @@ public class Shooter {
   private static final TalonFX mMasterFlywheelMotor =
       new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_MASTER, "CANexternal");
   private static final TalonFX mFollowerFlywheelMotor1 =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_ONE, "CANexternal");    
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_UPPER_RIGHT, "CANexternal");    
   private static final TalonFX mFollowerFlywheelMotor2 =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_TWO, "CANexternal");  
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_LOWER_LEFT, "CANexternal");  
   private static final TalonFX mFollowerFlywheelMotor3 =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_THREE, "CANexternal");  
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_LOWER_RIGHT, "CANexternal");  
 
   private static ArrayList<ShotPoint> VELOCITY_LOOKUP_TABLE = new ArrayList<>();
 
@@ -49,46 +49,46 @@ public class Shooter {
     VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.0, 0.0));
     VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.5, 0.0));
 
-    TalonFXConfiguration frontShooterMotorConfig = new TalonFXConfiguration();
+    TalonFXConfiguration shooterMotorConfig = new TalonFXConfiguration();
 
-    frontShooterMotorConfig.TorqueCurrent.PeakForwardTorqueCurrent = 800;
-    frontShooterMotorConfig.TorqueCurrent.PeakReverseTorqueCurrent = -800;
+    shooterMotorConfig.TorqueCurrent.PeakForwardTorqueCurrent = 800;
+    shooterMotorConfig.TorqueCurrent.PeakReverseTorqueCurrent = -800;
 
-    frontShooterMotorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    shooterMotorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+    shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-    frontShooterMotorConfig.CurrentLimits.StatorCurrentLimit = 170;
-    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 60;
-    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
-    frontShooterMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 1.0;
+    shooterMotorConfig.CurrentLimits.StatorCurrentLimit = 120;
+    shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 60;
+    shooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
+    shooterMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 1.0;
 
-    frontShooterMotorConfig.Slot0.kS = 0;
-    frontShooterMotorConfig.Slot0.kV = 0;
-    frontShooterMotorConfig.Slot0.kA = 0;
-    frontShooterMotorConfig.Slot0.kP = 0;
-    frontShooterMotorConfig.Slot0.kI = 0.0;
-    frontShooterMotorConfig.Slot0.kD = 0.0;
+    shooterMotorConfig.Slot0.kS = 6;
+    shooterMotorConfig.Slot0.kV = 0;
+    shooterMotorConfig.Slot0.kA = 0;
+    shooterMotorConfig.Slot0.kP = 2.75;
+    shooterMotorConfig.Slot0.kI = 0.0;
+    shooterMotorConfig.Slot0.kD = 0.0;
 
-    frontShooterMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
-    frontShooterMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+    shooterMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
+    shooterMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
-    frontShooterMotorConfig.Feedback.SensorToMechanismRatio = 1 / 1;
-    frontShooterMotorConfig.Feedback.RotorToSensorRatio = 1 / 1;
+    shooterMotorConfig.Feedback.SensorToMechanismRatio = 1 / 1;
+    shooterMotorConfig.Feedback.RotorToSensorRatio = 1 / 1;
 
-    frontShooterMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    frontShooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    shooterMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    shooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-    mMasterFlywheelMotor.getConfigurator().apply(frontShooterMotorConfig);
-    mFollowerFlywheelMotor1.getConfigurator().apply(frontShooterMotorConfig);
-    mFollowerFlywheelMotor2.getConfigurator().apply(frontShooterMotorConfig);
-    mFollowerFlywheelMotor3.getConfigurator().apply(frontShooterMotorConfig);
+    mMasterFlywheelMotor.getConfigurator().apply(shooterMotorConfig);
+    mFollowerFlywheelMotor1.getConfigurator().apply(shooterMotorConfig);
+    mFollowerFlywheelMotor2.getConfigurator().apply(shooterMotorConfig);
+    mFollowerFlywheelMotor3.getConfigurator().apply(shooterMotorConfig);
 
     mFollowerFlywheelMotor1.setControl(
-        new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Aligned)
+        new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
             .withUpdateFreqHz(100));
     
     mFollowerFlywheelMotor2.setControl(
-        new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
+        new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Aligned)
             .withUpdateFreqHz(100));
     
     mFollowerFlywheelMotor3.setControl(
