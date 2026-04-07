@@ -40,7 +40,7 @@ import frc.robot.RobotMap;
 public class Swerve {
 
     public class SwerveConstants{
-        public static final double ODOMETRY_FREQUENCY = 250.0;
+        public static final double ODOMETRY_FREQUENCY = 150.0;
 
         private static final double MaxSpeed = GeneratedConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
         private static final double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -85,16 +85,18 @@ public class Swerve {
     
     public static void init() {
         SwerveObjects.headingController.enableContinuousInput(-Math.PI, Math.PI);
-        SwerveObjects.pointDriveController.setTolerance(0.05);
+        SwerveObjects.pointDriveController.setTolerance(0.001);
 
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
 
     public static void periodic() {
-        SwerveObjects.Swerve.periodic(); // look at the function comment and see that this is actually just a reorientation tool
-
         Logger.recordOutput("Swerve/ 2D CTRE Pose-Estimate", getPose());
         Logger.recordOutput("Swerve/ FieldSpeeds", getFieldSpeeds());
+    }
+
+    public static void disabledPeriodic() {
+        SwerveObjects.Swerve.periodic(); // look at the function comment and see that this is actually just a reorientation tool
     }
 
     public static void simulationPeriodic() {
@@ -207,11 +209,7 @@ public class Swerve {
     public static ChassisSpeeds getFieldSpeeds() {
         return ChassisSpeeds.fromRobotRelativeSpeeds(getState().Speeds, getYawAsRotations());
     }
-
-    public static double getDistToPose(Pose2d pose) {
-        return 0.0; // TODO: do this
-    }
-
+    
     public static void brakeX() {
         SwerveObjects.Swerve.setControl(SwerveObjects.brake);
     }
@@ -286,13 +284,13 @@ public class Swerve {
         automaticDrive(velocity, new Rotation2d(Math.atan2(dy, dx)), omega);
     }
 
-    public static void facePose(Translation2d targetPose) {
+    public static void facePose(Translation2d targetPose, Rotation2d offset) {
         Pose2d currPose = getPose();
         double dy = targetPose.getY() - currPose.getY();
         double dx = targetPose.getX() - currPose.getX();
         Rotation2d target = new Rotation2d(Math.atan2(dy, dx));
 
-        SwerveObjects.headingController.setSetpoint(target.getRadians());
+        SwerveObjects.headingController.setSetpoint(target.getRadians() + offset.getRadians());
         double omega = SwerveObjects.headingController.calculate(currPose.getRotation().getRadians());
 
         automaticDrive(0, new Rotation2d(0), omega);

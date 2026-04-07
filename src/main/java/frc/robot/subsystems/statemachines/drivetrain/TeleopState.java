@@ -4,7 +4,6 @@ import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
-import frc.robot.subsystems.statemachines.scoring.CycleState;
 import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
 
 public class TeleopState extends State {
@@ -19,7 +18,8 @@ public class TeleopState extends State {
         addTransition(
             new Transition(
                 () -> {
-                  return RobotMap.driverController.getLeftTriggerAxis() > 0.25;
+                  return RobotMap.driverController.getLeftTriggerAxis() > 0.25
+                    || RobotMap.scoringStateMachine.getCurrentState().equals(ScoringStateMachine.cycleState);
                 },
                 DrivetrainStateMachine.alignState));  
     }
@@ -29,16 +29,6 @@ public class TeleopState extends State {
 
     @Override
     public void execute() {
-        if (RobotMap.scoringStateMachine.getCurrentState().equals(ScoringStateMachine.cycleState) && !CycleState.isPass) {
-            Swerve.teleopDriveSlewed(0.2);
-            return;
-        }
-
-        if (RobotMap.scoringStateMachine.getCurrentState().equals(ScoringStateMachine.cycleState) && !CycleState.isPass) {
-            Swerve.teleopDrive(0.5);
-            return;
-        }
-
         Swerve.teleopDrive();
     }   
     

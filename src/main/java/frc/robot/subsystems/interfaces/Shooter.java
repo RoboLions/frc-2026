@@ -26,6 +26,7 @@ public class Shooter {
       new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_LOWER_RIGHT, "CANexternal");  
 
   private static ArrayList<ShotPoint> VELOCITY_LOOKUP_TABLE = new ArrayList<>();
+  private static ArrayList<ShotPoint> PASSING_LOOKUP_TABLE = new ArrayList<>();
 
   private static class ShotPoint {
     double distance; //meters
@@ -38,16 +39,20 @@ public class Shooter {
   }
 
   public static void init() {
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(0.25, 0.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(0.5, 0.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(1.0, 0.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(1.5, 0.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(2.0, 0.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(2.5, 0.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.0, 0.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.5, 0.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.0, 0.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.5, 0.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(1.7, 38.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(2.09, 42.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(2.51, 45.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.0, 47.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.5, 50.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.81, 51.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.2, 53.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.5, 54.0));
+
+    PASSING_LOOKUP_TABLE.add(new ShotPoint(4.0, 40));
+    PASSING_LOOKUP_TABLE.add(new ShotPoint(5.0, 40));
+    PASSING_LOOKUP_TABLE.add(new ShotPoint(6.0, 40));
+    PASSING_LOOKUP_TABLE.add(new ShotPoint(7.0, 40));
+    PASSING_LOOKUP_TABLE.add(new ShotPoint(8.0, 40));
 
     TalonFXConfiguration shooterMotorConfig = new TalonFXConfiguration();
 
@@ -85,15 +90,15 @@ public class Shooter {
 
     mFollowerFlywheelMotor1.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-            .withUpdateFreqHz(100));
+            .withUpdateFreqHz(50));
     
     mFollowerFlywheelMotor2.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Aligned)
-            .withUpdateFreqHz(100));
+            .withUpdateFreqHz(50));
     
     mFollowerFlywheelMotor3.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-            .withUpdateFreqHz(100));
+            .withUpdateFreqHz(50));
   }
 
   public static void interpolateAndShoot(double currentDistance) {
@@ -102,6 +107,14 @@ public class Shooter {
 
     Logger.recordOutput("Shooter/ ShootSpeed (RPS)", velocity);
     Logger.recordOutput("Shooter/ Dist-To-Target (M)", currentDistance);
+  }
+
+  public static void interpoleateAndPass(double currentDistance) {
+    double velocity = getPassingVelocity(currentDistance);
+    setShootSpeed(velocity);
+
+    Logger.recordOutput("Shooter/ Passing-Speed (RPS)", velocity);
+    Logger.recordOutput("Shooter/ Dist-To-PassTarget (M)", currentDistance);
   }
   
   private static double getInterpolatedVelocity(double currentDistance) {
@@ -125,6 +138,27 @@ public class Shooter {
       return VELOCITY_LOOKUP_TABLE.get(VELOCITY_LOOKUP_TABLE.size() - 1).velocity;
   }
 
+  private static double getPassingVelocity(double currentDistance) {
+      if (PASSING_LOOKUP_TABLE.isEmpty()) return 0.0;
+
+      if (currentDistance <= PASSING_LOOKUP_TABLE.get(0).distance) {
+          return PASSING_LOOKUP_TABLE.get(0).velocity;
+      }
+
+      for (int i = 0; i < PASSING_LOOKUP_TABLE.size() - 1; i++) {
+          ShotPoint p1 = PASSING_LOOKUP_TABLE.get(i);
+          ShotPoint p2 = PASSING_LOOKUP_TABLE.get(i + 1);
+
+          if (currentDistance <= p2.distance) {
+              //linear Interpolation formula: y = y1 + ((x - x1) / (x2 - x1)) * (y2 - y1)
+              double t = (currentDistance - p1.distance) / (p2.distance - p1.distance);
+              return p1.velocity + t * (p2.velocity - p1.velocity);
+          }
+      }
+
+      return PASSING_LOOKUP_TABLE.get(PASSING_LOOKUP_TABLE.size() - 1).velocity;
+  }
+
   // speed in meters per second
   private static void setShootSpeed(double setSpeed) {
     mMasterFlywheelMotor.setControl(
@@ -134,7 +168,6 @@ public class Shooter {
 
   public static void idlerShooter() {
     mMasterFlywheelMotor.setControl(
-        new VoltageOut(0.5)
-            .withEnableFOC(true));
+        new VoltageOut(0.0).withUpdateFreqHz(20));
   }
 }

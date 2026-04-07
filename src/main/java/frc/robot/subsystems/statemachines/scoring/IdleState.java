@@ -8,7 +8,6 @@ import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
-import frc.robot.subsystems.interfaces.LED;
 import frc.robot.subsystems.interfaces.Shooter;
 
 /** Add your docs here. */
@@ -16,6 +15,12 @@ public class IdleState extends State {
 
   @Override
   public void build() {
+    addTransition(
+            new Transition(
+                () -> {
+                return RobotMap.driverController.getBButtonPressed();
+                },
+                ScoringStateMachine.idleState));
     addTransition(
         new Transition(
             () -> {
@@ -38,15 +43,14 @@ public class IdleState extends State {
 
   @Override
   public void init(State prevState) {
-    Shooter.idlerShooter();
     Intake.allRollersStop();
-    LED.setSolidWhite();
+    Shooter.idlerShooter();
   }
 
   @Override
   public void execute() {
     if (RobotMap.driverController.getYButtonPressed()) {
-      Intake.intakeMid();
+      Intake.intakeUp();
     }
   }
 

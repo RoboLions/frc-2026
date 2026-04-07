@@ -12,9 +12,9 @@ import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.interfaces.swerve.Swerve;
 import frc.robot.subsystems.statemachines.drivetrain.DrivetrainStateMachine;
 import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
-import frc.robot.subsystems.interfaces.LED;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -68,7 +68,6 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void autonomousInit() {
-    LED.setSolidWhite();
     CommandScheduler.getInstance().run(); // we will always need this in auto, command schedulers are not built into the LoggedRobot class, but it is for TimedRobot.
   }
 
@@ -81,15 +80,15 @@ public class Robot extends LoggedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    // RobotMap.scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);
-    // RobotMap.drivetrainStateMachine.setCurrentState(DrivetrainStateMachine.teleopState);
+    RobotMap.scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);
+    RobotMap.drivetrainStateMachine.setCurrentState(DrivetrainStateMachine.teleopState);
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // RobotMap.drivetrainStateMachine.setNextState();
-    // RobotMap.scoringStateMachine.setNextState();
+    RobotMap.drivetrainStateMachine.setNextState();
+    RobotMap.scoringStateMachine.setNextState();
   }
 
   /** This function is called once when the robot is disabled. */
@@ -98,7 +97,9 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    Swerve.disabledPeriodic();
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override

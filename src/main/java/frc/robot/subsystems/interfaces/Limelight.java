@@ -13,13 +13,13 @@ public class Limelight {
   // Y -> Sidways shift, positive means shift the return pose to the left
   // Z -> Up down shift, positive means shift the return pose towards the ground
   private static final String FRONT_LEFT_CAM = "limelight-fl"; 
-  private static final Translation3d FL_OFFSET = new Translation3d(0.3290062, -0.24765, 0.288417);
+  private static final Translation3d FL_OFFSET = new Translation3d(0.0111, -0.133, 0.520);
 
   private static final String FRONT_RIGHT_CAM = "limelight-fr";
-  private static final Translation3d FR_OFFSET = new Translation3d(0.3251962, 0.263525, 0.2633472);
+  private static final Translation3d FR_OFFSET = new Translation3d(0.0111, 0.133, 0.520);
 
   private static final String BACK_CAM = "limelight-back";
-  private static final Translation3d BACK_OFFSET = new Translation3d(0.269, -0.340, 0.362);
+  private static final Translation3d BACK_OFFSET = new Translation3d(0.300, 0.244, 0.504);
 
   private static final int[] VALID_IDS = {1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 13, 14, 17, 18, 19, 20, 21, 22, 24, 25, 26, 27, 29, 30};
 
@@ -42,9 +42,9 @@ public class Limelight {
   }
 
   public static void periodic() {
-    LimelightHelpers.setCameraPose_RobotSpace(FRONT_LEFT_CAM, FL_OFFSET.getX(), FL_OFFSET.getY(), FL_OFFSET.getZ(), 0, 20, 0);
-    LimelightHelpers.setCameraPose_RobotSpace(FRONT_RIGHT_CAM, FR_OFFSET.getX(), FR_OFFSET.getY(), FR_OFFSET.getZ(), 0, 20, 0);
-    LimelightHelpers.setCameraPose_RobotSpace(BACK_CAM, BACK_OFFSET.getX(), BACK_OFFSET.getY(), BACK_OFFSET.getZ(), 0, 0, 90);
+    LimelightHelpers.setCameraPose_RobotSpace(FRONT_LEFT_CAM, FL_OFFSET.getX(), FL_OFFSET.getY(), FL_OFFSET.getZ(), 0, 15, 180);
+    LimelightHelpers.setCameraPose_RobotSpace(FRONT_RIGHT_CAM, FR_OFFSET.getX(), FR_OFFSET.getY(), FR_OFFSET.getZ(), 0, 15, 180);
+    LimelightHelpers.setCameraPose_RobotSpace(BACK_CAM, BACK_OFFSET.getX(), BACK_OFFSET.getY(), BACK_OFFSET.getZ(), 0, 15, 0);
 
     if (DriverStation.isDisabled()) {
       seedFromMegaTag1(FRONT_LEFT_CAM);
@@ -62,15 +62,8 @@ public class Limelight {
     if (isValid(mt1Pose)) {
       double xyStdDev = 8; 
       double rotStdDev = 8;
-        
-        Logger.recordOutput("Vision/ Disabled Feed: " + cameraName, mt1Pose.pose);
-        Logger.recordOutput("Vision/ AVG Dist to Tag: " + cameraName, mt1Pose.avgTagDist);
-        Logger.recordOutput("Vision/ Latency: " + cameraName, mt1Pose.latency);
-        Logger.recordOutput("Vision/ TagCount: " + cameraName, mt1Pose.tagCount);
       
       if (mt1Pose.tagCount < 2) {
-        Logger.recordOutput("Vision/ ERROR LOG: " + cameraName, "NOT ENOUGH TAGS");
-        LED.setSolidRed();
         return; // NO READINGS FOR LESS THAN 2 TAGS
       }
 
@@ -80,8 +73,8 @@ public class Limelight {
           VecBuilder.fill(xyStdDev, xyStdDev, rotStdDev)
       );
 
-      Logger.recordOutput("Vision/ ERROR LOG: " + cameraName, "LOOKS GOOD, SEED ACCEPT");
-      LED.setFlashGreen();
+      Logger.recordOutput("Vision/ Disabled Feed: " + cameraName, mt1Pose.pose);
+      Logger.recordOutput("Vision/ AVG Dist to Tag: " + cameraName, mt1Pose.avgTagDist);
     }
   }
 
@@ -89,9 +82,6 @@ public class Limelight {
     LimelightHelpers.SetRobotOrientation(cameraName, Swerve.getYawAsDegrees(), Swerve.getYawRateAsDeg(), 0, 0, 0, 0);
     LimelightHelpers.PoseEstimate mt1PoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(cameraName);
     
-      Logger.recordOutput("Vision/ Enabled Feed: " + cameraName, mt1PoseEstimate.pose);
-      Logger.recordOutput("Vision/ AVG Dist to Tag: " + cameraName, mt1PoseEstimate.avgTagDist);
-
     if (isValid(mt1PoseEstimate)) {
       if (mt1PoseEstimate.avgTagDist > 4.5) {
         Logger.recordOutput("Vision/ ERROR LOG: " + cameraName, "OUT OF RANGE");
@@ -119,6 +109,8 @@ public class Limelight {
       );
 
       Logger.recordOutput("Vision/ ERROR LOG: " + cameraName, "LOOKS GOOD, POSE ACCEPT");
+      Logger.recordOutput("Vision/ Enabled Feed: " + cameraName, mt1PoseEstimate.pose);
+      Logger.recordOutput("Vision/ AVG Dist to Tag: " + cameraName, mt1PoseEstimate.avgTagDist);
     }
   }
 

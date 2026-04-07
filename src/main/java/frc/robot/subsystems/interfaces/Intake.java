@@ -41,7 +41,7 @@ public class Intake {
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 100;
+    masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 90;
     masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
     masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60;
 
@@ -50,7 +50,7 @@ public class Intake {
     masterIntakeMotorConfiguration.Slot0.kV = 0.0;
     masterIntakeMotorConfiguration.Slot0.kA = 0.0;
 
-    masterIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    masterIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     mIntakeRollerMotorFollow.getConfigurator().apply(masterIntakeMotorConfiguration);
     mIntakeRollerMotorMaster.getConfigurator().apply(masterIntakeMotorConfiguration);
@@ -61,20 +61,20 @@ public class Intake {
     indexMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     indexMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    indexMotorConfiguration.CurrentLimits.StatorCurrentLimit = 100;
+    indexMotorConfiguration.CurrentLimits.StatorCurrentLimit = 90;
     indexMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
     indexMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60;
 
-    indexMotorConfiguration.Slot0.kP = 0.0;
+    indexMotorConfiguration.Slot0.kP = 3.0;
     indexMotorConfiguration.Slot0.kI = 0.0;
     indexMotorConfiguration.Slot0.kD = 0.0;
-    indexMotorConfiguration.Slot0.kS = 0.0;
+    indexMotorConfiguration.Slot0.kS = 14.0;
     indexMotorConfiguration.Slot0.kA = 0.0;
-    indexMotorConfiguration.Slot0.kV = 0.0;
+    indexMotorConfiguration.Slot0.kV = 0.25;
     indexMotorConfiguration.Slot0.kG = 0.0;
 
     indexMotorConfiguration.Feedback.SensorToMechanismRatio = 1 / 1;
-    indexMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    indexMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     mIndexMotorMaster.getConfigurator().apply(indexMotorConfiguration);
     mIndexMotorFollower.getConfigurator().apply(indexMotorConfiguration);
@@ -85,16 +85,16 @@ public class Intake {
     feedMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     feedMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    feedMotorConfiguration.CurrentLimits.StatorCurrentLimit = 100;
+    feedMotorConfiguration.CurrentLimits.StatorCurrentLimit = 90;
     feedMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
     feedMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60;
 
-    feedMotorConfiguration.Slot0.kP = 0.0;
+    feedMotorConfiguration.Slot0.kP = 3.0;
     feedMotorConfiguration.Slot0.kI = 0.0;
     feedMotorConfiguration.Slot0.kD = 0.0;
-    feedMotorConfiguration.Slot0.kS = 0.0;
+    feedMotorConfiguration.Slot0.kS = 4.75;
     feedMotorConfiguration.Slot0.kA = 0.0;
-    feedMotorConfiguration.Slot0.kV = 0.0;
+    feedMotorConfiguration.Slot0.kV = 0.05;
     feedMotorConfiguration.Slot0.kG = 0.0;
 
     feedMotorConfiguration.Feedback.SensorToMechanismRatio = 1 / 1;
@@ -107,7 +107,7 @@ public class Intake {
     rackMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 50;
+    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 60;
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 40;
 
@@ -132,24 +132,28 @@ public class Intake {
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
 
-    mIntakeRollerMotorFollow.setControl(new Follower(mIntakeRollerMotorMaster.getDeviceID(), MotorAlignmentValue.Opposed).withUpdateFreqHz(50));
-    mIndexMotorFollower.setControl(new Follower(mIndexMotorMaster.getDeviceID(), MotorAlignmentValue.Opposed).withUpdateFreqHz(50));
+    mIntakeRollerMotorFollow.setControl(new Follower(mIntakeRollerMotorMaster.getDeviceID(), MotorAlignmentValue.Opposed).withUpdateFreqHz(20));
+    mIndexMotorFollower.setControl(new Follower(mIndexMotorMaster.getDeviceID(), MotorAlignmentValue.Opposed).withUpdateFreqHz(20));
   }
 
   public static void set(double speed) {
-    mIntakeRollerMotorMaster.setControl(new VelocityTorqueCurrentFOC(speed));
+    mIntakeRollerMotorMaster.setControl(new VelocityTorqueCurrentFOC(speed).withUpdateFreqHz(20));
   }
 
   public static void intake() {
-    set(70);
+    set(75);
+  }
+
+  public static void intakeSlow() {
+    set(30);
   }
 
   public static void outtake() {
-    set(-50);
+    set(-40);
   }
 
   public static void stopIntake() {
-    mIntakeRollerMotorMaster.setControl(new VoltageOut(0));
+    mIntakeRollerMotorMaster.setControl(new VoltageOut(0).withUpdateFreqHz(20));
   }
 
   public static void setRack(double target) {
@@ -173,11 +177,11 @@ public class Intake {
   }
 
   public static void setFeed(double rpm) {
-    mFeedMotor.setControl(new VelocityTorqueCurrentFOC(rpm));
+    mFeedMotor.setControl(new VelocityTorqueCurrentFOC(rpm).withUpdateFreqHz(40));
   }
 
   public static void FeedIn() {
-    setFeed(50);
+    setFeed(80);
   }
 
   public static void FeedOut() {
@@ -185,15 +189,15 @@ public class Intake {
   }
 
   public static void stopFeed() {
-    mFeedMotor.setControl(new VoltageOut(0));
+    mFeedMotor.setControl(new VoltageOut(0).withUpdateFreqHz(20));
   }
 
   public static void setIndex(double rpm) {
-    mIndexMotorMaster.setControl(new VelocityTorqueCurrentFOC(rpm));
+    mIndexMotorMaster.setControl(new VelocityTorqueCurrentFOC(rpm).withUpdateFreqHz(20));
   }
 
   public static void IndexIn() {
-    setIndex(50);
+    setIndex(90);
   }
 
   public static void IndexOut() {
@@ -201,7 +205,7 @@ public class Intake {
   }
 
   public static void stopIndex() {
-    mIndexMotorMaster.setControl(new VoltageOut(0));
+    mIndexMotorMaster.setControl(new VoltageOut(0).withUpdateFreqHz(20));
   }
 
   public static void allRollersIn() {

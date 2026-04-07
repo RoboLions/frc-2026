@@ -12,7 +12,7 @@ public class BrakeState extends State {
         addTransition(
             new Transition(
                 () -> {
-                  return RobotMap.driverController.getBButtonPressed();
+                  return RobotMap.driverController.getBButtonPressed() || RobotMap.driverController.getRightBumperButtonPressed();
                 },
                 DrivetrainStateMachine.teleopState));    
         addTransition(
@@ -24,12 +24,12 @@ public class BrakeState extends State {
     }
 
     @Override
-    public void init(State prevState) {}  
+    public void init(State prevState) {
+        Swerve.brakeX();
+    }  
 
     @Override
-    public void execute() {
-        Swerve.brakeX();
-    }   
+    public void execute() {}   
     
     @Override
         public void exit(State nextState) { 
