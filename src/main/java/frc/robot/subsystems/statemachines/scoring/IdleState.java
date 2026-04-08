@@ -46,7 +46,7 @@ public class IdleState extends State {
   public void init(State prevState) {
     Intake.allRollersStop();
     Shooter.idlerShooter();
-    LED.setSolidGreen();
+    LED.setFlashWhite();
   }
 
   @Override

@@ -1,30 +1,28 @@
 package frc.robot.subsystems.interfaces;
 
 import com.ctre.phoenix6.configs.CANdleConfiguration;
+import com.ctre.phoenix6.controls.LarsonAnimation;
 import com.ctre.phoenix6.controls.RainbowAnimation;
 import com.ctre.phoenix6.controls.SolidColor;
 import com.ctre.phoenix6.controls.StrobeAnimation;
-import com.ctre.phoenix6.controls.TwinkleAnimation;
 import com.ctre.phoenix6.hardware.CANdle;
 import com.ctre.phoenix6.signals.RGBWColor;
 import com.ctre.phoenix6.signals.StripTypeValue;
 
-import frc.robot.Constants;
-
 public class LED {
     
-    private static final CANdle mRGB_Candle = new CANdle(Constants.CAN_IDS.CANDLE, "CANivore");
+    private static final CANdle mRGB_Candle = new CANdle(49, "CANivore");
     private static final int MAX_LED_INDEX = 42;
 
     public static void init() {
         CANdleConfiguration config = new CANdleConfiguration();
 
-        config.LED.StripType = StripTypeValue.GRB;
+        config.LED.StripType = StripTypeValue.RGB;
         config.LED.BrightnessScalar = 1.0;
 
         mRGB_Candle.getConfigurator().apply(config);
 
-        mRGB_Candle.setControl(new TwinkleAnimation(0, MAX_LED_INDEX)
+        mRGB_Candle.setControl(new LarsonAnimation(0, MAX_LED_INDEX)
             .withColor(new RGBWColor(135, 206, 235)));
         //init animation
     }
@@ -71,6 +69,11 @@ public class LED {
     public static void setFlashYellow() {
         mRGB_Candle.setControl(new StrobeAnimation(0, MAX_LED_INDEX)
             .withColor(new RGBWColor(255, 255, 0)));
+    }
+
+    public static void setFlashWhite() {
+        mRGB_Candle.setControl(new StrobeAnimation(0, MAX_LED_INDEX)
+            .withColor(new RGBWColor(255, 255, 255)));
     }
 
     public static void turnOff() {
