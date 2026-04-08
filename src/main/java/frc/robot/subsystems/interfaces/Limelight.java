@@ -91,7 +91,7 @@ public class Limelight {
       double xyStdDev = 4.0 + (Math.pow(mt1PoseEstimate.avgTagDist, 1.0) * 1.0);
 
       if (mt1PoseEstimate.tagCount > 1) {
-        xyStdDev *= 0.8;
+        xyStdDev *= 0.6;
       }
 
       if (Swerve.getYawRateAsDeg() > 270) {

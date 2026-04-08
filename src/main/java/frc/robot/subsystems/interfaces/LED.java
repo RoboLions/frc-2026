@@ -12,7 +12,7 @@ import com.ctre.phoenix6.signals.StripTypeValue;
 public class LED {
     
     private static final CANdle mRGB_Candle = new CANdle(49, "CANivore");
-    private static final int MAX_LED_INDEX = 42;
+    private static final int MAX_LED_INDEX = 68;
 
     public static void init() {
         CANdleConfiguration config = new CANdleConfiguration();
@@ -21,10 +21,6 @@ public class LED {
         config.LED.BrightnessScalar = 1.0;
 
         mRGB_Candle.getConfigurator().apply(config);
-
-        mRGB_Candle.setControl(new LarsonAnimation(0, MAX_LED_INDEX)
-            .withColor(new RGBWColor(135, 206, 235)));
-        //init animation
     }
 
     public static void setRainBow() {
@@ -58,22 +54,33 @@ public class LED {
 
     public static void setFlashBlue() {
         mRGB_Candle.setControl(new StrobeAnimation(0, MAX_LED_INDEX)
-            .withColor(new RGBWColor(0, 0, 255)));
+            .withColor(new RGBWColor(0, 0, 255))
+            .withFrameRate(20));
     }
 
     public static void setFlashRed() {
         mRGB_Candle.setControl(new StrobeAnimation(0, MAX_LED_INDEX)
-            .withColor(new RGBWColor(255, 0, 0)));
+            .withColor(new RGBWColor(255, 0, 0))
+            .withFrameRate(40));
     }
 
     public static void setFlashYellow() {
         mRGB_Candle.setControl(new StrobeAnimation(0, MAX_LED_INDEX)
-            .withColor(new RGBWColor(255, 255, 0)));
+            .withColor(new RGBWColor(255, 255, 0))
+            .withFrameRate(10));
     }
 
     public static void setFlashWhite() {
         mRGB_Candle.setControl(new StrobeAnimation(0, MAX_LED_INDEX)
-            .withColor(new RGBWColor(255, 255, 255)));
+            .withColor(new RGBWColor(255, 255, 255))
+            .withFrameRate(20));
+    }
+
+    public static void setLarsonWhite() {
+        mRGB_Candle.setControl(new LarsonAnimation(0, MAX_LED_INDEX)
+            .withColor(new RGBWColor(255, 255, 255))
+            .withSize(10)
+            .withFrameRate(50));
     }
 
     public static void turnOff() {

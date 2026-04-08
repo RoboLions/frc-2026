@@ -30,7 +30,7 @@ public class Intake {
   private static final TalonFX mRackMotor = 
     new TalonFX(Constants.CAN_IDS.RACK_MOTOR, "CANexternal");
 
-  private static final double STOW_POS = 0.2;
+  private static final double STOW_POS = 0.5;
   private static final double MIDDLE_POS = 5.0;
   private static final double DOWN_POS = 12.25;
 
@@ -89,7 +89,7 @@ public class Intake {
     feedMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
     feedMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60;
 
-    feedMotorConfiguration.Slot0.kP = 3.0;
+    feedMotorConfiguration.Slot0.kP = 5;
     feedMotorConfiguration.Slot0.kI = 0.0;
     feedMotorConfiguration.Slot0.kD = 0.0;
     feedMotorConfiguration.Slot0.kS = 4.75;
@@ -107,7 +107,7 @@ public class Intake {
     rackMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 60;
+    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 100;
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 40;
 

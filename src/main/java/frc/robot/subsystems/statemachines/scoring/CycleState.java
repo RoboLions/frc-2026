@@ -7,6 +7,7 @@ import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Shooter;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
+import frc.robot.subsystems.interfaces.LED;
 
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
@@ -35,6 +36,7 @@ public class CycleState extends State {
   @Override
   public void init(State prevState) {
     Intake.intakeDown();
+    LED.setFlashRed();
   }
 
   @Override
@@ -42,6 +44,7 @@ public class CycleState extends State {
     if (RobotMap.driverController.getRightTriggerAxis() > 0.25) { // SHOOT
       Intake.FeedIn();
       Intake.IndexIn();
+      LED.setFlashGreen();
     }
 
     if (RobotMap.driverController.getLeftBumperButtonPressed() || RobotMap.manipulatorController.getLeftBumperButtonPressed()) {

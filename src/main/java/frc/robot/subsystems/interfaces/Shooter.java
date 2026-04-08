@@ -42,17 +42,14 @@ public class Shooter {
     VELOCITY_LOOKUP_TABLE.add(new ShotPoint(1.7, 38.0));
     VELOCITY_LOOKUP_TABLE.add(new ShotPoint(2.09, 42.0));
     VELOCITY_LOOKUP_TABLE.add(new ShotPoint(2.51, 45.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.0, 47.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.5, 50.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.81, 51.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.2, 53.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.5, 54.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.0, 48.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.5, 51.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.81, 53)); //B
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.2, 55.0)); //B
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.5, 57.0)); //B
 
     PASSING_LOOKUP_TABLE.add(new ShotPoint(4.0, 40));
-    PASSING_LOOKUP_TABLE.add(new ShotPoint(5.0, 40));
-    PASSING_LOOKUP_TABLE.add(new ShotPoint(6.0, 40));
-    PASSING_LOOKUP_TABLE.add(new ShotPoint(7.0, 40));
-    PASSING_LOOKUP_TABLE.add(new ShotPoint(8.0, 40));
+    PASSING_LOOKUP_TABLE.add(new ShotPoint(8.5, 70));
 
     TalonFXConfiguration shooterMotorConfig = new TalonFXConfiguration();
 
@@ -62,7 +59,7 @@ public class Shooter {
     shooterMotorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-    shooterMotorConfig.CurrentLimits.StatorCurrentLimit = 120;
+    shooterMotorConfig.CurrentLimits.StatorCurrentLimit = 160;
     shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 60;
     shooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
     shooterMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 1.0;
@@ -70,7 +67,7 @@ public class Shooter {
     shooterMotorConfig.Slot0.kS = 6;
     shooterMotorConfig.Slot0.kV = 0;
     shooterMotorConfig.Slot0.kA = 0;
-    shooterMotorConfig.Slot0.kP = 4;
+    shooterMotorConfig.Slot0.kP = 10;
     shooterMotorConfig.Slot0.kI = 0.0;
     shooterMotorConfig.Slot0.kD = 0.0;
 

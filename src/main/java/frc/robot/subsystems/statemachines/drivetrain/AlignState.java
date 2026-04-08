@@ -38,6 +38,8 @@ public class AlignState extends State {
             } else {
                 Swerve.facePose(Constants.FIELD.PASS_LOWER.toTranslation2d(), Rotation2d.fromDegrees(180.0));
             }
+
+            return;
         }
 
         Swerve.facePose(Constants.FIELD.HUB_POSE, Rotation2d.fromDegrees(180.0));

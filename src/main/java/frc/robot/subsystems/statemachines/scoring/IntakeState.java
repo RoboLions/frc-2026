@@ -8,6 +8,7 @@ import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
+import frc.robot.subsystems.interfaces.LED;
 
 /** Add your docs here. */
 public class IntakeState extends State {
@@ -37,6 +38,7 @@ public class IntakeState extends State {
   public void init(State prevState) {
     Intake.intake();
     Intake.intakeDown();
+    LED.setFlashYellow();
   }
 
   @Override
