@@ -122,7 +122,7 @@ public class Intake {
     rackMotorConfiguration.Slot0.kI = 0.0;
     rackMotorConfiguration.Slot0.kD = 0.0;
     rackMotorConfiguration.Slot0.kS = 1.0;
-    rackMotorConfiguration.Slot0.kV = 0.675;
+    rackMotorConfiguration.Slot0.kV = 0.5;
     rackMotorConfiguration.Slot0.kA = 0.0;
     rackMotorConfiguration.Slot0.kG = 0.0;
 

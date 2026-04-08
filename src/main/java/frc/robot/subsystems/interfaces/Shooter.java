@@ -70,7 +70,7 @@ public class Shooter {
     shooterMotorConfig.Slot0.kS = 6;
     shooterMotorConfig.Slot0.kV = 0;
     shooterMotorConfig.Slot0.kA = 0;
-    shooterMotorConfig.Slot0.kP = 2.75;
+    shooterMotorConfig.Slot0.kP = 4;
     shooterMotorConfig.Slot0.kI = 0.0;
     shooterMotorConfig.Slot0.kD = 0.0;
 
@@ -90,15 +90,15 @@ public class Shooter {
 
     mFollowerFlywheelMotor1.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-            .withUpdateFreqHz(50));
+            .withUpdateFreqHz(100));
     
     mFollowerFlywheelMotor2.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Aligned)
-            .withUpdateFreqHz(50));
+            .withUpdateFreqHz(100));
     
     mFollowerFlywheelMotor3.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-            .withUpdateFreqHz(50));
+            .withUpdateFreqHz(100));
   }
 
   public static void interpolateAndShoot(double currentDistance) {
@@ -163,7 +163,7 @@ public class Shooter {
   private static void setShootSpeed(double setSpeed) {
     mMasterFlywheelMotor.setControl(
         new VelocityTorqueCurrentFOC(setSpeed)
-            .withUpdateFreqHz(50));
+            .withUpdateFreqHz(100));
   }
 
   public static void idlerShooter() {
