@@ -14,13 +14,13 @@ import frc.robot.Constants;
 public class LED {
     
     private static final CANdle mRGB_Candle = new CANdle(Constants.CAN_IDS.CANDLE, "CANivore");
-    private static final int MAX_LED_INDEX = 50;
+    private static final int MAX_LED_INDEX = 42;
 
     public static void init() {
         CANdleConfiguration config = new CANdleConfiguration();
 
-        config.LED.StripType = StripTypeValue.RGB;
-        config.LED.BrightnessScalar = 0.5;
+        config.LED.StripType = StripTypeValue.GRB;
+        config.LED.BrightnessScalar = 1.0;
 
         mRGB_Candle.getConfigurator().apply(config);
 
