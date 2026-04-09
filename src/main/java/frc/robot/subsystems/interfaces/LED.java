@@ -76,6 +76,12 @@ public class LED {
             .withFrameRate(20));
     }
 
+    public static void setFlashPurple() {
+        mRGB_Candle.setControl(new StrobeAnimation(0, MAX_LED_INDEX)
+            .withColor(new RGBWColor(255, 0, 255))
+            .withFrameRate(5));
+    }
+
     public static void setLarsonWhite() {
         mRGB_Candle.setControl(new LarsonAnimation(0, MAX_LED_INDEX)
             .withColor(new RGBWColor(255, 255, 255))

@@ -60,7 +60,7 @@ public class AutoSubsystem {
                     N1.cmd(),
 
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(3.0),
+                        .withTimeout(3.5),
 
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
@@ -72,7 +72,7 @@ public class AutoSubsystem {
                     N2.cmd(),
                     
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(3.0)));
+                        .withTimeout(3.5)));
 
             return routine;
         };

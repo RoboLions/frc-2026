@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.*;
 
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
@@ -239,6 +241,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         m_pathThetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         var pose = getState().Pose;
+
+        Logger.recordOutput("Swerve/ Auto-Target Pose", pose);
 
         var targetSpeeds = sample.getChassisSpeeds();
         targetSpeeds.vxMetersPerSecond += m_pathXController.calculate(

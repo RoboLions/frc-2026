@@ -18,33 +18,33 @@ public class Limelight {
   private static final String FRONT_RIGHT_CAM = "limelight-fr";
   private static final Translation3d FR_OFFSET = new Translation3d(0.0111, 0.133, 0.520);
 
-  private static final String BACK_CAM = "limelight-back";
-  private static final Translation3d BACK_OFFSET = new Translation3d(0.300, 0.244, 0.504);
+  // private static final String BACK_CAM = "limelight-back";
+  // private static final Translation3d BACK_OFFSET = new Translation3d(0.300, 0.244, 0.504);
 
   private static final int[] VALID_IDS = {1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 13, 14, 17, 18, 19, 20, 21, 22, 24, 25, 26, 27, 29, 30};
 
   public static void init() {
     LimelightHelpers.SetThrottle(FRONT_LEFT_CAM, 0);
     LimelightHelpers.SetThrottle(FRONT_RIGHT_CAM, 0);
-    LimelightHelpers.SetThrottle(BACK_CAM, 0);
+    // LimelightHelpers.SetThrottle(BACK_CAM, 0);
 
     LimelightHelpers.SetIMUMode(FRONT_LEFT_CAM, 0);
     LimelightHelpers.SetIMUMode(FRONT_RIGHT_CAM, 0);
-    LimelightHelpers.SetIMUMode(BACK_CAM, 0);
+    // LimelightHelpers.SetIMUMode(BACK_CAM, 0);
 
     LimelightHelpers.setRewindEnabled(FRONT_LEFT_CAM, false);
     LimelightHelpers.setRewindEnabled(FRONT_RIGHT_CAM, false);
-    LimelightHelpers.setRewindEnabled(BACK_CAM, false);
+    // LimelightHelpers.setRewindEnabled(BACK_CAM, false);
 
     LimelightHelpers.SetFiducialIDFiltersOverride(FRONT_LEFT_CAM, VALID_IDS);
     LimelightHelpers.SetFiducialIDFiltersOverride(FRONT_RIGHT_CAM, VALID_IDS);
-    LimelightHelpers.SetFiducialIDFiltersOverride(BACK_CAM, VALID_IDS);
+    // LimelightHelpers.SetFiducialIDFiltersOverride(BACK_CAM, VALID_IDS);
   }
 
   public static void periodic() {
     LimelightHelpers.setCameraPose_RobotSpace(FRONT_LEFT_CAM, FL_OFFSET.getX(), FL_OFFSET.getY(), FL_OFFSET.getZ(), 0, 15, 180);
     LimelightHelpers.setCameraPose_RobotSpace(FRONT_RIGHT_CAM, FR_OFFSET.getX(), FR_OFFSET.getY(), FR_OFFSET.getZ(), 0, 15, 180);
-    LimelightHelpers.setCameraPose_RobotSpace(BACK_CAM, BACK_OFFSET.getX(), BACK_OFFSET.getY(), BACK_OFFSET.getZ(), 0, 15, 0);
+    // LimelightHelpers.setCameraPose_RobotSpace(BACK_CAM, BACK_OFFSET.getX(), BACK_OFFSET.getY(), BACK_OFFSET.getZ(), 0, 15, 0);
 
     if (DriverStation.isDisabled()) {
       seedFromMegaTag1(FRONT_LEFT_CAM);
@@ -52,7 +52,7 @@ public class Limelight {
     } else {
       updateWithMegaTag1(FRONT_LEFT_CAM);
       updateWithMegaTag1(FRONT_RIGHT_CAM);
-      updateWithMegaTag1(BACK_CAM);
+      // updateWithMegaTag1(BACK_CAM);
     }
   }
 

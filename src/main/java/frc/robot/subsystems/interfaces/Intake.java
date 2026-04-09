@@ -127,8 +127,8 @@ public class Intake {
     rackMotorConfiguration.Slot0.kG = 0.0;
 
     rackMotorConfiguration.ClosedLoopGeneral.ContinuousWrap = false;
-    rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 50.0;
-    rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 100.0;
+    rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 100.0;
+    rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 150.0;
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
 
