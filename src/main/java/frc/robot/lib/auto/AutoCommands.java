@@ -48,12 +48,12 @@ public class AutoCommands {
     public static Command shootSequenceWithRamp() {
         return Commands.sequence(AutoCommands.SwerveFaceHUB()
                         .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.4),
+                        .withTimeout(0.5),
                 
                     AutoCommands.feedIn()
                         .alongWith(AutoCommands.SwerveFaceHUB())
                         .alongWith(AutoCommands.setShooter())
-                        .withTimeout(1.0),
+                        .withTimeout(0.5),
 
                     AutoCommands.intakeZeroPosition()
                         .alongWith(AutoCommands.SwerveFaceHUB())
@@ -77,6 +77,10 @@ public class AutoCommands {
         return Commands.run(() -> Intake.intakeDown());
     }
 
+    public static Command intakeStop() {
+        return Commands.run(() -> Intake.stopIntake());
+    }
+
     public static Command intakeMidOnly() {
         return Commands.run(() -> Intake.intakeMid());
     }
@@ -98,7 +102,8 @@ public class AutoCommands {
 
     public static Command feedStop() {
         return Commands.run(() -> Intake.stopFeed())
-                        .alongWith(Commands.run(() -> Intake.stopIndex()));
+                        .alongWith(Commands.run(() -> Intake.stopIndex())
+                        .alongWith(Commands.run(() -> Intake.stopIntake())));
     }
 
     public static Command intakeZeroPosition() {

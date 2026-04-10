@@ -32,7 +32,7 @@ public class Intake {
 
   private static final double STOW_POS = 0.5;
   private static final double MIDDLE_POS = 5.0;
-  private static final double DOWN_POS = 12.25;
+  private static final double DOWN_POS = 12.0;
 
   public static void init() {    
     TalonFXConfiguration masterIntakeMotorConfiguration = new TalonFXConfiguration();
@@ -107,7 +107,7 @@ public class Intake {
     rackMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 100;
+    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 80;
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 40;
 
@@ -141,7 +141,7 @@ public class Intake {
   }
 
   public static void intake() {
-    set(75);
+    set(100);
   }
 
   public static void intakeSlow() {
@@ -181,7 +181,7 @@ public class Intake {
   }
 
   public static void FeedIn() {
-    setFeed(80);
+    setFeed(100);
   }
 
   public static void FeedOut() {

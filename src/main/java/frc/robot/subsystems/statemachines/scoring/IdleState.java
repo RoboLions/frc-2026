@@ -51,7 +51,7 @@ public class IdleState extends State {
 
   @Override
   public void execute() {
-    if (RobotMap.driverController.getYButtonPressed()) {
+    if (RobotMap.driverController.getYButtonPressed() || RobotMap.manipulatorController.getLeftBumperButtonPressed()) {
       Intake.intakeUp();
     }
   }
