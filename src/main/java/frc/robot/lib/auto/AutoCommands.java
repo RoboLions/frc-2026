@@ -53,7 +53,7 @@ public class AutoCommands {
                     AutoCommands.feedIn()
                         .alongWith(AutoCommands.SwerveFaceHUB())
                         .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.5),
+                        .withTimeout(0.75),
 
                     AutoCommands.intakeZeroPosition()
                         .alongWith(AutoCommands.SwerveFaceHUB())

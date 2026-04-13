@@ -85,7 +85,7 @@ public class LED {
     public static void setLarsonWhite() {
         mRGB_Candle.setControl(new LarsonAnimation(0, MAX_LED_INDEX)
             .withColor(new RGBWColor(255, 255, 255))
-            .withSize(10)
+            .withSize(15)
             .withFrameRate(50));
     }
 

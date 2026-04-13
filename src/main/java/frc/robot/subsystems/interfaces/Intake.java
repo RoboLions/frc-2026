@@ -43,7 +43,7 @@ public class Intake {
     masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
     masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 90;
     masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60;
+    masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 40;
 
     masterIntakeMotorConfiguration.Slot0.kP = 3.0;
     masterIntakeMotorConfiguration.Slot0.kS = 12;
@@ -63,7 +63,7 @@ public class Intake {
     indexMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
     indexMotorConfiguration.CurrentLimits.StatorCurrentLimit = 90;
     indexMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    indexMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60;
+    indexMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 50;
 
     indexMotorConfiguration.Slot0.kP = 3.0;
     indexMotorConfiguration.Slot0.kI = 0.0;
@@ -87,7 +87,7 @@ public class Intake {
     feedMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
     feedMotorConfiguration.CurrentLimits.StatorCurrentLimit = 90;
     feedMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    feedMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 60;
+    feedMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 40;
 
     feedMotorConfiguration.Slot0.kP = 5;
     feedMotorConfiguration.Slot0.kI = 0.0;
@@ -109,7 +109,7 @@ public class Intake {
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 80;
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 40;
+    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 35;
 
     rackMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
@@ -141,7 +141,7 @@ public class Intake {
   }
 
   public static void intake() {
-    set(100);
+    set(80);
   }
 
   public static void intakeSlow() {
@@ -181,7 +181,7 @@ public class Intake {
   }
 
   public static void FeedIn() {
-    setFeed(100);
+    setFeed(80);
   }
 
   public static void FeedOut() {
