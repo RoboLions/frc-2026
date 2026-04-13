@@ -60,9 +60,7 @@ public class Shooter {
     shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     shooterMotorConfig.CurrentLimits.StatorCurrentLimit = 160;
-    shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 50;
-    shooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 40;
-    shooterMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 1.0;
+    shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 40;
 
     shooterMotorConfig.Slot0.kS = 6;
     shooterMotorConfig.Slot0.kV = 0;

@@ -43,7 +43,7 @@ public class Intake {
     masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
     masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 90;
     masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 40;
+    masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 35;
 
     masterIntakeMotorConfiguration.Slot0.kP = 3.0;
     masterIntakeMotorConfiguration.Slot0.kS = 12;
@@ -63,7 +63,7 @@ public class Intake {
     indexMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
     indexMotorConfiguration.CurrentLimits.StatorCurrentLimit = 90;
     indexMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    indexMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 50;
+    indexMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 35;
 
     indexMotorConfiguration.Slot0.kP = 3.0;
     indexMotorConfiguration.Slot0.kI = 0.0;
@@ -87,7 +87,7 @@ public class Intake {
     feedMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
     feedMotorConfiguration.CurrentLimits.StatorCurrentLimit = 90;
     feedMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    feedMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 40;
+    feedMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 35;
 
     feedMotorConfiguration.Slot0.kP = 5;
     feedMotorConfiguration.Slot0.kI = 0.0;
@@ -109,7 +109,7 @@ public class Intake {
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 80;
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 35;
+    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 30;
 
     rackMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
