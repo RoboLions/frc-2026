@@ -12,6 +12,7 @@ import choreo.auto.AutoFactory;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -111,6 +112,11 @@ public class Swerve {
     public static CommandSwerveDrivetrain getGeneratedDrive() {
 		return SwerveObjects.Swerve;
 	}
+
+    public static void setModuleDeviations() { // TODO: figure out what to do with this method
+        Matrix<N3, N1> matrix = new Matrix<>(Nat.N3(), Nat.N1());
+        SwerveObjects.Swerve.setStateStdDevs(matrix);
+    }
 
     public static SwerveDriveState getState() {
 		return SwerveObjects.Swerve.getState();
