@@ -47,7 +47,7 @@ public class Swerve {
     public class SwerveConstants{
         public static final double ODOMETRY_FREQUENCY = 150.0;
 
-        private static final double SLIP_ERROR_THRESHOLD = 1.0; //needs to be tuned against wall
+        private static final double SLIP_ERROR_THRESHOLD = 4.0; //needs to be tuned against wall
         private static final double MaxSpeed = GeneratedConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
         private static final double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
     }
@@ -148,9 +148,11 @@ public class Swerve {
         Logger.recordOutput("Swerve/ Velocity-Error/ MaxError", maxError);
 
         if (maxError > SwerveConstants.SLIP_ERROR_THRESHOLD) {
-            TelemetryObjects.odometryMatrix = VecBuilder.fill(1.5 + maxError, 1.5 + maxError, 0.1);
+            TelemetryObjects.odometryMatrix = VecBuilder.fill(4.0 + maxError, 4.0 + maxError, 0.1);
+            Logger.recordOutput("Swerve/ Velocity-Error/ Tripped?", true);
         } else {
             TelemetryObjects.odometryMatrix = VecBuilder.fill(0.1, 0.1, 0.1);
+            Logger.recordOutput("Swerve/ Velocity-Error/ Tripped?", false);
         }
 
         SwerveObjects.Swerve.setStateStdDevs(TelemetryObjects.odometryMatrix);
