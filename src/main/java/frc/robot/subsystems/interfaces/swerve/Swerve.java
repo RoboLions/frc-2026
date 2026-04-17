@@ -9,10 +9,14 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
 import choreo.auto.AutoFactory;
 
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -43,6 +47,7 @@ public class Swerve {
     public class SwerveConstants{
         public static final double ODOMETRY_FREQUENCY = 150.0;
 
+        private static final double SLIP_ERROR_THRESHOLD = 1.0; //needs to be tuned against wall
         private static final double MaxSpeed = GeneratedConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
         private static final double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
     }
@@ -73,6 +78,13 @@ public class Swerve {
     }
 
     private class TelemetryObjects{
+        private static Matrix<N3, N1> odometryMatrix = VecBuilder.fill(0.1, 0.1, 0.1);;
+
+        private static final TalonFX mDRIVE0 = getModuleStates()[0].getDriveMotor();
+        private static final TalonFX mDRIVE1 = getModuleStates()[1].getDriveMotor();
+        private static final TalonFX mDRIVE2 = getModuleStates()[2].getDriveMotor();
+        private static final TalonFX mDRIVE3 = getModuleStates()[3].getDriveMotor();
+
         private static final GeneratedTelemetry telemetryLogger = 
             new GeneratedTelemetry(SwerveConstants.MaxSpeed);
         
@@ -92,6 +104,8 @@ public class Swerve {
     }
 
     public static void periodic() {
+        setModuleDeviations(); // this is actually one the first methods to be run
+
         Logger.recordOutput("Swerve/ 2D CTRE Pose-Estimate", getPose());
         Logger.recordOutput("Swerve/ FieldSpeeds", getFieldSpeeds());
     }
@@ -114,8 +128,46 @@ public class Swerve {
 	}
 
     public static void setModuleDeviations() { // TODO: figure out what to do with this method
-        Matrix<N3, N1> matrix = new Matrix<>(Nat.N3(), Nat.N1());
-        SwerveObjects.Swerve.setStateStdDevs(matrix);
+        //all velocities are in RPS
+        double mod0Velocity = Math.abs(TelemetryObjects.mDRIVE0.getVelocity().getValueAsDouble());
+        double mod0Error = Math.abs(TelemetryObjects.mDRIVE0.getClosedLoopError().getValueAsDouble());
+
+        double mod1Velocity = Math.abs(TelemetryObjects.mDRIVE1.getVelocity().getValueAsDouble());
+        double mod1Error = Math.abs(TelemetryObjects.mDRIVE1.getClosedLoopError().getValueAsDouble());
+        
+        double mod2Velocity = Math.abs(TelemetryObjects.mDRIVE2.getVelocity().getValueAsDouble());
+        double mod2Error = Math.abs(TelemetryObjects.mDRIVE2.getClosedLoopError().getValueAsDouble());
+
+        double mod3Velocity = Math.abs(TelemetryObjects.mDRIVE3.getVelocity().getValueAsDouble());
+        double mod3Error = Math.abs(TelemetryObjects.mDRIVE3.getClosedLoopError().getValueAsDouble());
+
+        double maxError = Math.max(
+            Math.max(mod0Error, mod1Error), 
+            Math.max(mod2Error, mod3Error)
+        );
+        Logger.recordOutput("Swerve/ Velocity-Error/ MaxError", maxError);
+
+        if (maxError > SwerveConstants.SLIP_ERROR_THRESHOLD) {
+            TelemetryObjects.odometryMatrix = VecBuilder.fill(1.5 + maxError, 1.5 + maxError, 0.1);
+        } else {
+            TelemetryObjects.odometryMatrix = VecBuilder.fill(0.1, 0.1, 0.1);
+        }
+
+        SwerveObjects.Swerve.setStateStdDevs(TelemetryObjects.odometryMatrix);
+        
+        Logger.recordOutput("Swerve/ Motor-Velocities/ Mod0", mod0Velocity);
+        Logger.recordOutput("Swerve/ Motor-Velocities/ Mod1", mod1Velocity);
+        Logger.recordOutput("Swerve/ Motor-Velocities/ Mod2", mod2Velocity);
+        Logger.recordOutput("Swerve/ Motor-Velocities/ Mod3", mod3Velocity);
+
+        Logger.recordOutput("Swerve/ Velocity-Error/ Mod0", mod0Error);
+        Logger.recordOutput("Swerve/ Velocity-Error/ Mod1", mod1Error);
+        Logger.recordOutput("Swerve/ Velocity-Error/ Mod2", mod2Error);
+        Logger.recordOutput("Swerve/ Velocity-Error/ Mod3", mod3Error);
+    }
+
+    public static SwerveModule<TalonFX, TalonFX, CANcoder>[] getModuleStates() {
+        return getGeneratedDrive().getModules();
     }
 
     public static SwerveDriveState getState() {
