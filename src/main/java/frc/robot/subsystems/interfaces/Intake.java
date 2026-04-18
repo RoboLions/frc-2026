@@ -43,7 +43,7 @@ public class Intake {
     masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
     masterIntakeMotorConfiguration.CurrentLimits.StatorCurrentLimit = 90;
     masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 35;
+    masterIntakeMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 30;
 
     masterIntakeMotorConfiguration.Slot0.kP = 3.0;
     masterIntakeMotorConfiguration.Slot0.kS = 12;
@@ -87,7 +87,7 @@ public class Intake {
     feedMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
     feedMotorConfiguration.CurrentLimits.StatorCurrentLimit = 90;
     feedMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    feedMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 35;
+    feedMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 30;
 
     feedMotorConfiguration.Slot0.kP = 5;
     feedMotorConfiguration.Slot0.kI = 0.0;
@@ -109,7 +109,7 @@ public class Intake {
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 80;
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 30;
+    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 27;
 
     rackMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
@@ -118,17 +118,17 @@ public class Intake {
     rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
     rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = STOW_POS;
     
-    rackMotorConfiguration.Slot0.kP = 3.0;
+    rackMotorConfiguration.Slot0.kP = 2.0;
     rackMotorConfiguration.Slot0.kI = 0.0;
     rackMotorConfiguration.Slot0.kD = 0.0;
-    rackMotorConfiguration.Slot0.kS = 1.0;
-    rackMotorConfiguration.Slot0.kV = 0.5;
+    rackMotorConfiguration.Slot0.kS = 0.75;
+    rackMotorConfiguration.Slot0.kV = 0.1;
     rackMotorConfiguration.Slot0.kA = 0.0;
     rackMotorConfiguration.Slot0.kG = 0.0;
 
     rackMotorConfiguration.ClosedLoopGeneral.ContinuousWrap = false;
-    rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 100.0;
-    rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 150.0;
+    rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 300.0;
+    rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 180.0;
     
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
 

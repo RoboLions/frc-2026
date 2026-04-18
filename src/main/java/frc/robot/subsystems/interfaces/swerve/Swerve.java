@@ -15,7 +15,6 @@ import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
@@ -47,7 +46,7 @@ public class Swerve {
     public class SwerveConstants{
         public static final double ODOMETRY_FREQUENCY = 150.0;
 
-        private static final double SLIP_ERROR_THRESHOLD = 4.0; //needs to be tuned against wall
+        private static final double SLIP_ERROR_THRESHOLD = 5.0; //needs to be tuned against wall
         private static final double MaxSpeed = GeneratedConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
         private static final double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
     }
@@ -127,7 +126,7 @@ public class Swerve {
 		return SwerveObjects.Swerve;
 	}
 
-    public static void setModuleDeviations() { // TODO: figure out what to do with this method
+    public static void setModuleDeviations() {
         //all velocities are in RPS
         double mod0Velocity = Math.abs(TelemetryObjects.mDRIVE0.getVelocity().getValueAsDouble());
         double mod0Error = Math.abs(TelemetryObjects.mDRIVE0.getClosedLoopError().getValueAsDouble());
@@ -148,7 +147,7 @@ public class Swerve {
         Logger.recordOutput("Swerve/ Velocity-Error/ MaxError", maxError);
 
         if (maxError > SwerveConstants.SLIP_ERROR_THRESHOLD) {
-            TelemetryObjects.odometryMatrix = VecBuilder.fill(4.0 + maxError, 4.0 + maxError, 0.1);
+            TelemetryObjects.odometryMatrix = VecBuilder.fill(5.0 + (2 * maxError), 5.0 + (2 * maxError), 0.1);
             Logger.recordOutput("Swerve/ Velocity-Error/ Tripped?", true);
         } else {
             TelemetryObjects.odometryMatrix = VecBuilder.fill(0.1, 0.1, 0.1);
