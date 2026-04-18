@@ -15,12 +15,6 @@ public class BrakeState extends State {
                   return RobotMap.driverController.getBButtonPressed() || RobotMap.driverController.getRightBumperButtonPressed();
                 },
                 DrivetrainStateMachine.teleopState));    
-        addTransition(
-            new Transition(
-                () -> {
-                  return RobotMap.driverController.getLeftTriggerAxis() > 0.25;
-                },
-                DrivetrainStateMachine.alignState));   
     }
 
     @Override

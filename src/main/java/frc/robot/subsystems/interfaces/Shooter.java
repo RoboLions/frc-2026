@@ -45,8 +45,8 @@ public class Shooter {
     VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.0, 47.0));
     VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.5, 50.0));
     VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.81, 52)); //B
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.2, 54.0)); //B
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.5, 56.0)); //B
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.2, 55.0)); //B
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.5, 59.0)); //B
 
     PASSING_LOOKUP_TABLE.add(new ShotPoint(4.0, 40));
     PASSING_LOOKUP_TABLE.add(new ShotPoint(8.5, 70));
