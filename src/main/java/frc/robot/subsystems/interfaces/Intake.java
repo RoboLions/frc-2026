@@ -61,9 +61,9 @@ public class Intake {
     indexMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     indexMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    indexMotorConfiguration.CurrentLimits.StatorCurrentLimit = 90;
+    indexMotorConfiguration.CurrentLimits.StatorCurrentLimit = 75;
     indexMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    indexMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 35;
+    indexMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 33;
 
     indexMotorConfiguration.Slot0.kP = 3.0;
     indexMotorConfiguration.Slot0.kI = 0.0;
@@ -85,9 +85,9 @@ public class Intake {
     feedMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     feedMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    feedMotorConfiguration.CurrentLimits.StatorCurrentLimit = 90;
+    feedMotorConfiguration.CurrentLimits.StatorCurrentLimit = 80;
     feedMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    feedMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 30;
+    feedMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 27;
 
     feedMotorConfiguration.Slot0.kP = 5;
     feedMotorConfiguration.Slot0.kI = 0.0;
@@ -107,9 +107,9 @@ public class Intake {
     rackMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 80;
+    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 75;
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 27;
+    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 25;
 
     rackMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
@@ -141,7 +141,7 @@ public class Intake {
   }
 
   public static void intake() {
-    set(80);
+    set(100);
   }
 
   public static void intakeSlow() {

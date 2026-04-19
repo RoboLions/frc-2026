@@ -50,7 +50,7 @@ public class CycleState extends State {
     if (RobotMap.driverController.getLeftBumperButtonPressed() || RobotMap.manipulatorController.getLeftBumperButtonPressed()) {
       Intake.intakeUp();
       Intake.intakeSlow();
-    } else if (RobotMap.driverController.getAButtonPressed() || RobotMap.manipulatorController.getAButtonPressed()) {
+    } else if (RobotMap.driverController.getRightBumperButtonPressed() || RobotMap.driverController.getAButtonPressed() || RobotMap.manipulatorController.getRightBumperButtonPressed()) {
       Intake.intakeDown();
     }
 
