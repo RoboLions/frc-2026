@@ -40,6 +40,9 @@ public class AutoSubsystem {
                 .withTimeout(0.01));
 
         AutoTrajectory NL1 = routine.trajectory("N1");
+            NL1.atPose("INTAKE_STOP", 1, 1)
+                .onTrue(AutoCommands.intakeStop()
+                .withTimeout(0.01));
 
         AutoTrajectory L2 = routine.trajectory("L2");
             L2.atPose("INTAKE_OUT", 1, 1)
@@ -47,6 +50,9 @@ public class AutoSubsystem {
                 .withTimeout(0.01));
 
         AutoTrajectory NL2 = routine.trajectory("N2");
+            NL2.atPose("INTAKE_STOP", 1, 1)
+                .onTrue(AutoCommands.intakeStop()
+                .withTimeout(0.01));
 
         return () -> {
             routine.active().onTrue(
@@ -91,6 +97,9 @@ public class AutoSubsystem {
                 .withTimeout(0.01));
 
         AutoTrajectory NR1 = routine.trajectory("N1").mirrorY();
+            NR1.atPose("INTAKE_STOP", 1, 1)
+                .onTrue(AutoCommands.intakeStop()
+                .withTimeout(0.01));
 
         AutoTrajectory R2 = routine.trajectory("L2").mirrorY();
             R2.atPose("INTAKE_OUT", 1, 1)
@@ -98,6 +107,9 @@ public class AutoSubsystem {
                 .withTimeout(0.01));
 
         AutoTrajectory NR2 = routine.trajectory("N2").mirrorY();
+            NR2.atPose("INTAKE_STOP", 1, 1)
+                .onTrue(AutoCommands.intakeStop()
+                .withTimeout(0.01));
 
         return () -> {
             routine.active().onTrue(
