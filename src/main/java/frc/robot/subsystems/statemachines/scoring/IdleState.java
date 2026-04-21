@@ -46,13 +46,22 @@ public class IdleState extends State {
   public void init(State prevState) {
     Intake.allRollersStop();
     Shooter.idlerShooter();
-    LED.setLarsonWhite();
+    LED.setRainBow();
   }
 
   @Override
   public void execute() {
     if (RobotMap.driverController.getYButtonPressed() || RobotMap.manipulatorController.getLeftBumperButtonPressed()) {
       Intake.intakeUp();
+      Intake.intakeSlow();
+    }
+
+    if (RobotMap.driverController.getYButtonReleased() || RobotMap.manipulatorController.getLeftBumperButtonReleased()) {
+      Intake.stopIntake();
+    }
+
+    if (RobotMap.manipulatorController.getRightBumperButtonPressed()) {
+      Intake.intakeDown();
     }
   }
 

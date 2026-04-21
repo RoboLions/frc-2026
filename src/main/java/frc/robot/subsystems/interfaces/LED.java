@@ -24,7 +24,9 @@ public class LED {
     }
 
     public static void setRainBow() {
-        mRGB_Candle.setControl(new RainbowAnimation(0, MAX_LED_INDEX));
+        mRGB_Candle.setControl(new RainbowAnimation(0, MAX_LED_INDEX)
+            .withFrameRate(100)
+            .withBrightness(0.5));
     }
 
     public static void setSolidGreen() {

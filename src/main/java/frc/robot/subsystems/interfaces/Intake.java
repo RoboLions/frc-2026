@@ -107,9 +107,9 @@ public class Intake {
     rackMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 75;
+    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 60;
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 25;
+    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 20;
 
     rackMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
@@ -149,7 +149,7 @@ public class Intake {
   }
 
   public static void outtake() {
-    set(-40);
+    set(-80);
   }
 
   public static void stopIntake() {
@@ -201,7 +201,7 @@ public class Intake {
   }
 
   public static void IndexOut() {
-    setIndex(-10);
+    setIndex(-80);
   }
 
   public static void stopIndex() {

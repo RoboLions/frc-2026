@@ -8,6 +8,7 @@ import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
+import frc.robot.subsystems.interfaces.LED;
 
 /** Add your docs here. */
 public class OuttakeState extends State {
@@ -32,6 +33,9 @@ public class OuttakeState extends State {
   public void init(State prevState) {
     Intake.intakeDown();
     Intake.outtake();
+    Intake.IndexOut();
+    Intake.FeedOut();
+    LED.setLarsonWhite();
   }
 
   @Override
