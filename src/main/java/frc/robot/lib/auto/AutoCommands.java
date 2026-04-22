@@ -59,7 +59,7 @@ public class AutoCommands {
                         .alongWith(AutoCommands.SwerveFaceHUB())
                         .alongWith(AutoCommands.setShooter())
                         .alongWith(AutoCommands.intakeZeroPosition())
-                        .withTimeout(2.0));
+                        .withTimeout(3.0));
     }
 
         public static Command shootSequenceNoRamp() {

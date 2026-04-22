@@ -35,24 +35,29 @@ public class AutoSubsystem {
         AutoRoutine routine = autoFactory.newRoutine("LEFT 2 PIECE");
 
         AutoTrajectory L1 = routine.trajectory("L1");
-            L1.atPose("Intake_OUT", 1, 1)
+            L1.atPose("INTAKE", 1, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
 
         AutoTrajectory NL1 = routine.trajectory("N1");
             NL1.atPose("INTAKE_STOP", 1, 1)
                 .onTrue(AutoCommands.intakeStop()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
 
         AutoTrajectory L2 = routine.trajectory("L2");
-            L2.atPose("INTAKE_OUT", 1, 1)
+            L2.atPose("INTAKE", 1, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
 
         AutoTrajectory NL2 = routine.trajectory("N2");
             NL2.atPose("INTAKE_STOP", 1, 1)
                 .onTrue(AutoCommands.intakeStop()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
+
+        AutoTrajectory L3 = routine.trajectory("L3");
+            L3.atPose("INTAKE", 1, 1)
+                .onTrue(AutoCommands.intakeOutRollersIn()
+                .withTimeout(0.001));
 
         return () -> {
             routine.active().onTrue(
@@ -70,7 +75,7 @@ public class AutoSubsystem {
                     NL1.cmd(),
 
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(3.5),
+                        .withTimeout(3.0),
 
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
@@ -82,7 +87,15 @@ public class AutoSubsystem {
                     NL2.cmd(),
                     
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(3.5)));
+                        .withTimeout(3.0),
+
+                    AutoCommands.feedStop()
+                        .withTimeout(0.001),
+                    
+                    AutoCommands.idleShooter()
+                        .withTimeout(0.001),
+
+                    L3.cmd()));
 
             return routine;
         };
@@ -92,24 +105,29 @@ public class AutoSubsystem {
         AutoRoutine routine = autoFactory.newRoutine("LEFT 2 PIECE");
 
         AutoTrajectory R1 = routine.trajectory("L1").mirrorY();
-            R1.atPose("Intake_OUT", 1, 1)
+            R1.atPose("INTAKE", 1, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
 
         AutoTrajectory NR1 = routine.trajectory("N1").mirrorY();
             NR1.atPose("INTAKE_STOP", 1, 1)
                 .onTrue(AutoCommands.intakeStop()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
 
         AutoTrajectory R2 = routine.trajectory("L2").mirrorY();
-            R2.atPose("INTAKE_OUT", 1, 1)
+            R2.atPose("INTAKE", 1, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
 
         AutoTrajectory NR2 = routine.trajectory("N2").mirrorY();
             NR2.atPose("INTAKE_STOP", 1, 1)
                 .onTrue(AutoCommands.intakeStop()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
+
+        AutoTrajectory R3 = routine.trajectory("L3").mirrorY();
+            R3.atPose("INTAKE", 1, 1)
+                .onTrue(AutoCommands.intakeOutRollersIn()
+                .withTimeout(0.001));
 
         return () -> {
             routine.active().onTrue(
@@ -127,7 +145,7 @@ public class AutoSubsystem {
                     NR1.cmd(),
 
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(3.5),
+                        .withTimeout(3.0),
 
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
@@ -139,31 +157,39 @@ public class AutoSubsystem {
                     NR2.cmd(),
                     
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(3.5)));
+                        .withTimeout(3.0),
+                    
+                    AutoCommands.feedStop()
+                        .withTimeout(0.001),
+                    
+                    AutoCommands.idleShooter()
+                        .withTimeout(0.001),
+
+                    R3.cmd()));
 
             return routine;
         };
     }
 
     private Supplier<AutoRoutine> leftDELAY2Trip() {
-        AutoRoutine routine = autoFactory.newRoutine("LEFT 2 PIECE");
+        AutoRoutine routine = autoFactory.newRoutine("LEFT 2 PIECE DELAY");
 
         AutoTrajectory L1 = routine.trajectory("L1_DELAY");
-            L1.atPose("Intake_OUT", 1, 1)
+            L1.atPose("INTAKE", 0.5, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
             L1.atPose("Intake_ROLLERS_STOP", 0.5, 1)
                 .onTrue(AutoCommands.intakeStop()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
 
 
         AutoTrajectory L2 = routine.trajectory("L2_DELAY");
-            L2.atPose("INTAKE_OUT", 1, 1)
+            L2.atPose("INTAKE", 0.5, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
             L2.atPose("Intake_ROLLERS_STOP", 0.5, 1)
                 .onTrue(AutoCommands.intakeStop()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
 
 
         return () -> {
@@ -204,21 +230,21 @@ public class AutoSubsystem {
         AutoRoutine routine = autoFactory.newRoutine("LEFT 2 PIECE");
 
         AutoTrajectory R1 = routine.trajectory("L1_DELAY").mirrorY();
-            R1.atPose("Intake_OUT", 1, 1)
+            R1.atPose("INTAKE", 1, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
             R1.atPose("Intake_ROLLERS_STOP", 0.5, 1)
                 .onTrue(AutoCommands.intakeStop()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
 
 
         AutoTrajectory R2 = routine.trajectory("L2_DELAY").mirrorY();
-            R2.atPose("INTAKE_OUT", 1, 1)
+            R2.atPose("INTAKE", 1, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
             R2.atPose("Intake_ROLLERS_STOP", 0.5, 1)
                 .onTrue(AutoCommands.intakeStop()
-                .withTimeout(0.01));
+                .withTimeout(0.001));
 
 
         return () -> {
