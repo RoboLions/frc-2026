@@ -9,9 +9,13 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
 import choreo.auto.AutoFactory;
 
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -42,6 +46,7 @@ public class Swerve {
     public class SwerveConstants{
         public static final double ODOMETRY_FREQUENCY = 150.0;
 
+        private static final double SLIP_ERROR_THRESHOLD = 5.0; //needs to be tuned against wall
         private static final double MaxSpeed = GeneratedConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
         private static final double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
     }
@@ -62,7 +67,7 @@ public class Swerve {
                 .withDriveRequestType(DriveRequestType.Velocity);  
 
         private static final PIDController pointDriveController = new PIDController(1, 0, 0);
-        private static final PIDController headingController = new PIDController(2.5, 0, 0.04);
+        private static final PIDController headingController = new PIDController(2.0, 0, 0.05);
 
         private static final SlewRateLimiter xLimiter = new SlewRateLimiter(1.0); // units/sec²
         private static final SlewRateLimiter yLimiter = new SlewRateLimiter(1.0);
@@ -72,6 +77,13 @@ public class Swerve {
     }
 
     private class TelemetryObjects{
+        private static Matrix<N3, N1> odometryMatrix = VecBuilder.fill(0.1, 0.1, 0.1);;
+
+        private static final TalonFX mDRIVE0 = getModuleStates()[0].getDriveMotor();
+        private static final TalonFX mDRIVE1 = getModuleStates()[1].getDriveMotor();
+        private static final TalonFX mDRIVE2 = getModuleStates()[2].getDriveMotor();
+        private static final TalonFX mDRIVE3 = getModuleStates()[3].getDriveMotor();
+
         private static final GeneratedTelemetry telemetryLogger = 
             new GeneratedTelemetry(SwerveConstants.MaxSpeed);
         
@@ -85,16 +97,20 @@ public class Swerve {
     
     public static void init() {
         SwerveObjects.headingController.enableContinuousInput(-Math.PI, Math.PI);
-        SwerveObjects.pointDriveController.setTolerance(0.05);
+        SwerveObjects.pointDriveController.setTolerance(0.001);
 
         SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
     }
 
     public static void periodic() {
-        SwerveObjects.Swerve.periodic(); // look at the function comment and see that this is actually just a reorientation tool
+        setModuleDeviations(); // this is actually one the first methods to be run
 
         Logger.recordOutput("Swerve/ 2D CTRE Pose-Estimate", getPose());
         Logger.recordOutput("Swerve/ FieldSpeeds", getFieldSpeeds());
+    }
+
+    public static void disabledPeriodic() {
+        SwerveObjects.Swerve.periodic(); // look at the function comment and see that this is actually just a reorientation tool
     }
 
     public static void simulationPeriodic() {
@@ -109,6 +125,51 @@ public class Swerve {
     public static CommandSwerveDrivetrain getGeneratedDrive() {
 		return SwerveObjects.Swerve;
 	}
+
+    public static void setModuleDeviations() {
+        //all velocities are in RPS
+        double mod0Velocity = Math.abs(TelemetryObjects.mDRIVE0.getVelocity().getValueAsDouble());
+        double mod0Error = Math.abs(TelemetryObjects.mDRIVE0.getClosedLoopError().getValueAsDouble());
+
+        double mod1Velocity = Math.abs(TelemetryObjects.mDRIVE1.getVelocity().getValueAsDouble());
+        double mod1Error = Math.abs(TelemetryObjects.mDRIVE1.getClosedLoopError().getValueAsDouble());
+        
+        double mod2Velocity = Math.abs(TelemetryObjects.mDRIVE2.getVelocity().getValueAsDouble());
+        double mod2Error = Math.abs(TelemetryObjects.mDRIVE2.getClosedLoopError().getValueAsDouble());
+
+        double mod3Velocity = Math.abs(TelemetryObjects.mDRIVE3.getVelocity().getValueAsDouble());
+        double mod3Error = Math.abs(TelemetryObjects.mDRIVE3.getClosedLoopError().getValueAsDouble());
+
+        double maxError = Math.max(
+            Math.max(mod0Error, mod1Error), 
+            Math.max(mod2Error, mod3Error)
+        );
+        Logger.recordOutput("Swerve/ Velocity-Error/ MaxError", maxError);
+
+        if (maxError > SwerveConstants.SLIP_ERROR_THRESHOLD) {
+            TelemetryObjects.odometryMatrix = VecBuilder.fill(5.0 + (2 * maxError), 5.0 + (2 * maxError), 0.1);
+            Logger.recordOutput("Swerve/ Velocity-Error/ Tripped?", true);
+        } else {
+            TelemetryObjects.odometryMatrix = VecBuilder.fill(0.1, 0.1, 0.1);
+            Logger.recordOutput("Swerve/ Velocity-Error/ Tripped?", false);
+        }
+
+        SwerveObjects.Swerve.setStateStdDevs(TelemetryObjects.odometryMatrix);
+        
+        Logger.recordOutput("Swerve/ Motor-Velocities/ Mod0", mod0Velocity);
+        Logger.recordOutput("Swerve/ Motor-Velocities/ Mod1", mod1Velocity);
+        Logger.recordOutput("Swerve/ Motor-Velocities/ Mod2", mod2Velocity);
+        Logger.recordOutput("Swerve/ Motor-Velocities/ Mod3", mod3Velocity);
+
+        Logger.recordOutput("Swerve/ Velocity-Error/ Mod0", mod0Error);
+        Logger.recordOutput("Swerve/ Velocity-Error/ Mod1", mod1Error);
+        Logger.recordOutput("Swerve/ Velocity-Error/ Mod2", mod2Error);
+        Logger.recordOutput("Swerve/ Velocity-Error/ Mod3", mod3Error);
+    }
+
+    public static SwerveModule<TalonFX, TalonFX, CANcoder>[] getModuleStates() {
+        return getGeneratedDrive().getModules();
+    }
 
     public static SwerveDriveState getState() {
 		return SwerveObjects.Swerve.getState();
@@ -207,13 +268,9 @@ public class Swerve {
     public static ChassisSpeeds getFieldSpeeds() {
         return ChassisSpeeds.fromRobotRelativeSpeeds(getState().Speeds, getYawAsRotations());
     }
-
-    public static double getDistToPose(Pose2d pose) {
-        return 0.0; // TODO: do this
-    }
-
+    
     public static void brakeX() {
-        SwerveObjects.Swerve.applyRequest(() -> SwerveObjects.brake);
+        SwerveObjects.Swerve.setControl(SwerveObjects.brake);
     }
 
     public static void teleopDrive() {
@@ -284,6 +341,18 @@ public class Swerve {
         double omega = SwerveObjects.headingController.calculate(currPose.getRotation().getRadians());
 
         automaticDrive(velocity, new Rotation2d(Math.atan2(dy, dx)), omega);
+    }
+
+    public static void facePose(Translation2d targetPose, Rotation2d offset) {
+        Pose2d currPose = getPose();
+        double dy = targetPose.getY() - currPose.getY();
+        double dx = targetPose.getX() - currPose.getX();
+        Rotation2d target = new Rotation2d(Math.atan2(dy, dx));
+
+        SwerveObjects.headingController.setSetpoint(target.getRadians() + offset.getRadians());
+        double omega = SwerveObjects.headingController.calculate(currPose.getRotation().getRadians());
+
+        automaticDrive(0, new Rotation2d(0), omega);
     }
 
     public static Command sysIdQuasistatic(SysIdRoutine.Direction direction) {

@@ -5,7 +5,6 @@ import frc.robot.lib.auto.AutoSubsystem;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Limelight;
 import frc.robot.subsystems.interfaces.Shooter;
-import frc.robot.subsystems.interfaces.Turret;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 import frc.robot.subsystems.statemachines.drivetrain.DrivetrainStateMachine;
 import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
@@ -30,7 +29,6 @@ public class RobotMap {
     Swerve.init();
     Limelight.init();
     Shooter.init();
-    Turret.init();
     Intake.init();
 
     //THEN STATEMACHINES
@@ -50,14 +48,6 @@ public class RobotMap {
     if (driverController.getXButtonPressed()) {
       Swerve.zeroGyro();
     }
-
-    if (manipulatorController.getBButtonPressed()) {
-      Turret.FudgeFactor += 0.1;
-    } else if (manipulatorController.getXButtonPressed()) {
-      Turret.FudgeFactor -= 0.1;
-    } else if (manipulatorController.getAButtonPressed()) {
-      Turret.FudgeFactor = 0;
-    }
   }
 
   public static void scheduleAuto() {
@@ -66,3 +56,4 @@ public class RobotMap {
 }
 
 // initiate bomb sequence
+// - jai patel

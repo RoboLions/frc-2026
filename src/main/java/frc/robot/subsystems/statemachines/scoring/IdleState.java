@@ -8,14 +8,20 @@ import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
+import frc.robot.subsystems.interfaces.LED;
 import frc.robot.subsystems.interfaces.Shooter;
-import frc.robot.subsystems.interfaces.Turret;
 
 /** Add your docs here. */
 public class IdleState extends State {
 
   @Override
   public void build() {
+    addTransition(
+            new Transition(
+                () -> {
+                return RobotMap.driverController.getBButtonPressed();
+                },
+                ScoringStateMachine.idleState));
     addTransition(
         new Transition(
             () -> {
@@ -38,21 +44,27 @@ public class IdleState extends State {
 
   @Override
   public void init(State prevState) {
-    Shooter.idlerShooter();
     Intake.allRollersStop();
+    Shooter.idlerShooter();
+    LED.setRainBow();
   }
 
   @Override
   public void execute() {
-    Turret.turretTrackHub();
+    if (RobotMap.driverController.getYButtonPressed() || RobotMap.manipulatorController.getLeftBumperButtonPressed()) {
+      Intake.intakeUp();
+      Intake.intakeSlow();
+    }
 
-    if (RobotMap.driverController.getYButtonPressed()) {
-      Intake.intakeMid();
+    if (RobotMap.driverController.getYButtonReleased() || RobotMap.manipulatorController.getLeftBumperButtonReleased()) {
+      Intake.stopIntake();
+    }
+
+    if (RobotMap.manipulatorController.getRightBumperButtonPressed()) {
+      Intake.intakeDown();
     }
   }
 
   @Override
-  public void exit(State nextState) {
-
-  }
+  public void exit(State nextState) {}
 }

@@ -1,12 +1,12 @@
 package frc.robot.subsystems.statemachines.drivetrain;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
+import frc.robot.subsystems.statemachines.scoring.CycleState;
 
 
 public class AlignState extends State {
@@ -15,7 +15,8 @@ public class AlignState extends State {
         addTransition(
             new Transition(
                 () -> {
-                  return RobotMap.driverController.getBButtonPressed();
+                  return RobotMap.driverController.getBButtonPressed() 
+                    || RobotMap.driverController.getRightBumperButtonPressed();
                 },
                 DrivetrainStateMachine.teleopState));    
     }
@@ -25,7 +26,17 @@ public class AlignState extends State {
 
     @Override
     public void execute() {
-        Swerve.driveToPoint(new Pose2d(new Translation2d(2.25, 6.5), Rotation2d.fromDegrees(-45)), 0.75);
+        if (CycleState.isPass) {
+            if (Swerve.getPose().getY() > 4.0) {
+                Swerve.facePose(Constants.FIELD.PASS_UPPER.toTranslation2d(), Rotation2d.fromDegrees(180.0));
+            } else {
+                Swerve.facePose(Constants.FIELD.PASS_LOWER.toTranslation2d(), Rotation2d.fromDegrees(180.0));
+            }
+
+            return;
+        }
+
+        Swerve.facePose(Constants.FIELD.HUB_POSE, Rotation2d.fromDegrees(180.0));
     }   
     
     @Override

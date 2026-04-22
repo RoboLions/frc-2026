@@ -4,15 +4,15 @@ import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Shooter;
-import frc.robot.subsystems.interfaces.Turret;
-import frc.robot.subsystems.interfaces.Turret.SimulationObjects;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 
 public class AutoCommands {
@@ -29,54 +29,56 @@ public class AutoCommands {
         return Commands.runOnce(() -> Swerve.zeroCommand());
     }
 
+    public static Command SwerveFaceHUB() {
+        return Commands.run(() -> Swerve.facePose(Constants.FIELD.HUB_POSE, Rotation2d.fromDegrees(180)));
+    }
+
     public static Command PrintItem(String string) {
         return Commands.runOnce(() -> System.out.println(string));
-    }
-
-    public static Command setTurretTrack() {
-        return Commands.run(() -> Turret.turretTrackHub());
-    }
-
-    public static Command setTurretToZero() {
-        return Commands.run(() -> Turret.setAzimuthZero()); 
     }
 
     public static Command idleShooter() {
         return Commands.run(() ->  Shooter.idlerShooter());
     }
 
-    public static Command setShooterAndTrackHub() {
-        return Commands.run(() ->  Turret.turretTrackHub())
-                       .alongWith(Commands.run(() ->  Shooter.setShootSpeed(SimulationObjects.totalShotVelocity)));
+    public static Command setShooter() {
+        return Commands.run(() ->  Shooter.interpolateAndShoot(Swerve.getPose().getTranslation().getDistance(Constants.FIELD.HUB_POSE)));
     }
 
     public static Command shootSequenceWithRamp() {
-        return Commands.sequence(AutoCommands.SwerveStop()
-                        .alongWith(AutoCommands.setTurretTrack())
+        return Commands.sequence(AutoCommands.SwerveFaceHUB()
                         .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.35),
+                        .withTimeout(0.5),
                 
-                    AutoCommands.feedIn());
+                    AutoCommands.feedIn()
+                        .alongWith(AutoCommands.SwerveFaceHUB())
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.75),
+
+                    AutoCommands.intakeZeroPosition()
+                        .alongWith(AutoCommands.SwerveFaceHUB())
+                        .alongWith(AutoCommands.setShooter())
+                        .alongWith(AutoCommands.intakeZeroPosition())
+                        .withTimeout(3.0));
     }
 
         public static Command shootSequenceNoRamp() {
         return Commands.sequence(AutoCommands.SwerveStop()
-                        .alongWith(AutoCommands.setTurretTrack())
                         .alongWith(AutoCommands.setShooter())
                         .alongWith(AutoCommands.feedIn()));
     }
 
-    public static Command setShooter() {
-        return Commands.run(() ->  Shooter.setShootSpeed(SimulationObjects.totalShotVelocity));
-    }
-
     public static Command intakeOutRollersIn() {
-        return Commands.run(() -> Intake.intakeFastAuto())
+        return Commands.run(() -> Intake.intake())
                        .alongWith(Commands.run(() -> Intake.intakeDown()));
     }
 
     public static Command intakeOutOnly() {
         return Commands.run(() -> Intake.intakeDown());
+    }
+
+    public static Command intakeStop() {
+        return Commands.run(() -> Intake.stopIntake());
     }
 
     public static Command intakeMidOnly() {
@@ -94,13 +96,14 @@ public class AutoCommands {
 
     public static Command feedIn() {
         return Commands.run(() -> Intake.FeedIn())
-                       .alongWith(Commands.run(() -> Intake.IndexIn()))
-                       .alongWith(Commands.run(() -> Intake.intake()));
+                       .alongWith(Commands.run(() -> Intake.intake()))
+                       .alongWith(Commands.run(() -> Intake.IndexIn()));
     }
 
     public static Command feedStop() {
         return Commands.run(() -> Intake.stopFeed())
-                       .alongWith(Commands.run(() -> Intake.stopIndex()));
+                        .alongWith(Commands.run(() -> Intake.stopIndex())
+                        .alongWith(Commands.run(() -> Intake.stopIntake())));
     }
 
     public static Command intakeZeroPosition() {
