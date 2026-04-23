@@ -46,7 +46,7 @@ public class Swerve {
     public class SwerveConstants{
         public static final double ODOMETRY_FREQUENCY = 150.0;
 
-        private static final double SLIP_ERROR_THRESHOLD = 5.0; //needs to be tuned against wall
+        private static final double SLIP_ERROR_THRESHOLD = 7.5; //needs to be tuned against wall
         private static final double MaxSpeed = GeneratedConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
         private static final double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
     }

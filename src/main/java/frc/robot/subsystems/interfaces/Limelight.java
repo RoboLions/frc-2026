@@ -84,10 +84,10 @@ public class Limelight {
       double xyStdDev = 2.0 + (Math.pow(mtPoseEstimate.avgTagDist, 1.0) * 0.5);
 
       if (mtPoseEstimate.tagCount > 1) {
-        xyStdDev *= 0.3;
+        xyStdDev *= 0.5;
       }
 
-      if (Swerve.getYawRateAsDeg() > 270) {
+      if (Swerve.getYawRateAsDeg() > 90) {
         Logger.recordOutput("Vision/ ERROR LOG: " + cameraName, "ROTATION TOO FAST, YAWRATE - " + Swerve.getYawRateAsDeg());
         return;
       }
