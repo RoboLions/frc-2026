@@ -20,7 +20,7 @@ public class AutoSubsystem {
         autoFactory = createAutoFactory;
         autoChooser = new AutoChooser();
 
-        autoChooser.addRoutine("LEFT-Trench 2P", left2TrenchTripONLY());
+        autoChooser.addRoutine("Left-Trench 2P", left2TrenchTripONLY());
         autoChooser.addRoutine("Right-Trench 2P", right2TrenchTripONLY());
 
         autoChooser.addRoutine("Left-Delay 2P", leftDELAY2Trip());
@@ -37,26 +37,26 @@ public class AutoSubsystem {
     }
 
     private Supplier<AutoRoutine> left2TrenchTripONLY() {
-        AutoRoutine routine = autoFactory.newRoutine("LEFT 2 PIECE");
+        AutoRoutine routine = autoFactory.newRoutine("Left 2 PIECE");
 
         AutoTrajectory L1 = routine.trajectory("L1");
-            L1.atPose("INTAKE", 0.25, 1)
+            L1.atPose("INTAKE", 0.5, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.001));
-            L1.atPose("INTAKE_STOP", 0.25, 1)
+            L1.atTime("INTAKE_STOP")
                 .onTrue(AutoCommands.intakeStop()
                 .withTimeout(0.001));
 
         AutoTrajectory L2 = routine.trajectory("L2");
-            L2.atPose("INTAKE", 0.25, 1)
+            L2.atPose("INTAKE", 0.5, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.001));
-            L2.atPose("INTAKE_STOP", 0.25, 1)
+            L2.atTime("INTAKE_STOP")
                 .onTrue(AutoCommands.intakeStop()
                 .withTimeout(0.001));
 
         AutoTrajectory L3 = routine.trajectory("L3");
-            L3.atPose("INTAKE", 1, 1)
+            L3.atPose("INTAKE", 0.5, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.001));
 
@@ -104,23 +104,23 @@ public class AutoSubsystem {
         AutoRoutine routine = autoFactory.newRoutine("RIGHT 2 PIECE");
 
         AutoTrajectory R1 = routine.trajectory("L1").mirrorY();
-            R1.atPose("INTAKE", 0.25, 1)
+            R1.atPose("INTAKE", 0.5, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.001));
-            R1.atPose("INTAKE_STOP", 0.25, 1)
+            R1.atTime("INTAKE_STOP")
                 .onTrue(AutoCommands.intakeStop()
                 .withTimeout(0.001));
 
         AutoTrajectory R2 = routine.trajectory("L2").mirrorY();
-            R2.atPose("INTAKE", 0.25, 1)
+            R2.atPose("INTAKE", 0.5, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.001));
-            R2.atPose("INTAKE_STOP", 0.25, 1)
+            R2.atTime("INTAKE_STOP")
                 .onTrue(AutoCommands.intakeStop()
                 .withTimeout(0.001));
 
         AutoTrajectory R3 = routine.trajectory("L3").mirrorY();
-            R3.atPose("INTAKE", 1, 1)
+            R3.atPose("INTAKE", 0.5, 1)
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.001));
 
