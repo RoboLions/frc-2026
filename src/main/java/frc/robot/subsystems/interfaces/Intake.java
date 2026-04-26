@@ -65,12 +65,12 @@ public class Intake {
     indexMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
     indexMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 33;
 
-    indexMotorConfiguration.Slot0.kP = 3.0;
+    indexMotorConfiguration.Slot0.kP = 2.5;
     indexMotorConfiguration.Slot0.kI = 0.0;
     indexMotorConfiguration.Slot0.kD = 0.0;
-    indexMotorConfiguration.Slot0.kS = 14.0;
+    indexMotorConfiguration.Slot0.kS = 15.0;
     indexMotorConfiguration.Slot0.kA = 0.0;
-    indexMotorConfiguration.Slot0.kV = 0.25;
+    indexMotorConfiguration.Slot0.kV = 0.165;
     indexMotorConfiguration.Slot0.kG = 0.0;
 
     indexMotorConfiguration.Feedback.SensorToMechanismRatio = 1 / 1;
@@ -107,9 +107,9 @@ public class Intake {
     rackMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 60;
+    rackMotorConfiguration.CurrentLimits.StatorCurrentLimit = 55;
     rackMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 20;
+    rackMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 18;
 
     rackMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
@@ -177,7 +177,7 @@ public class Intake {
   }
 
   public static void setFeed(double rpm) {
-    mFeedMotor.setControl(new VelocityTorqueCurrentFOC(rpm).withUpdateFreqHz(40));
+    mFeedMotor.setControl(new VelocityTorqueCurrentFOC(rpm).withUpdateFreqHz(50));
   }
 
   public static void FeedIn() {
@@ -193,15 +193,15 @@ public class Intake {
   }
 
   public static void setIndex(double rpm) {
-    mIndexMotorMaster.setControl(new VelocityTorqueCurrentFOC(rpm).withUpdateFreqHz(20));
+    mIndexMotorMaster.setControl(new VelocityTorqueCurrentFOC(rpm).withUpdateFreqHz(50));
   }
 
   public static void IndexIn() {
-    setIndex(90);
+    setIndex(47);
   }
 
   public static void IndexOut() {
-    setIndex(-80);
+    setIndex(-40);
   }
 
   public static void stopIndex() {

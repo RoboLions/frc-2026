@@ -55,14 +55,13 @@ public class AutoCommands {
                         .alongWith(AutoCommands.setShooter())
                         .withTimeout(0.75),
 
-                    AutoCommands.intakeZeroPosition()
-                        .alongWith(AutoCommands.SwerveFaceHUB())
+                        AutoCommands.SwerveFaceHUB()
                         .alongWith(AutoCommands.setShooter())
                         .alongWith(AutoCommands.intakeZeroPosition())
                         .withTimeout(3.0));
     }
 
-        public static Command shootSequenceNoRamp() {
+    public static Command shootSequenceNoRamp() {
         return Commands.sequence(AutoCommands.SwerveStop()
                         .alongWith(AutoCommands.setShooter())
                         .alongWith(AutoCommands.feedIn()));
