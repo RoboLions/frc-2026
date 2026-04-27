@@ -61,9 +61,9 @@ public class Intake {
     indexMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     indexMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
-    indexMotorConfiguration.CurrentLimits.StatorCurrentLimit = 75;
+    indexMotorConfiguration.CurrentLimits.StatorCurrentLimit = 70;
     indexMotorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    indexMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 33;
+    indexMotorConfiguration.CurrentLimits.SupplyCurrentLimit = 30;
 
     indexMotorConfiguration.Slot0.kP = 2.5;
     indexMotorConfiguration.Slot0.kI = 0.0;
@@ -197,7 +197,7 @@ public class Intake {
   }
 
   public static void IndexIn() {
-    setIndex(47);
+    setIndex(60);
   }
 
   public static void IndexOut() {

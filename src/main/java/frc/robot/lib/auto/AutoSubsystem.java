@@ -14,7 +14,8 @@ public class AutoSubsystem {
     public AutoFactory autoFactory;
     private AutoChooser autoChooser;
 
-    private final double SHOOT_TIMEOUT = 3.25; // time to empty the hopper
+    private final double SHOOT_TIMEOUT_1 = 3.25; // time to empty the hopper
+    private final double SHOOT_TIMEOUT_2 = 2.75; // time to empty the hopper
 
     public AutoSubsystem(AutoFactory createAutoFactory) {
         autoFactory = createAutoFactory;
@@ -40,19 +41,25 @@ public class AutoSubsystem {
         AutoRoutine routine = autoFactory.newRoutine("Left 2 PIECE");
 
         AutoTrajectory L1 = routine.trajectory("L1");
-            L1.atPose("INTAKE", 0.5, 1)
+            L1.atTime("INTAKE")
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.001));
             L1.atTime("INTAKE_STOP")
                 .onTrue(AutoCommands.intakeStop()
                 .withTimeout(0.001));
+            L1.atTime("REV_SHOT")
+                .onTrue(AutoCommands.setShooter()
+                .withTimeout(0.001));
 
         AutoTrajectory L2 = routine.trajectory("L2");
-            L2.atPose("INTAKE", 0.5, 1)
+            L2.atTime("INTAKE")
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.001));
             L2.atTime("INTAKE_STOP")
                 .onTrue(AutoCommands.intakeStop()
+                .withTimeout(0.001));
+            L2.atTime("REV_SHOT")
+                .onTrue(AutoCommands.setShooter()
                 .withTimeout(0.001));
 
         AutoTrajectory L3 = routine.trajectory("L3");
@@ -75,7 +82,7 @@ public class AutoSubsystem {
                     L1.cmd(),
 
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(SHOOT_TIMEOUT),
+                        .withTimeout(SHOOT_TIMEOUT_1),
 
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
@@ -86,7 +93,7 @@ public class AutoSubsystem {
                     L2.cmd(),
                     
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(SHOOT_TIMEOUT),
+                        .withTimeout(SHOOT_TIMEOUT_2),
 
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
@@ -104,19 +111,25 @@ public class AutoSubsystem {
         AutoRoutine routine = autoFactory.newRoutine("RIGHT 2 PIECE");
 
         AutoTrajectory R1 = routine.trajectory("L1").mirrorY();
-            R1.atPose("INTAKE", 0.5, 1)
+            R1.atTime("INTAKE")
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.001));
             R1.atTime("INTAKE_STOP")
                 .onTrue(AutoCommands.intakeStop()
                 .withTimeout(0.001));
+            R1.atTime("REV_SHOT")
+                .onTrue(AutoCommands.setShooter()
+                .withTimeout(0.001));
 
         AutoTrajectory R2 = routine.trajectory("L2").mirrorY();
-            R2.atPose("INTAKE", 0.5, 1)
+            R2.atTime("INTAKE")
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.001));
             R2.atTime("INTAKE_STOP")
                 .onTrue(AutoCommands.intakeStop()
+                .withTimeout(0.001));
+            R2.atTime("REV_SHOT")
+                .onTrue(AutoCommands.setShooter()
                 .withTimeout(0.001));
 
         AutoTrajectory R3 = routine.trajectory("L3").mirrorY();
@@ -139,7 +152,7 @@ public class AutoSubsystem {
                     R1.cmd(),
 
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(SHOOT_TIMEOUT),
+                        .withTimeout(SHOOT_TIMEOUT_1),
 
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
@@ -150,7 +163,7 @@ public class AutoSubsystem {
                     R2.cmd(),
                     
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(SHOOT_TIMEOUT),
+                        .withTimeout(SHOOT_TIMEOUT_2),
                     
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
@@ -202,7 +215,7 @@ public class AutoSubsystem {
                     L1.cmd(),
 
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(SHOOT_TIMEOUT),
+                        .withTimeout(SHOOT_TIMEOUT_1),
 
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
@@ -213,7 +226,7 @@ public class AutoSubsystem {
                     L2.cmd(),
                     
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(SHOOT_TIMEOUT)));
+                        .withTimeout(SHOOT_TIMEOUT_2)));
 
             return routine;
         };
@@ -257,7 +270,7 @@ public class AutoSubsystem {
                     R1.cmd(),
 
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(SHOOT_TIMEOUT),
+                        .withTimeout(SHOOT_TIMEOUT_1),
 
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
@@ -268,7 +281,7 @@ public class AutoSubsystem {
                     R2.cmd(),
                     
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(SHOOT_TIMEOUT)));
+                        .withTimeout(SHOOT_TIMEOUT_2)));
 
             return routine;
         };
@@ -278,20 +291,26 @@ public class AutoSubsystem {
         AutoRoutine routine = autoFactory.newRoutine("LEFT 2 PIECE BUMP");
 
         AutoTrajectory L1 = routine.trajectory("L1_Bump");
-            L1.atPose("INTAKE", 0.5, 1)
+            L1.atTime("INTAKE")
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.001));
-            L1.atPose("Intake_ROLLERS_STOP", 0.5, 1)
+            L1.atTime("Intake_ROLLERS_STOP")
                 .onTrue(AutoCommands.intakeStop()
+                .withTimeout(0.001));
+            L1.atTime("REV_SHOT")
+                .onTrue(AutoCommands.setShooter()
                 .withTimeout(0.001));
 
 
         AutoTrajectory L2 = routine.trajectory("L2_Bump");
-            L2.atPose("INTAKE", 0.5, 1)
+            L2.atTime("INTAKE")
                 .onTrue(AutoCommands.intakeOutRollersIn()
                 .withTimeout(0.001));
-            L2.atPose("Intake_ROLLERS_STOP", 0.5, 1)
+            L2.atTime("Intake_ROLLERS_STOP")
                 .onTrue(AutoCommands.intakeStop()
+                .withTimeout(0.001));
+            L2.atTime("REV_SHOT")
+                .onTrue(AutoCommands.setShooter()
                 .withTimeout(0.001));
 
         AutoTrajectory L3 = routine.trajectory("L3_Bump");
@@ -316,7 +335,7 @@ public class AutoSubsystem {
                     L1.cmd(),
 
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(SHOOT_TIMEOUT),
+                        .withTimeout(SHOOT_TIMEOUT_1),
 
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
@@ -327,7 +346,7 @@ public class AutoSubsystem {
                     L2.cmd(),
                     
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(SHOOT_TIMEOUT),
+                        .withTimeout(SHOOT_TIMEOUT_2),
                         
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
@@ -383,7 +402,7 @@ public class AutoSubsystem {
                     L1.cmd(),
 
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(SHOOT_TIMEOUT),
+                        .withTimeout(SHOOT_TIMEOUT_1),
 
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
@@ -394,7 +413,7 @@ public class AutoSubsystem {
                     L2.cmd(),
                     
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(SHOOT_TIMEOUT),
+                        .withTimeout(SHOOT_TIMEOUT_2),
                         
                     AutoCommands.feedStop()
                         .withTimeout(0.001),

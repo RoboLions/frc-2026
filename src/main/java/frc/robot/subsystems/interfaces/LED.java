@@ -18,7 +18,7 @@ public class LED {
         CANdleConfiguration config = new CANdleConfiguration();
 
         config.LED.StripType = StripTypeValue.RGB;
-        config.LED.BrightnessScalar = 1.0;
+        config.LED.BrightnessScalar = 0.25;
 
         mRGB_Candle.getConfigurator().apply(config);
     }
@@ -26,7 +26,7 @@ public class LED {
     public static void setRainBow() {
         mRGB_Candle.setControl(new RainbowAnimation(0, MAX_LED_INDEX)
             .withFrameRate(100)
-            .withBrightness(0.5));
+            .withBrightness(0.25));
     }
 
     public static void setSolidGreen() {

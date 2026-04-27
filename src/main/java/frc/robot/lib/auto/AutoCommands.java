@@ -48,17 +48,49 @@ public class AutoCommands {
     public static Command shootSequenceWithRamp() {
         return Commands.sequence(AutoCommands.SwerveFaceHUB()
                         .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.5),
+                        .withTimeout(0.1),
                 
                     AutoCommands.feedIn()
                         .alongWith(AutoCommands.SwerveFaceHUB())
                         .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.75),
+                        .withTimeout(0.35),
 
-                        AutoCommands.SwerveFaceHUB()
+                    AutoCommands.SwerveFaceHUB()
                         .alongWith(AutoCommands.setShooter())
                         .alongWith(AutoCommands.intakeZeroPosition())
-                        .withTimeout(3.0));
+                        .withTimeout(0.35),
+                        
+                    AutoCommands.intakeOutOnly()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.35),
+                        
+                    AutoCommands.intakeZeroPosition()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.35),
+                    
+                    AutoCommands.intakeOutOnly()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.35),
+                        
+                    AutoCommands.intakeZeroPosition()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.35),
+
+                    AutoCommands.intakeOutOnly()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.35),
+                        
+                    AutoCommands.intakeZeroPosition()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.35),
+
+                    AutoCommands.intakeOutOnly()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.35),
+                        
+                    AutoCommands.intakeZeroPosition()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.35));
     }
 
     public static Command shootSequenceNoRamp() {
@@ -102,7 +134,8 @@ public class AutoCommands {
     public static Command feedStop() {
         return Commands.run(() -> Intake.stopFeed())
                         .alongWith(Commands.run(() -> Intake.stopIndex())
-                        .alongWith(Commands.run(() -> Intake.stopIntake())));
+                        .alongWith(Commands.run(() -> Intake.stopIntake())
+                        .alongWith(Commands.run(() -> Intake.intakeUp()))));
     }
 
     public static Command intakeZeroPosition() {
