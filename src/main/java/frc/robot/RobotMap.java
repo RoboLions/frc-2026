@@ -1,5 +1,8 @@
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.lib.auto.AutoSubsystem;
 import frc.robot.subsystems.interfaces.Intake;
@@ -11,6 +14,7 @@ import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
 
 public class RobotMap {
 
+  private static final PowerDistribution PDP = new PowerDistribution();
   private static final AutoSubsystem autoSubsystem = new AutoSubsystem(Swerve.createAutoFactory());
 
   /* state machine instances */
@@ -48,6 +52,8 @@ public class RobotMap {
     if (driverController.getXButtonPressed()) {
       Swerve.zeroGyro();
     }
+
+    Logger.recordOutput("PDP TOTAL", PDP.getTotalCurrent());
   }
 
   public static void scheduleAuto() {

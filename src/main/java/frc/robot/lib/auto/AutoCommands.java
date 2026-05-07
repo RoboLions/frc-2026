@@ -57,40 +57,41 @@ public class AutoCommands {
 
                     AutoCommands.SwerveFaceHUB()
                         .alongWith(AutoCommands.setShooter())
+                        .alongWith(AutoCommands.intakeSlow())
                         .alongWith(AutoCommands.intakeZeroPosition())
                         .withTimeout(0.35),
                         
                     AutoCommands.intakeOutOnly()
                         .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.35),
+                        .withTimeout(0.5),
                         
                     AutoCommands.intakeZeroPosition()
                         .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.35),
+                        .withTimeout(0.5),
                     
                     AutoCommands.intakeOutOnly()
                         .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.35),
+                        .withTimeout(0.5),
                         
                     AutoCommands.intakeZeroPosition()
                         .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.35),
+                        .withTimeout(0.5),
 
                     AutoCommands.intakeOutOnly()
                         .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.35),
+                        .withTimeout(0.5),
                         
                     AutoCommands.intakeZeroPosition()
                         .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.35),
+                        .withTimeout(0.5),
 
                     AutoCommands.intakeOutOnly()
                         .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.35),
+                        .withTimeout(0.5),
                         
                     AutoCommands.intakeZeroPosition()
                         .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.35));
+                        .withTimeout(0.5));
     }
 
     public static Command shootSequenceNoRamp() {
@@ -118,6 +119,10 @@ public class AutoCommands {
 
     public static Command intakeRollersIn() {
         return Commands.run(() -> Intake.intake());
+    }
+
+    public static Command intakeSlow() {
+        return Commands.run(() -> Intake.intakeSlow());
     }
 
     public static Command intakeMidRollersStop() {

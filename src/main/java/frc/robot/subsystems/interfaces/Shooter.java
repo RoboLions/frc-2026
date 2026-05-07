@@ -43,9 +43,9 @@ public class Shooter {
     VELOCITY_LOOKUP_TABLE.add(new ShotPoint(2.09, 42.0));
     VELOCITY_LOOKUP_TABLE.add(new ShotPoint(2.51, 45.0));
     VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.0, 47.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.5, 50.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.81, 52)); //B
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.2, 55.0)); //B
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.5, 52.0));
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.81, 54)); //B
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.2, 57.0)); //B
     VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.5, 59.0)); //B
 
     PASSING_LOOKUP_TABLE.add(new ShotPoint(4.0, 40));
@@ -59,8 +59,8 @@ public class Shooter {
     shooterMotorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-    shooterMotorConfig.CurrentLimits.StatorCurrentLimit = 90;
-    shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 33;
+    shooterMotorConfig.CurrentLimits.StatorCurrentLimit = 60;
+    shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 27;
 
     shooterMotorConfig.Slot0.kS = 6;
     shooterMotorConfig.Slot0.kV = 0;

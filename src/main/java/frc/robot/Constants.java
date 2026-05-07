@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.util.Color;
 
 public class Constants {
 
@@ -24,5 +25,12 @@ public class Constants {
         public static final int INTAKE_FOLLOWER_ROLLER = 53;
         public static final int INDEX_MOTOR_MASTER = 54;
         public static final int INDEX_MOTOR_FOLLOWER = 55;
+    }
+
+    public class Colors {
+        public static final Color RED = new Color(255, 0, 0);
+        public static final Color WHITE = new Color(255, 255, 255);
+        public static final Color PURPLE = new Color(255, 0, 255);
+        public static final Color GREEN = new Color(0, 255, 0);
     }
 }

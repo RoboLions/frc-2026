@@ -9,6 +9,7 @@ import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.LED;
+import frc.robot.subsystems.interfaces.Shooter;
 
 /** Add your docs here. */
 public class IntakeState extends State {
@@ -38,11 +39,18 @@ public class IntakeState extends State {
   public void init(State prevState) {
     Intake.intake();
     Intake.intakeDown();
+    Shooter.idlerShooter();
     LED.setFlashYellow();
   }
 
   @Override
-  public void execute() {} 
+  public void execute() {
+    if (RobotMap.manipulatorController.getBButtonPressed()) {
+      Intake.stopIntake();
+    } else if (RobotMap.manipulatorController.getBButtonReleased()) {
+      Intake.intake();
+    }
+  } 
 
   @Override
   public void exit(State nextState) {}

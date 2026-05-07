@@ -11,6 +11,8 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 import frc.robot.subsystems.statemachines.drivetrain.DrivetrainStateMachine;
@@ -89,6 +91,28 @@ public class Robot extends LoggedRobot {
   public void teleopPeriodic() {
     RobotMap.drivetrainStateMachine.setNextState();
     RobotMap.scoringStateMachine.setNextState();
+
+    double gameTime = Timer.getMatchTime();
+    
+    if (130 < gameTime && gameTime < 140) {
+      SmartDashboard.putString("SHIFT COLOR", "TRANSITION");
+      SmartDashboard.putNumber("SHIFT TIMER", (gameTime - 130));
+    } else if (105 < gameTime && gameTime < 130) {
+      SmartDashboard.putString("SHIFT COLOR", "LOSER 1");
+      SmartDashboard.putNumber("SHIFT TIMER", (gameTime - 105));
+    } else if (80 < gameTime && gameTime < 105) {
+      SmartDashboard.putString("SHIFT COLOR", "WINNER 1");
+      SmartDashboard.putNumber("SHIFT TIMER", (gameTime - 80));
+    } else if (55 < gameTime && gameTime < 80) {
+      SmartDashboard.putString("SHIFT COLOR", "LOSER 2");
+      SmartDashboard.putNumber("SHIFT TIMER", (gameTime - 55));
+    } else if (30 < gameTime && gameTime < 55) {
+      SmartDashboard.putString("SHIFT COLOR", "WINNER 2");
+      SmartDashboard.putNumber("SHIFT TIMER", (gameTime - 30));
+    } else if (gameTime < 30) {
+      SmartDashboard.putString("SHIFT COLOR", "ENDGAME");
+      SmartDashboard.putNumber("SHIFT TIMER", (gameTime));
+    }
   }
 
   /** This function is called once when the robot is disabled. */
