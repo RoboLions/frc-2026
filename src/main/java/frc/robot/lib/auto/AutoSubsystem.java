@@ -41,68 +41,68 @@ public class AutoSubsystem {
         AutoRoutine routine = autoFactory.newRoutine("Left 2 PIECE");
 
         AutoTrajectory L1 = routine.trajectory("L1");
-            L1.atTime("INTAKE")
-                .onTrue(AutoCommands.intakeOutRollersIn()
-                .withTimeout(0.001));
-            L1.atTime("INTAKE_STOP")
-                .onTrue(AutoCommands.intakeStop()
-                .withTimeout(0.001));
-            L1.atTime("REV_SHOT")
-                .onTrue(AutoCommands.setShooter()
-                .withTimeout(0.001));
+            // L1.atTime("INTAKE")
+            //     .onTrue(AutoCommands.intakeOutRollersIn()
+            //     .withTimeout(0.001));
+            // L1.atTime("INTAKE_STOP")
+            //     .onTrue(AutoCommands.intakeStop()
+            //     .withTimeout(0.001));
+            // L1.atTime("REV_SHOT")
+            //     / .onTrue(AutoCommands.setShooter()
+            //      .withTimeout(0.001));
 
         AutoTrajectory L2 = routine.trajectory("L2");
-            L2.atTime("INTAKE")
-                .onTrue(AutoCommands.intakeOutRollersIn()
-                .withTimeout(0.001));
-            L2.atTime("INTAKE_STOP")
-                .onTrue(AutoCommands.intakeStop()
-                .withTimeout(0.001));
-            L2.atTime("REV_SHOT")
-                .onTrue(AutoCommands.setShooter()
-                .withTimeout(0.001));
+            // L2.atTime("INTAKE")
+            //     .onTrue(AutoCommands.intakeOutRollersIn()
+            //     .withTimeout(0.001));
+            // L2.atTime("INTAKE_STOP")
+            //     .onTrue(AutoCommands.intakeStop()
+            //     .withTimeout(0.001));
+            // L2.atTime("REV_SHOT")
+            //     .onTrue(AutoCommands.setShooter()
+            //     .withTimeout(0.001));
 
         AutoTrajectory L3 = routine.trajectory("L3");
-            L3.atPose("INTAKE", 0.5, 1)
-                .onTrue(AutoCommands.intakeOutRollersIn()
-                .withTimeout(0.001));
+            // L3.atPose("INTAKE", 0.5, 1)
+            //     .onTrue(AutoCommands.intakeOutRollersIn()
+            //     .withTimeout(0.001));
 
         return () -> {
             routine.active().onTrue(
                 Commands.sequence(
-                    AutoCommands.intakeZeroPosition()
-                        .withTimeout(0.001),
+                    // AutoCommands.intakeZeroPosition()
+                    //     .withTimeout(0.001),
 
-                    AutoCommands.feedStop()
-                        .withTimeout(0.001),
+                    // AutoCommands.feedStop()
+                    //     .withTimeout(0.001),
                     
-                    AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                    // AutoCommands.idleShooter()
+                    //     .withTimeout(0.001),
                     
-                    L1.cmd(),
+                    // L1.cmd(),
 
-                    AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(SHOOT_TIMEOUT_1),
+                    // AutoCommands.shootSequenceWithRamp()
+                    //     .withTimeout(SHOOT_TIMEOUT_1),
 
-                    AutoCommands.feedStop()
-                        .withTimeout(0.001),
+                    // AutoCommands.feedStop()
+                    //     .withTimeout(0.001),
                     
-                    AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                    // AutoCommands.idleShooter()
+                    //     .withTimeout(0.001),
 
-                    L2.cmd(),
+                    // L2.cmd(),
                     
-                    AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(SHOOT_TIMEOUT_2),
+                    // AutoCommands.shootSequenceWithRamp()
+                    //     .withTimeout(SHOOT_TIMEOUT_2),
 
-                    AutoCommands.feedStop()
-                        .withTimeout(0.001),
+                    // AutoCommands.feedStop()
+                    //     .withTimeout(0.001),
                     
-                    AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                    // AutoCommands.idleShooter()
+                    //     .withTimeout(0.001),
 
-                    L3.cmd()));
-
+                    // L3.cmd()));
+                ));
             return routine;
         };
     }
