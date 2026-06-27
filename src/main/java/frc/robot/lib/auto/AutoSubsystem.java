@@ -68,32 +68,32 @@ public class AutoSubsystem {
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
                     
-                    AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                    // AutoCommands.idleShooter()
+                    //     .withTimeout(0.001),
                     
                     L1.cmd(),
                     NL1.cmd(),
 
-                    AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(3.0),
+                    // AutoCommands.shootSequenceWithRamp()
+                    //     .withTimeout(3.0),
 
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
                     
-                    AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                    // AutoCommands.idleShooter()
+                    //     .withTimeout(0.001),
 
                     L2.cmd(),
                     NL2.cmd(),
                     
-                    AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(3.0),
+                    // AutoCommands.shootSequenceWithRamp()
+                    //     .withTimeout(3.0),
 
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
                     
-                    AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                    // AutoCommands.idleShooter()
+                    //     .withTimeout(0.001),
 
                     L3.cmd()));
 
@@ -138,32 +138,32 @@ public class AutoSubsystem {
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
                     
-                    AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                    // AutoCommands.idleShooter()
+                    //     .withTimeout(0.001),
                     
                     R1.cmd(),
                     NR1.cmd(),
 
-                    AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(3.0),
+                    // AutoCommands.shootSequenceWithRamp()
+                    //     .withTimeout(3.0),
 
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
                     
-                    AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                    // AutoCommands.idleShooter()
+                    //     .withTimeout(0.001),
 
                     R2.cmd(),
                     NR2.cmd(),
                     
-                    AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(3.0),
+                    // AutoCommands.shootSequenceWithRamp()
+                    //     .withTimeout(3.0),
                     
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
                     
-                    AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                    // AutoCommands.idleShooter()
+                    //     .withTimeout(0.001),
 
                     R3.cmd()));
 
@@ -203,24 +203,24 @@ public class AutoSubsystem {
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
                     
-                    AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                    // AutoCommands.idleShooter()
+                    //     .withTimeout(0.001),
                     
                     L1.cmd(),
 
-                    AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(3.5),
+                    // AutoCommands.shootSequenceWithRamp()
+                    //     .withTimeout(3.5),
 
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
                     
-                    AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                    // AutoCommands.idleShooter()
+                    //     .withTimeout(0.001),
 
                     L2.cmd(),
                     
-                    AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(3.5)));
+                    // AutoCommands.shootSequenceWithRamp()
+                    //     .withTimeout(3.5)));
 
             return routine;
         };
@@ -258,24 +258,24 @@ public class AutoSubsystem {
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
                     
-                    AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                    // AutoCommands.idleShooter()
+                    //     .withTimeout(0.001),
                     
                     R1.cmd(),
 
-                    AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(3.5),
+                    // AutoCommands.shootSequenceWithRamp()
+                    //     .withTimeout(3.5),
 
                     AutoCommands.feedStop()
                         .withTimeout(0.001),
                     
-                    AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                    // AutoCommands.idleShooter()
+                    //     .withTimeout(0.001),
 
                     R2.cmd(),
                     
-                    AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(3.5)));
+                    // AutoCommands.shootSequenceWithRamp()
+                    //     // .withTimeout(3.5)));
 
             return routine;
         };

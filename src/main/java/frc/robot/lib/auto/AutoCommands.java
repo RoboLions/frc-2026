@@ -37,36 +37,36 @@ public class AutoCommands {
         return Commands.runOnce(() -> System.out.println(string));
     }
 
-    public static Command idleShooter() {
-        return Commands.run(() ->  Shooter.idlerShooter());
-    }
+    // public static Command idleShooter() {
+    //     return Commands.run(() ->  Shooter.idlerShooter());
+    // }
 
-    public static Command setShooter() {
-        return Commands.run(() ->  Shooter.interpolateAndShoot(Swerve.getPose().getTranslation().getDistance(Constants.FIELD.HUB_POSE)));
-    }
+    // public static Command setShooter() {
+    //     return Commands.run(() ->  Shooter.interpolateAndShoot(Swerve.getPose().getTranslation().getDistance(Constants.FIELD.HUB_POSE)));
+    // }
 
-    public static Command shootSequenceWithRamp() {
-        return Commands.sequence(AutoCommands.SwerveFaceHUB()
-                        .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.5),
+    // public static Command shootSequenceWithRamp() {
+    //     return Commands.sequence(AutoCommands.SwerveFaceHUB()
+    //                     .alongWith(AutoCommands.setShooter())
+    //                     .withTimeout(0.5),
                 
-                    AutoCommands.feedIn()
-                        .alongWith(AutoCommands.SwerveFaceHUB())
-                        .alongWith(AutoCommands.setShooter())
-                        .withTimeout(0.75),
+    //                 AutoCommands.feedIn()
+    //                     .alongWith(AutoCommands.SwerveFaceHUB())
+    //                     .alongWith(AutoCommands.setShooter())
+    //                     .withTimeout(0.75),
 
-                    AutoCommands.intakeZeroPosition()
-                        .alongWith(AutoCommands.SwerveFaceHUB())
-                        .alongWith(AutoCommands.setShooter())
-                        .alongWith(AutoCommands.intakeZeroPosition())
-                        .withTimeout(3.0));
-    }
+    //                 AutoCommands.intakeZeroPosition()
+    //                     .alongWith(AutoCommands.SwerveFaceHUB())
+    //                     .alongWith(AutoCommands.setShooter())
+    //                     .alongWith(AutoCommands.intakeZeroPosition())
+    //                     .withTimeout(3.0));
+    // }
 
-        public static Command shootSequenceNoRamp() {
-        return Commands.sequence(AutoCommands.SwerveStop()
-                        .alongWith(AutoCommands.setShooter())
-                        .alongWith(AutoCommands.feedIn()));
-    }
+    //     public static Command shootSequenceNoRamp() {
+    //     return Commands.sequence(AutoCommands.SwerveStop()
+    //                     .alongWith(AutoCommands.setShooter())
+    //                     .alongWith(AutoCommands.feedIn()));
+    // }
 
     public static Command intakeOutRollersIn() {
         return Commands.run(() -> Intake.intake())
