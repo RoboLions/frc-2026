@@ -19,7 +19,7 @@ public class IntakeState extends State {
     addTransition(
         new Transition(
             () -> {
-              return RobotMap.driverController.getLeftBumper();
+              return RobotMap.driverController.getLeftBumperButton();
             },
             ScoringStateMachine.outtakeState));
     addTransition(

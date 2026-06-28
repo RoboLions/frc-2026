@@ -46,7 +46,8 @@ public class AutoCommands {
     }
 
     public static Command shootSequenceWithRamp() {
-        return Commands.sequence(AutoCommands.SwerveFaceHUB()
+        return Commands.sequence(
+                    AutoCommands.SwerveFaceHUB()
                         .alongWith(AutoCommands.setShooter())
                         .withTimeout(0.1),
                 

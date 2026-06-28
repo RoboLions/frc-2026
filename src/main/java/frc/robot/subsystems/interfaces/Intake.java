@@ -1,5 +1,6 @@
 package frc.robot.subsystems.interfaces;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -15,20 +16,20 @@ import frc.robot.Constants;
 public class Intake {
 
   private static final TalonFX mIntakeRollerMotorMaster =
-    new TalonFX(Constants.CAN_IDS.INTAKE_ROLLER_MASTER, "CANexternal");  
+    new TalonFX(Constants.CAN_IDS.INTAKE_ROLLER_MASTER, new CANBus("CANexCANexternalternal"));  
   private static final TalonFX mIntakeRollerMotorFollow = 
-    new TalonFX(Constants.CAN_IDS.INTAKE_FOLLOWER_ROLLER, "CANexternal");
+    new TalonFX(Constants.CAN_IDS.INTAKE_FOLLOWER_ROLLER, new CANBus("CANexternal"));
 
   private static final TalonFX mIndexMotorMaster = 
-    new TalonFX(Constants.CAN_IDS.INDEX_MOTOR_MASTER, "CANexternal");
+    new TalonFX(Constants.CAN_IDS.INDEX_MOTOR_MASTER, new CANBus("CANexternal"));
   private static final TalonFX mIndexMotorFollower = 
-    new TalonFX(Constants.CAN_IDS.INDEX_MOTOR_FOLLOWER, "CANexternal");
+    new TalonFX(Constants.CAN_IDS.INDEX_MOTOR_FOLLOWER, new CANBus("CANexternal"));
 
   private static final TalonFX mFeedMotor = 
-    new TalonFX(Constants.CAN_IDS.FEEDER_MOTOR, "CANexternal");
+    new TalonFX(Constants.CAN_IDS.FEEDER_MOTOR, new CANBus("CANexternal"));
 
   private static final TalonFX mRackMotor = 
-    new TalonFX(Constants.CAN_IDS.RACK_MOTOR, "CANexternal");
+    new TalonFX(Constants.CAN_IDS.RACK_MOTOR, new CANBus("CANexternal"));
 
   private static final double STOW_POS = 0.85;
   private static final double MIDDLE_POS = 2.0;

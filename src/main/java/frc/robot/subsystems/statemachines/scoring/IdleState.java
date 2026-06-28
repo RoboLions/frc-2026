@@ -31,13 +31,13 @@ public class IdleState extends State {
     addTransition(
             new Transition(
                 () -> {
-                return RobotMap.driverController.getRightBumper();
+                return RobotMap.driverController.getRightBumperButton();
                 },
                 ScoringStateMachine.intakeState));
     addTransition(
         new Transition(
             () -> {
-            return RobotMap.driverController.getLeftBumper();
+            return RobotMap.driverController.getLeftBumperButton();
             },
             ScoringStateMachine.outtakeState));
   }

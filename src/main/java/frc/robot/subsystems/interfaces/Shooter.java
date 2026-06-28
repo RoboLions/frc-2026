@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
@@ -17,13 +18,13 @@ import frc.robot.Constants;
 public class Shooter {
 
   private static final TalonFX mMasterFlywheelMotor =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_MASTER, "CANexternal");
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_MASTER, new CANBus("CANexternal"));
   private static final TalonFX mFollowerFlywheelMotor1 =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_UPPER_RIGHT, "CANexternal");    
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_UPPER_RIGHT, new CANBus("CANexternal"));    
   private static final TalonFX mFollowerFlywheelMotor2 =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_LOWER_LEFT, "CANexternal");  
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_LOWER_LEFT, new CANBus("CANexternal"));  
   private static final TalonFX mFollowerFlywheelMotor3 =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_LOWER_RIGHT, "CANexternal");  
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_LOWER_RIGHT, new CANBus("CANexternal"));  
 
   private static ArrayList<ShotPoint> VELOCITY_LOOKUP_TABLE = new ArrayList<>();
   private static ArrayList<ShotPoint> PASSING_LOOKUP_TABLE = new ArrayList<>();
