@@ -79,7 +79,7 @@ public class AutoSubsystem {
                     // AutoCommands.idleShooter()
                     //     .withTimeout(0.001),
                     
-                    // L1.cmd(),
+                     L1.cmd(),
 
                     // AutoCommands.shootSequenceWithRamp()
                     //     .withTimeout(SHOOT_TIMEOUT_1),
@@ -90,7 +90,7 @@ public class AutoSubsystem {
                     // AutoCommands.idleShooter()
                     //     .withTimeout(0.001),
 
-                    // L2.cmd(),
+                     L2.cmd(),
                     
                     // AutoCommands.shootSequenceWithRamp()
                     //     .withTimeout(SHOOT_TIMEOUT_2),
@@ -101,8 +101,8 @@ public class AutoSubsystem {
                     // AutoCommands.idleShooter()
                     //     .withTimeout(0.001),
 
-                    // L3.cmd()));
-                ));
+                     L3.cmd()));
+                
             return routine;
         };
     }
