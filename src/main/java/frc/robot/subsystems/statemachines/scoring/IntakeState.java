@@ -1,4 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
+
+
+
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -44,8 +47,9 @@ public class IntakeState extends State {
   }
 
   @Override
-  public void execute() {
+  public void execute() { 
     if (RobotMap.manipulatorController.getBButtonPressed()) {
+      System.out.println("executing intake");
       Intake.stopIntake();
     } else if (RobotMap.manipulatorController.getBButtonReleased()) {
       Intake.intake();

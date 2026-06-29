@@ -30,12 +30,32 @@ public class AutoSubsystem {
         autoChooser.addRoutine("Left-Bump 2P", leftBump2Trip());
         autoChooser.addRoutine("Right-Bump 2P", rightBump2Trip());
 
+        autoChooser.addRoutine("line", lines());
+
         SmartDashboard.putData("AutoChooser", autoChooser);
     }
 
     public void scheduleAuto() {
         RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
     }
+
+    private Supplier<AutoRoutine> lines() {
+        AutoRoutine routine = autoFactory.newRoutine("line");
+
+        AutoTrajectory line = routine.trajectory("line");
+        System.out.println("test");
+        return () -> {
+            routine.active().onTrue(
+                Commands.sequence(
+                    line.cmd()));
+                                return routine;
+
+        };
+
+
+    }
+
+
 
     private Supplier<AutoRoutine> left2TrenchTripONLY() {
         AutoRoutine routine = autoFactory.newRoutine("Left 2 PIECE");
