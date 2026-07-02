@@ -48,7 +48,7 @@ public class AutoSubsystem {
             routine.active().onTrue(
                 Commands.sequence(
                     line.cmd()));
-                                return routine;
+                 return routine;
 
         };
 
