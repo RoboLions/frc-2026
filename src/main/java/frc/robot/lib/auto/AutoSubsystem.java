@@ -49,7 +49,7 @@ public class AutoSubsystem {
                 .withTimeout(0.001));
             L1.atTime("REV_SHOT")
                 .onTrue(AutoCommands.setShooter()
-                .withTimeout(0.001));
+                .withTimeout(0.0025));
 
         AutoTrajectory L2 = routine.trajectory("L2");
             L2.atTime("INTAKE")
@@ -60,7 +60,7 @@ public class AutoSubsystem {
                 .withTimeout(0.001));
             L2.atTime("REV_SHOT")
                 .onTrue(AutoCommands.setShooter()
-                .withTimeout(0.001));
+                .withTimeout(0.0025));
 
         AutoTrajectory L3 = routine.trajectory("L3");
             L3.atPose("INTAKE", 0.5, 1)

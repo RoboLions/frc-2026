@@ -40,6 +40,12 @@ public class IdleState extends State {
             return RobotMap.driverController.getLeftBumper();
             },
             ScoringStateMachine.outtakeState));
+    addTransition(
+        new Transition(
+            () -> {
+            return RobotMap.manipulatorController.getAButton();
+            },
+            ScoringStateMachine.outtakeState));
   }
 
   @Override
