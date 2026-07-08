@@ -30,6 +30,8 @@ public class AutoSubsystem {
         autoChooser.addRoutine("Left-Bump 2P", leftBump2Trip());
         autoChooser.addRoutine("Right-Bump 2P", rightBump2Trip());
 
+        autoChooser.addRoutine("leftBump2Tripdelay",leftBump2Tripdelay());
+
         SmartDashboard.putData("AutoChooser", autoChooser);
     }
 
@@ -88,7 +90,7 @@ public class AutoSubsystem {
                         .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                        .withTimeout(0.0025),
 
                     L2.cmd(),
                     
@@ -99,7 +101,7 @@ public class AutoSubsystem {
                         .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                        .withTimeout(0.0025),
 
                     L3.cmd()));
 
@@ -147,7 +149,7 @@ public class AutoSubsystem {
                         .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                        .withTimeout(0.0025),
                     
                     R1.cmd(),
 
@@ -158,7 +160,7 @@ public class AutoSubsystem {
                         .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                        .withTimeout(0.0025),
 
                     R2.cmd(),
                     
@@ -169,7 +171,7 @@ public class AutoSubsystem {
                         .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                        .withTimeout(0.0025),
 
                     R3.cmd()));
 
@@ -210,7 +212,7 @@ public class AutoSubsystem {
                         .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                        .withTimeout(0.0025),
                     
                     L1.cmd(),
 
@@ -221,7 +223,7 @@ public class AutoSubsystem {
                         .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                        .withTimeout(0.0025),
 
                     L2.cmd(),
                     
@@ -265,7 +267,7 @@ public class AutoSubsystem {
                         .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                        .withTimeout(0.0025),
                     
                     R1.cmd(),
 
@@ -276,7 +278,7 @@ public class AutoSubsystem {
                         .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                        .withTimeout(0.0025),
 
                     R2.cmd(),
                     
@@ -299,7 +301,7 @@ public class AutoSubsystem {
                 .withTimeout(0.001));
             L1.atTime("REV_SHOT")
                 .onTrue(AutoCommands.setShooter()
-                .withTimeout(0.001));
+                .withTimeout(0.0025));
 
 
         AutoTrajectory L2 = routine.trajectory("L2_Bump");
@@ -311,7 +313,7 @@ public class AutoSubsystem {
                 .withTimeout(0.001));
             L2.atTime("REV_SHOT")
                 .onTrue(AutoCommands.setShooter()
-                .withTimeout(0.001));
+                .withTimeout(0.0025));
 
         AutoTrajectory L3 = routine.trajectory("L3_Bump");
             L3.atPose("INTAKE", 0.5, 1)
@@ -330,7 +332,7 @@ public class AutoSubsystem {
                         .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                        .withTimeout(0.0025),
                     
                     L1.cmd(),
 
@@ -341,7 +343,7 @@ public class AutoSubsystem {
                         .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                        .withTimeout(0.0025),
 
                     L2.cmd(),
                     
@@ -352,7 +354,7 @@ public class AutoSubsystem {
                         .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                        .withTimeout(0.0025),
                         
                     L3.cmd()));;
 
@@ -397,7 +399,7 @@ public class AutoSubsystem {
                         .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                        .withTimeout(0.0025),
                     
                     L1.cmd(),
 
@@ -408,7 +410,7 @@ public class AutoSubsystem {
                         .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                        .withTimeout(0.0025),
 
                     L2.cmd(),
                     
@@ -419,11 +421,82 @@ public class AutoSubsystem {
                         .withTimeout(0.001),
                     
                     AutoCommands.idleShooter()
-                        .withTimeout(0.001),
+                        .withTimeout(0.0025),
                         
                     L3.cmd()));
 
             return routine;
         };
+    }
+    
+
+    private Supplier<AutoRoutine> leftBump2Tripdelay() {
+        AutoRoutine routine = autoFactory.newRoutine("RIGHT 2 PIECE BUMP");
+
+        AutoTrajectory L1 = routine.trajectory("L1_Bump");
+            L1.atPose("INTAKE", 0.5, 1)
+                .onTrue(AutoCommands.intakeOutRollersIn()
+                .withTimeout(0.001));
+            L1.atPose("Intake_ROLLERS_STOP", 0.5, 1)
+                .onTrue(AutoCommands.intakeStop()
+                .withTimeout(0.001));
+
+
+        AutoTrajectory L2 = routine.trajectory("L2_Bump");
+            L2.atPose("INTAKE", 0.5, 1)
+                .onTrue(AutoCommands.intakeOutRollersIn()
+                .withTimeout(0.001));
+            L2.atPose("Intake_ROLLERS_STOP", 0.5, 1)
+                .onTrue(AutoCommands.intakeStop()
+                .withTimeout(0.001));
+
+        AutoTrajectory L3 = routine.trajectory("L3_Bump");
+            L3.atPose("INTAKE", 0.5, 1)
+                .onTrue(AutoCommands.intakeOutRollersIn()
+                .withTimeout(0.001));
+                
+
+        return () -> {
+            routine.active().onTrue(
+                Commands.sequence(
+                    Commands.waitSeconds(5.0),
+
+
+                    AutoCommands.intakeZeroPosition()
+                        .withTimeout(0.001),
+
+                    AutoCommands.feedStop()
+                        .withTimeout(0.001),
+                    
+                    AutoCommands.idleShooter()
+                        .withTimeout(0.0025),
+                    
+                    L1.cmd(),
+
+                    AutoCommands.shootSequenceWithRamp()
+                        .withTimeout(SHOOT_TIMEOUT_1),
+
+                    AutoCommands.feedStop()
+                        .withTimeout(0.001),
+                    
+                    AutoCommands.idleShooter()
+                        .withTimeout(0.0025),
+
+                    L2.cmd(),
+                    
+                    AutoCommands.shootSequenceWithRamp()
+                        .withTimeout(SHOOT_TIMEOUT_2),
+                        
+                    AutoCommands.feedStop()
+                        .withTimeout(0.001),
+                    
+                    AutoCommands.idleShooter()
+                        .withTimeout(0.0025),
+                        
+                    L3.cmd()));
+
+            return routine;
+        };
+
     }
 }
