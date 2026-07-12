@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.lib.auto.Pursuiter.util.PathPoint;
 import frc.robot.lib.auto.Pursuiter.util.PointConstraints;
 
-public class Loader {
+public class PathLoader {
 
     public static List<PathPoint> loadSample(String trajectoryName) {
         List<PathPoint> points = new ArrayList<>();
