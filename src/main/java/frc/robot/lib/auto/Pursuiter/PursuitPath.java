@@ -15,7 +15,6 @@ import frc.robot.lib.auto.Pursuiter.helpers.FastMath;
 import frc.robot.lib.auto.Pursuiter.helpers.PathLoader;
 import frc.robot.lib.auto.Pursuiter.helpers.PoseTolerance;
 import frc.robot.lib.auto.Pursuiter.util.PathPoint;
-import frc.robot.subsystems.interfaces.swerve.Swerve;
 
 public class PursuitPath {
     private final PoseTolerance poseTolerance;
