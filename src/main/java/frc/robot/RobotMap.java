@@ -41,7 +41,7 @@ public class RobotMap {
     drivetrainStateMachine.setCurrentState(DrivetrainStateMachine.teleopState);
     scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);
 
-    PursuiterTester.allTest();
+    PursuiterTester.initTest();
   }
 
   public static void subsystemPeriodics() {

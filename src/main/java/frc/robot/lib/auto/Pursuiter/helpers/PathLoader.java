@@ -38,7 +38,8 @@ public class PathLoader {
                 return points;
             }
 
-            for (JsonNode node : nodes) {
+            for (int i = 0; i < nodes.size(); i++) {
+                JsonNode node = nodes.get(i);
                 double x = node.path("x").asDouble();
                 double y = node.path("y").asDouble();
                 double heading = node.path("heading").asDouble();
@@ -50,7 +51,8 @@ public class PathLoader {
 
                 PathPoint point = new PathPoint(
                     new Pose2d(x, y, Rotation2d.fromRadians(heading)), 
-                    new PointConstraints(vx, vy, ax, ay, RadiansPerSecond.of(omega))
+                    new PointConstraints(vx, vy, ax, ay, RadiansPerSecond.of(omega)),
+                    i
                 );
 
                 points.add(point);

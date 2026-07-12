@@ -7,8 +7,6 @@ import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
-import choreo.auto.AutoFactory;
-
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveModule;
@@ -116,10 +114,6 @@ public class Swerve {
     public static void simulationPeriodic() {
         SwerveObjects.Swerve.updateSimState(0.005, RobotController.getBatteryVoltage());
         SwerveObjects.Swerve.simulationPeriodic();  
-    }
-
-    public static AutoFactory createAutoFactory() {
-        return SwerveObjects.Swerve.createAutoFactory();
     }
 
     public static CommandSwerveDrivetrain getGeneratedDrive() {
@@ -311,6 +305,14 @@ public class Swerve {
                 .withRotationalRate(omegaSlewed * SwerveConstants.MaxAngularRate));
     }
 
+    public static void setChassisSpeeds(ChassisSpeeds speeds) {
+        SwerveObjects.Swerve.setControl(
+            SwerveObjects.teleopDrive
+                .withVelocityX(speeds.vxMetersPerSecond)
+                .withVelocityY(speeds.vyMetersPerSecond)
+                .withRotationalRate(speeds.omegaRadiansPerSecond));
+    }
+
     public static void maxVoltForward() {
         SwerveObjects.Swerve.setControl(
             SwerveObjects.teleopDrive.withVelocityX(0)
@@ -318,7 +320,7 @@ public class Swerve {
                 .withRotationalRate(0));
     }
 
-    private static void automaticDrive(double velocity, Rotation2d heading, double omega) {
+    public static void automaticDrive(double velocity, Rotation2d heading, double omega) {
         double vx = velocity * heading.getCos();
         double vy = velocity * heading.getSin();
 
