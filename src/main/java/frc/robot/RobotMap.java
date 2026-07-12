@@ -4,7 +4,6 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.lib.auto.AutoSubsystem;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Limelight;
 import frc.robot.subsystems.interfaces.Shooter;
@@ -15,7 +14,6 @@ import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
 public class RobotMap {
 
   private static final PowerDistribution PDP = new PowerDistribution();
-  private static final AutoSubsystem autoSubsystem = new AutoSubsystem(Swerve.createAutoFactory());
 
   /* state machine instances */
   public static final ScoringStateMachine scoringStateMachine = new ScoringStateMachine();
@@ -41,8 +39,6 @@ public class RobotMap {
 
     drivetrainStateMachine.setCurrentState(DrivetrainStateMachine.teleopState);
     scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);;
-
-    scheduleAuto();
   }
 
   public static void subsystemPeriodics() {
@@ -54,10 +50,6 @@ public class RobotMap {
     }
 
     Logger.recordOutput("PDP TOTAL", PDP.getTotalCurrent());
-  }
-
-  public static void scheduleAuto() {
-    autoSubsystem.scheduleAuto();
   }
 }
 
