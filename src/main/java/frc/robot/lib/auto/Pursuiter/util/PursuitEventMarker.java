@@ -18,6 +18,7 @@ public class PursuitEventMarker {
 
     public PursuitEventMarker (String name, Command command) {
         this(command, () -> true);    
+        this.name = name;
     }
 
     public void bindCommand(Command command) {

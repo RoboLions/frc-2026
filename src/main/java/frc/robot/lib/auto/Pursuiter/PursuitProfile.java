@@ -9,4 +9,5 @@ public final record PursuitProfile (
     Distance lookAheadDistance,
     PIDController translationController,
     PIDController endPointController,
-    PIDController headingController)  {}
+    PIDController headingController,
+    boolean logToggle)  {}

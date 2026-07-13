@@ -79,7 +79,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousPeriodic() {
     CommandScheduler.getInstance().run(); // we will always need this in auto, command schedulers are not built into the LoggedRobot class, but it is for TimedRobot.
-    AutoSubsystem.autoPeriodic();
   }
 
   /** This function is called once when teleop is enabled. */

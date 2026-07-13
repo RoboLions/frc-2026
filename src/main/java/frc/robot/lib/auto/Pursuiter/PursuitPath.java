@@ -8,14 +8,17 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.lib.auto.Pursuiter.helpers.FastMath;
@@ -23,6 +26,7 @@ import frc.robot.lib.auto.Pursuiter.helpers.PathLoader;
 import frc.robot.lib.auto.Pursuiter.helpers.PoseTolerance;
 import frc.robot.lib.auto.Pursuiter.util.PursuitEventMarker;
 import frc.robot.lib.auto.Pursuiter.util.PathPoint;
+import frc.robot.lib.auto.Pursuiter.util.PointConstraints;
 
 public class PursuitPath {
     private final PoseTolerance poseTolerance;
@@ -32,10 +36,12 @@ public class PursuitPath {
     private PIDController endPointController = new PIDController(3.0, 0, 0);
     private PIDController headingController = new PIDController(1.0, 0, 0);
     private PathPoint currentPoint;
+    private List<PathPoint> eventPoints;
     private PathPoint lookAheadPoint;
     private boolean isFinished = false;
     private final String trajectoryName;
     private PursuitPath nextPath;
+    private boolean logToggle = true;
     
     /**
      * 
@@ -58,6 +64,7 @@ public class PursuitPath {
         this.lookAheadPoint = pathPoints.get(0);
         headingController.enableContinuousInput(-Math.PI, Math.PI);
         this.trajectoryName = trajectoryName;
+        this.eventPoints = this.getEventPoints();
     }
 
     public PursuitPath(
@@ -80,6 +87,7 @@ public class PursuitPath {
         this.lookAheadPoint = pathPoints.get(0);
         headingController.enableContinuousInput(-Math.PI, Math.PI);
         this.trajectoryName = trajectoryName;
+        this.eventPoints = this.getEventPoints();
     }
 
     public PursuitPath(PursuitProfile profile, String trajectoryName) 
@@ -95,18 +103,28 @@ public class PursuitPath {
         this.lookAheadPoint = pathPoints.get(0);
         headingController.enableContinuousInput(-Math.PI, Math.PI);
         this.trajectoryName = trajectoryName;
+        this.eventPoints = this.getEventPoints();
+
+        if (logToggle) {exampleLog();}
     }
 
-    public ChassisSpeeds update(Supplier<Pose2d> poseSupplier) {
-        if (isFinished) {
-            return new ChassisSpeeds();
-        }
+    public void update(Supplier<Pose2d> poseSupplier, Consumer<ChassisSpeeds> outputConsumer) {
+        if (isFinished) {return;}
 
         Pose2d robotPose2d = poseSupplier.get();
 
         this.currentPoint = 
             FastMath.findClosestPoint(robotPose2d, pathPoints, currentPoint.pointIndex(), lookAheadPoint.pointIndex());
         List<PathPoint> remainingPoints = pathPoints.subList(currentPoint.pointIndex(), pathPoints.size());
+
+        for (int i = 0; i < eventPoints.size(); i++) {
+            PathPoint event = eventPoints.get(i);
+            if (!event.eventMarker().hasTriggered() && currentPoint.pointIndex() >= event.pointIndex()) {
+                PathPoint removed = this.eventPoints.remove(0);
+                System.out.println("Scheduled Binded-Command " + removed.eventMarker().getName() + " on path: " + trajectoryName);
+                CommandScheduler.getInstance().schedule(event.eventMarker().getCommand());
+            }
+        }
 
         this.lookAheadPoint = FastMath.closestPointWithThreshold((
             (float) lookAhead.magnitude()), 
@@ -116,7 +134,7 @@ public class PursuitPath {
         if (currentPoint.pointIndex() >= pathPoints.get(pathPoints.size() - 1).pointIndex() && 
             poseTolerance.inError(currentPoint, robotPose2d)) {
             this.isFinished = true;
-            return new ChassisSpeeds();
+            return;
         }
         
         headingController.reset();
@@ -124,8 +142,6 @@ public class PursuitPath {
         double vx = lookAheadPoint.constraints().vx();
         double vy = lookAheadPoint.constraints().vy();
         double velocity = Math.hypot(vx, vy);
-
-        Logger.recordOutput("Pursuiter/ " + trajectoryName + "/Total Velocity Pursuit Component", velocity);
 
         double dx = lookAheadPoint.point().getX() - robotPose2d.getX();
         double dy = lookAheadPoint.point().getY() - robotPose2d.getY();
@@ -145,7 +161,9 @@ public class PursuitPath {
         double fx = (velocity + pidAdjust) * heading.getCos();
         double fy = (velocity + pidAdjust) * heading.getSin();
 
-        return new ChassisSpeeds(fx, fy, omega);
+        outputConsumer.accept(new ChassisSpeeds(fx, fy, omega));
+
+        if (logToggle) {exampleLog();}
     }
 
     public PathPoint getLookAhead() {
@@ -195,6 +213,7 @@ public class PursuitPath {
         if (this.pathPoints == null || pathPoints.isEmpty()) {return;}
         this.currentPoint = pathPoints.get(0);
         this.lookAheadPoint = pathPoints.get(0);
+        this.eventPoints = this.getEventPoints();
     }
 
     /**
@@ -211,7 +230,7 @@ public class PursuitPath {
     {
         Command currentSegmentCommand = new FunctionalCommand(
             () -> this.resetPathState(),
-            () -> outputConsumer.accept(this.update(poseSupplier)),
+            () -> this.update(poseSupplier, outputConsumer),
             interrupted -> outputConsumer.accept(new ChassisSpeeds()),
             () -> this.isFinished(),
             requirements
@@ -236,7 +255,7 @@ public class PursuitPath {
     public Command toCommand(Supplier<Pose2d> poseSupplier, Consumer<ChassisSpeeds> outputConsumer) {
         Command currentSegmentCommand = new FunctionalCommand(
             () -> this.resetPathState(),
-            () -> outputConsumer.accept(this.update(poseSupplier)),
+            () -> this.update(poseSupplier, outputConsumer),
             interrupted -> outputConsumer.accept(new ChassisSpeeds()),
             () -> this.isFinished()
         );
@@ -248,6 +267,12 @@ public class PursuitPath {
         return currentSegmentCommand.andThen(
             this.nextPath.toCommand(poseSupplier, outputConsumer)
         );
+    }
+
+    public void exampleLog() {
+        Logger.recordOutput("Pursuiter/ exampleLog/ current-trajectory", getVisualizedPath(7));
+        Logger.recordOutput("Pursuiter/ exampleLog/ current-point", this.currentPoint);
+        Logger.recordOutput("Pursuiter/ exampleLog/ current-lookahead", this.lookAheadPoint);
     }
 
     public String getName() {
@@ -281,5 +306,61 @@ public class PursuitPath {
         }   
         Pose2d[] poseArr = poses.toArray(new Pose2d[0]);
         return poseArr;
+    }
+
+    public void bindCommand(String commandName, Command command) {
+        for (int i = 0; i < eventPoints.size(); i++) {
+            if (commandName.equals(eventPoints.get(i).eventMarker().getName())) {
+                eventPoints.get(i).eventMarker().bindCommand(command);
+            }
+        }
+    }
+    
+    public void flipPath(boolean flipX, boolean flipY, Translation2d fieldCenter) {
+        if (this.pathPoints.isEmpty() || this.pathPoints == null) {return;}
+        List<PathPoint> flippedPoints = new ArrayList<>(); 
+
+        for (PathPoint point : pathPoints) {
+            Pose2d pose = point.point();
+
+            double newX = flipX ? (2 * fieldCenter.getX()) - pose.getX(): pose.getX();
+            double newY = flipY ? (2 * fieldCenter.getY()) - pose.getY(): pose.getY();
+            double newvX = flipX ? -point.constraints().vx() : point.constraints().vx();
+            double newvY = flipX ? -point.constraints().vy() : point.constraints().vy();
+            double newaX = flipX ? -point.constraints().ax() : point.constraints().ax();
+            double newaY = flipX ? -point.constraints().ay() : point.constraints().ay();
+            
+            double newRadians = pose.getRotation().getRadians();
+            if (flipX && flipY) {
+                newRadians += Math.PI;
+            } else if (flipX) {
+                newRadians = Math.PI - newRadians;
+            } else if (flipY) {
+                newRadians = -newRadians;
+            }
+            
+            Rotation2d newRotation = new Rotation2d(newRadians);
+            Pose2d newPose = new Pose2d(newX, newY, newRotation);
+
+            boolean invertsRotation = flipX ^ flipY; 
+            double newOmega = 
+                invertsRotation ? -point.constraints().omega().magnitude() : point.constraints().omega().magnitude();
+
+            PathPoint newPt = new PathPoint(
+                newPose, 
+                new PointConstraints(newvX, newvY, newaX, newaY, RadiansPerSecond.of(newOmega)), 
+                point.pointIndex(), 
+                point.eventMarker(), 
+                point.timeStamp());
+
+            flippedPoints.add(newPt);
+        }   
+        
+        this.pathPoints = flippedPoints;
+        this.resetPathState();
+
+        if (this.nextPath != null) {
+            this.nextPath.flipPath(flipX, flipY, fieldCenter);
+        }
     }
 }

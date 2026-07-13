@@ -64,8 +64,8 @@ public class PathLoader {
             }
 
             for (JsonNode event : eventNodes) {
+                String name = event.path("name").asText("N/A");
                 double t = event.path("from").path("targetTimestamp").asDouble();
-                String name = event.path("name").asText();
                 int low = 0;
                 int high = points.size() - 1;
 
