@@ -62,9 +62,14 @@ public class PursuitAutoFactory {
 
     public Command followPath(String trajectoryName, boolean flipX, boolean flipY, Translation2d centerPoint) {
         PursuitPath path = new PursuitPath(pursuitProfile, trajectoryName);
-
         path.flipPath(flipX, flipY, centerPoint);
+        bindFactoryCommands(path);
+        return path.toCommand(poseSupplier, outputConsumer);
+    }
 
+    public Command followPath(String trajectoryName, boolean flipX, boolean flipY, Translation2d centerPoint, PursuitProfile profile) {
+        PursuitPath path = new PursuitPath(profile, trajectoryName);
+        path.flipPath(flipX, flipY, centerPoint);
         bindFactoryCommands(path);
         return path.toCommand(poseSupplier, outputConsumer);
     }
