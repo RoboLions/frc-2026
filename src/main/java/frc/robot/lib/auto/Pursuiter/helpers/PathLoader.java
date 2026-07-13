@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import frc.robot.lib.auto.Pursuiter.util.PursuitEventMarker;
 import frc.robot.lib.auto.Pursuiter.util.PathPoint;
 import frc.robot.lib.auto.Pursuiter.util.PointConstraints;
 
@@ -32,6 +33,7 @@ public class PathLoader {
 
             JsonNode root = mapper.readTree(traj);
             JsonNode nodes = root.path("trajectory").path("samples");
+            JsonNode eventNodes = root.path("events");
 
             if (nodes.isMissingNode() || !nodes.isArray()) {
                 DriverStation.reportError("Choreo file structure is invalid: " + traj.getName(), false);
@@ -40,6 +42,7 @@ public class PathLoader {
 
             for (int i = 0; i < nodes.size(); i++) {
                 JsonNode node = nodes.get(i);
+                double t = node.path("t").asDouble();
                 double x = node.path("x").asDouble();
                 double y = node.path("y").asDouble();
                 double heading = node.path("heading").asDouble();
@@ -52,10 +55,39 @@ public class PathLoader {
                 PathPoint point = new PathPoint(
                     new Pose2d(x, y, Rotation2d.fromRadians(heading)), 
                     new PointConstraints(vx, vy, ax, ay, RadiansPerSecond.of(omega)),
-                    i
+                    i,
+                    null,
+                    t
                 );
 
                 points.add(point);
+            }
+
+            for (JsonNode event : eventNodes) {
+                double t = event.path("from").path("targetTimestamp").asDouble();
+                String name = event.path("name").asText();
+                int low = 0;
+                int high = points.size() - 1;
+
+                while (low <= high) {
+                    int mid =  (low + high) / 2;
+                    PathPoint midPt = points.get(mid);
+
+                    if (midPt.timeStamp() == t) {
+                        PathPoint eventPoint = new PathPoint(
+                            midPt.point(), 
+                            midPt.constraints(), 
+                            midPt.pointIndex(), 
+                            new PursuitEventMarker(name, null), 
+                            midPt.timeStamp());
+                        points.set(mid, eventPoint);
+                        break;
+                    } else if (midPt.timeStamp() < t) {
+                        low = mid + 1;
+                    } else {
+                        high = mid - 1;
+                    }
+                }
             }
         } catch (IOException e) {
             DriverStation.reportError("Failed to load Choreo trajectory into Pure-Pursuit!", e.getStackTrace());

@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.lib.auto.Pursuiter.helpers.FastMath;
 import frc.robot.lib.auto.Pursuiter.helpers.PathLoader;
 import frc.robot.lib.auto.Pursuiter.helpers.PoseTolerance;
+import frc.robot.lib.auto.Pursuiter.util.PursuitEventMarker;
 import frc.robot.lib.auto.Pursuiter.util.PathPoint;
 
 public class PursuitPath {
@@ -247,5 +248,38 @@ public class PursuitPath {
         return currentSegmentCommand.andThen(
             this.nextPath.toCommand(poseSupplier, outputConsumer)
         );
+    }
+
+    public String getName() {
+        return this.trajectoryName;
+    }
+
+    public List<PursuitEventMarker> getEventMarkers() {
+        List<PursuitEventMarker> eventMarkers = new ArrayList<PursuitEventMarker>();
+        for (PathPoint pt : pathPoints) {
+            if (pt.eventMarker() != null) {
+                eventMarkers.add(pt.eventMarker());
+            }
+        }   return eventMarkers;
+    }
+
+    public List<PathPoint> getEventPoints() {
+        List<PathPoint> pts = new ArrayList<PathPoint>();
+        for (PathPoint pt : pathPoints) {
+            if (pt.eventMarker() != null) {
+                pts.add(pt);
+            }
+        }   return pts;
+    }
+
+    public Pose2d[] getEventPoses() {
+        List<Pose2d> poses = new ArrayList<Pose2d>();
+        for (PathPoint pt : pathPoints) {
+            if (pt.eventMarker() != null) {
+                poses.add(pt.point());
+            }
+        }   
+        Pose2d[] poseArr = poses.toArray(new Pose2d[0]);
+        return poseArr;
     }
 }
