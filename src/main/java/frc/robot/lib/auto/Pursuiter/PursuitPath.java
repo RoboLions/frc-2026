@@ -134,6 +134,7 @@ public class PursuitPath {
         if (currentPoint.pointIndex() >= pathPoints.get(pathPoints.size() - 1).pointIndex() && 
             poseTolerance.inError(currentPoint, robotPose2d)) {
             this.isFinished = true;
+            System.out.println("Concluded pursuit-path: " + trajectoryName);
             return;
         }
         
