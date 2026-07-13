@@ -81,9 +81,23 @@ public class PursuitPath {
         this.trajectoryName = trajectoryName;
     }
 
+    public PursuitPath(PursuitProfile profile, String trajectoryName) 
+    {
+        this.poseTolerance = new PoseTolerance(
+            Meters.of(profile.metersTolerance()), Degrees.of(profile.degreesTolerance()));
+        this.lookAhead = profile.lookAheadDistance();
+        this.translationController = profile.translationController();
+        this.endPointController = profile.endPointController();
+        this.headingController = profile.headingController();
+        this.pathPoints = PathLoader.loadSample(trajectoryName);
+        this.currentPoint = pathPoints.get(0);
+        this.lookAheadPoint = pathPoints.get(0);
+        headingController.enableContinuousInput(-Math.PI, Math.PI);
+        this.trajectoryName = trajectoryName;
+    }
+
     public ChassisSpeeds update(Supplier<Pose2d> poseSupplier) {
         if (isFinished) {
-            System.out.println("Finished traj, tried to repeat!");
             return new ChassisSpeeds();
         }
 
@@ -101,7 +115,6 @@ public class PursuitPath {
         if (currentPoint.pointIndex() >= pathPoints.get(pathPoints.size() - 1).pointIndex() && 
             poseTolerance.inError(currentPoint, robotPose2d)) {
             this.isFinished = true;
-            System.out.println("Finished Choreo, now marking done.");
             return new ChassisSpeeds();
         }
         

@@ -1,0 +1,12 @@
+package frc.robot.lib.auto.Pursuiter;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.measure.Distance;
+
+public final record PursuitProfile (
+    double metersTolerance,
+    double degreesTolerance,
+    Distance lookAheadDistance,
+    PIDController translationController,
+    PIDController endPointController,
+    PIDController headingController)  {}

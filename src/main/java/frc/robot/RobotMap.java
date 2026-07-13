@@ -4,7 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.lib.auto.Pursuiter.util.PursuiterTester;
+import frc.robot.lib.auto.AutoSubsystem;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Limelight;
 import frc.robot.subsystems.interfaces.Shooter;
@@ -41,7 +41,7 @@ public class RobotMap {
     drivetrainStateMachine.setCurrentState(DrivetrainStateMachine.teleopState);
     scoringStateMachine.setCurrentState(ScoringStateMachine.idleState);
 
-    PursuiterTester.initTest();
+    AutoSubsystem.init();
   }
 
   public static void subsystemPeriodics() {

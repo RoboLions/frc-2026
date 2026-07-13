@@ -14,7 +14,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.lib.auto.Pursuiter.util.PursuiterTester;
+import frc.robot.lib.auto.AutoSubsystem;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 import frc.robot.subsystems.statemachines.drivetrain.DrivetrainStateMachine;
 import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
@@ -72,14 +72,14 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
     CommandScheduler.getInstance().run(); // we will always need this in auto, command schedulers are not built into the LoggedRobot class, but it is for TimedRobot.
-    PursuiterTester.autoTestInit();
+    AutoSubsystem.autoInit();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
     CommandScheduler.getInstance().run(); // we will always need this in auto, command schedulers are not built into the LoggedRobot class, but it is for TimedRobot.
-    PursuiterTester.autoTestPeriodic();
+    AutoSubsystem.autoPeriodic();
   }
 
   /** This function is called once when teleop is enabled. */
