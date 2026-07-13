@@ -15,15 +15,15 @@ public class FastMath {
      * @param points to compare
      * @return the closest point without being within the minimum distance.
      */
-    public static PathPoint closestPointWithThreshold(float minRequiredDist, Pose2d curentPose, List<PathPoint> points) {
+    public static PathPoint closestPointWithThreshold(float minRequiredDist, PathPoint currPoint, List<PathPoint> points) {
         if (points == null || points.isEmpty()) return null;
 
-        PathPoint closest = points.get(0);
+        PathPoint closest = points.get(points.size() - 1);
         float minSqrDist = Float.MAX_VALUE;
         float minRequiredSqrDist = minRequiredDist * minRequiredDist;
 
-        float currX = (float) curentPose.getX();
-        float currY = (float) curentPose.getY();
+        float currX = (float) currPoint.point().getX();
+        float currY = (float) currPoint.point().getY();
 
         for (int i = 0; i < points.size(); i++) {
             PathPoint p = points.get(i);
@@ -35,32 +35,7 @@ public class FastMath {
                 if (squaredDist < minSqrDist && squaredDist >= minRequiredSqrDist) {
                     minSqrDist = squaredDist;
                     closest = p;
-                }
-            }
-
-        return closest;
-    }
-
-    public static PathPoint closestPointWithThreshold(float minRequiredDist, PathPoint curentPose, List<PathPoint> points) {
-        if (points == null || points.isEmpty()) return null;
-
-        PathPoint closest = points.get(0);
-        float minSqrDist = Float.MAX_VALUE;
-        float minRequiredSqrDist = minRequiredDist * minRequiredDist;
-
-        float currX = (float) curentPose.point().getX();
-        float currY = (float) curentPose.point().getY();
-
-        for (int i = 0; i < points.size(); i++) {
-            PathPoint p = points.get(i);
-
-            float dx = (float) p.point().getX() - currX;
-            float dy = (float) p.point().getY() - currY;
-            float squaredDist = dx * dx + dy * dy; 
-
-                if (squaredDist < minSqrDist && squaredDist >= minRequiredSqrDist) {
-                    minSqrDist = squaredDist;
-                    closest = p;
+                    return closest;
                 }
             }
 
@@ -72,7 +47,7 @@ public class FastMath {
      * @param curentPose
      * @param points
      */
-    public static PathPoint findClosestPoint(Pose2d curentPose, List<PathPoint> points) {
+    public static PathPoint findClosestPoint(Pose2d curentPose, List<PathPoint> points, int prevCurr, int prevLookAheadIndex) {
         if (points == null || points.isEmpty()) return null;
 
         PathPoint closest = null;
@@ -81,7 +56,9 @@ public class FastMath {
         float currX = (float) curentPose.getX();
         float currY = (float) curentPose.getY();
 
-        for (PathPoint p : points) {
+        List<PathPoint> searchablePts = points.subList(prevCurr, prevLookAheadIndex + 1);
+
+        for (PathPoint p : searchablePts) {
         float dx = (float) p.point().getX() - currX;
         float dy = (float) p.point().getY() - currY;
         float squaredDist = dx * dx + dy * dy; 

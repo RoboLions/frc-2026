@@ -305,12 +305,9 @@ public class Swerve {
                 .withRotationalRate(omegaSlewed * SwerveConstants.MaxAngularRate));
     }
 
-    public static void setChassisSpeeds(ChassisSpeeds speeds) {
+    public static void setFieldChassisSpeeds(ChassisSpeeds speeds) {
         SwerveObjects.Swerve.setControl(
-            SwerveObjects.teleopDrive
-                .withVelocityX(speeds.vxMetersPerSecond)
-                .withVelocityY(speeds.vyMetersPerSecond)
-                .withRotationalRate(speeds.omegaRadiansPerSecond));
+            new SwerveRequest.ApplyFieldSpeeds().withSpeeds(speeds));
     }
 
     public static void maxVoltForward() {
