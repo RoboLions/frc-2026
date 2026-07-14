@@ -18,7 +18,7 @@ public class PursuitAutoFactory {
   private final PursuitProfile pursuitProfile;
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-  private final Map<String, Command> eventMap = new HashMap<>();
+  private final Map<String, Command> eventMap = new HashMap<>(); //TODO: bind booleanSuppliers
 
   public PursuitAutoFactory(
       Supplier<Pose2d> poseSupplier,

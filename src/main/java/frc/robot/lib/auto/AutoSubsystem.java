@@ -1,9 +1,6 @@
 package frc.robot.lib.auto;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -22,7 +19,7 @@ public class AutoSubsystem {
           Units.Meters.of(0.3),
           new PIDController(1.0, 0, 0),
           new PIDController(2.0, 0, 0),
-          new PIDController(10.0, 0, 0),
+          new PIDController(5.0, 0, 0),
           true);
   private static PursuitAutoFactory autoFactory =
       new PursuitAutoFactory(Swerve::getPose, Swerve::setFieldChassisSpeeds, profile);
@@ -39,7 +36,6 @@ public class AutoSubsystem {
   }
 
   public static void autoInit() {
-    Swerve.resetPose(new Pose2d(new Translation2d(15, 0), new Rotation2d()));
     CommandScheduler.getInstance().schedule(autoFactory.getSelectedAuto());
   }
 

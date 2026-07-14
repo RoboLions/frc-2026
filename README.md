@@ -10,6 +10,7 @@ PursuitAutoFactory should be used to initialize Choreo's .traj files you have cr
 - Flip paths on both the X and Y axies about a centerpoint using 'followPath'.
 - Log the current path trajectory for aura points (enabled via 'PursuitProfile'). You are encouraged to tinker around with the logging of this library as you see fit.
 - Accept a pose supplier, reset odometry function, and a 'PursuitProfile'. More info on the 'PursuitProfile' class below.
+- Includes an SendableChooser if you wish to register autos with this factory.
 
 ### PursuitProfile
 PursuitProfile is used to inform the PursuitAutoFactory of constraints and PIDs. You can:
@@ -18,3 +19,17 @@ PursuitProfile is used to inform the PursuitAutoFactory of constraints and PIDs.
 - PIDControllers to guide rotation and translational correction mid path.
 - A seperate PIDController only used at the end of the path to help the path finish within tolerance. Profiled Pure Pursuit controllers can struggle with ending at the specified endpoint accurately because of profiled speeds at the end of the path being much lower than in the middle path. This PID Controller is meant to help with that.
 - A toggle for the default logging included in the auto path.
+
+## Quick Start
+### 1. Define your Profile
+'''java
+PursuitProfile highPrecisionProfile = new PursuitProfile(
+    0.05,                         // 5 cm translation tolerance
+    2.0,                          // 2 degrees rotation tolerance
+    Meters.of(0.5),               // 0.5 meter look-ahead distance
+    new PIDController(0.5, 0, 0), // Mid-path translation PID
+    new PIDController(3.0, 0, 0), // Endpoint anchoring PID
+    new PIDController(1.5, 0, 0), // Heading PID
+    true                          // Enable telemetry logging
+);
+'''
