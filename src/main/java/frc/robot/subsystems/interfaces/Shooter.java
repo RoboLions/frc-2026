@@ -95,7 +95,10 @@ public class Shooter {
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
             .withUpdateFreqHz(100));
   }
+  public static void setshot(){
+    setShootSpeed(38);
 
+ }
   public static void interpolateAndShoot(double currentDistance) {
     double velocity = getInterpolatedVelocity(currentDistance);
     setShootSpeed(velocity);

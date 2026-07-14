@@ -15,13 +15,13 @@ public class TeleopState extends State {
                   return RobotMap.driverController.getBButtonPressed();
                 },
                 DrivetrainStateMachine.teleopState));  
-        addTransition(
-            new Transition(
-                () -> {
-                  return RobotMap.driverController.getLeftTriggerAxis() > 0.25
-                    || RobotMap.scoringStateMachine.getCurrentState().equals(ScoringStateMachine.cycleState);
-                },
-                DrivetrainStateMachine.alignState));  
+        // addTransition(
+            // new Transition(
+            //     () -> {
+            //       return RobotMap.driverController.getLeftTriggerAxis() > 0.25
+            //         || RobotMap.scoringStateMachine.getCurrentState().equals(ScoringStateMachine.cycleState);
+            //     },
+            //     DrivetrainStateMachine.alignState));  
     }
 
     @Override
