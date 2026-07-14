@@ -21,15 +21,15 @@ PursuitProfile is used to inform the PursuitAutoFactory of constraints and PIDs.
 - A toggle for the default logging included in the auto path.
 
 ## Quick Start
-### 1. Define your Profile
+### 1. Create a PursuitProfile
 ```java
-PursuitProfile highPrecisionProfile = new PursuitProfile(
-    0.05,                         // 5 cm translation tolerance
-    2.0,                          // 2 degrees rotation tolerance
-    Meters.of(0.5),               // 0.5 meter look-ahead distance
-    new PIDController(0.5, 0, 0), // Mid-path translation PID
-    new PIDController(3.0, 0, 0), // Endpoint anchoring PID
-    new PIDController(1.5, 0, 0), // Heading PID
-    true                          // Enable telemetry logging
-);
+  private static PursuitProfile profile =
+      new PursuitProfile(
+          Units.Meters.of(0.1),
+          360,
+          Units.Meters.of(0.3),
+          new PIDController(1.0, 0, 0),
+          new PIDController(2.0, 0, 0),
+          new PIDController(5.0, 0, 0),
+          true);
 ```
