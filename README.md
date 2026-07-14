@@ -25,11 +25,11 @@ PursuitProfile is used to inform the PursuitAutoFactory of constraints and PIDs.
 ```java
   private static PursuitProfile profile =
       new PursuitProfile(
-          Units.Meters.of(0.1),
-          360,
-          Units.Meters.of(0.3),
-          new PIDController(1.0, 0, 0),
-          new PIDController(2.0, 0, 0),
-          new PIDController(5.0, 0, 0),
-          true);
+          Units.Meters.of(0.1),         // 10cm Endpoint Tolerance
+          360,                          // 360deg Endpoint Tolerance
+          Units.Meters.of(0.3),         // Look Ahead Distance
+          new PIDController(1.0, 0, 0), // Path Translational Controller
+          new PIDController(2.0, 0, 0), // Endpoint Translational Controller
+          new PIDController(5.0, 0, 0), // Path Rotational Controller
+          true);                        // Enable logging method
 ```
