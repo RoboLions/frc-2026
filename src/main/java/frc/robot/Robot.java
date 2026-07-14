@@ -4,13 +4,6 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.LogFileUtil;
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -18,6 +11,12 @@ import frc.robot.lib.auto.AutoSubsystem;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 import frc.robot.subsystems.statemachines.drivetrain.DrivetrainStateMachine;
 import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -37,12 +36,17 @@ public class Robot extends LoggedRobot {
       Logger.addDataReceiver(new NT4Publisher());
     } else {
       setUseTiming(false); // Run as fast as possible
-      String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+      String logPath =
+          LogFileUtil
+              .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
       Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-      Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+      Logger.addDataReceiver(
+          new WPILOGWriter(
+              LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
     }
 
-    Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
+    Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may
+    // be added.
 
     RobotMap.init();
   }
@@ -71,14 +75,18 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void autonomousInit() {
-    CommandScheduler.getInstance().run(); // we will always need this in auto, command schedulers are not built into the LoggedRobot class, but it is for TimedRobot.
+    CommandScheduler.getInstance()
+        .run(); // we will always need this in auto, command schedulers are not built into the
+    // LoggedRobot class, but it is for TimedRobot.
     AutoSubsystem.autoInit();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    CommandScheduler.getInstance().run(); // we will always need this in auto, command schedulers are not built into the LoggedRobot class, but it is for TimedRobot.
+    CommandScheduler.getInstance()
+        .run(); // we will always need this in auto, command schedulers are not built into the
+    // LoggedRobot class, but it is for TimedRobot.
   }
 
   /** This function is called once when teleop is enabled. */
@@ -95,7 +103,7 @@ public class Robot extends LoggedRobot {
     RobotMap.scoringStateMachine.setNextState();
 
     double gameTime = Timer.getMatchTime();
-    
+
     if (130 < gameTime && gameTime < 140) {
       SmartDashboard.putString("SHIFT COLOR", "TRANSITION");
       SmartDashboard.putNumber("SHIFT TIMER", (gameTime - 130));

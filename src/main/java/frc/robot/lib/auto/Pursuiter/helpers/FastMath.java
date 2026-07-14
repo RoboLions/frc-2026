@@ -1,74 +1,77 @@
 package frc.robot.lib.auto.Pursuiter.helpers;
 
-import java.util.List;
-
-
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.lib.auto.Pursuiter.util.PathPoint;
+import java.util.List;
 
 public class FastMath {
-    
-    /** Inside float math, be careful of overflow
-     * 
-     * @param minRequiredDist requires that the minimum distance to a point is beyond this distance in meters.
-     * @param curentPose the current robot position
-     * @param points to compare
-     * @return the closest point without being within the minimum distance.
-     */
-    public static PathPoint closestPointWithThreshold(float minRequiredDist, PathPoint currPoint, List<PathPoint> points) {
-        if (points == null || points.isEmpty()) return null;
 
-        PathPoint closest = points.get(points.size() - 1);
-        float minSqrDist = Float.MAX_VALUE;
-        float minRequiredSqrDist = minRequiredDist * minRequiredDist;
+  /**
+   * Inside float math, be careful of overflow
+   *
+   * @param minRequiredDist requires that the minimum distance to a point is beyond this distance in
+   *     meters.
+   * @param curentPose the current robot position
+   * @param points to compare
+   * @return the closest point without being within the minimum distance.
+   */
+  public static PathPoint closestPointWithThreshold(
+      float minRequiredDist, PathPoint currPoint, List<PathPoint> points) {
+    if (points == null || points.isEmpty()) return null;
 
-        float currX = (float) currPoint.point().getX();
-        float currY = (float) currPoint.point().getY();
+    PathPoint closest = points.get(points.size() - 1);
+    float minSqrDist = Float.MAX_VALUE;
+    float minRequiredSqrDist = minRequiredDist * minRequiredDist;
 
-        for (int i = 0; i < points.size(); i++) {
-            PathPoint p = points.get(i);
+    float currX = (float) currPoint.point().getX();
+    float currY = (float) currPoint.point().getY();
 
-            float dx = (float) p.point().getX() - currX;
-            float dy = (float) p.point().getY() - currY;
-            float squaredDist = dx * dx + dy * dy; 
+    for (int i = 0; i < points.size(); i++) {
+      PathPoint p = points.get(i);
 
-                if (squaredDist < minSqrDist && squaredDist >= minRequiredSqrDist) {
-                    minSqrDist = squaredDist;
-                    closest = p;
-                    return closest;
-                }
-            }
+      float dx = (float) p.point().getX() - currX;
+      float dy = (float) p.point().getY() - currY;
+      float squaredDist = dx * dx + dy * dy;
 
+      if (squaredDist < minSqrDist && squaredDist >= minRequiredSqrDist) {
+        minSqrDist = squaredDist;
+        closest = p;
         return closest;
+      }
     }
 
-    /** Finds the closest PathPoint given a list of PathPoints.
-     * 
-     * @param curentPose
-     * @param points
-     */
-    public static PathPoint findClosestPoint(Pose2d curentPose, List<PathPoint> points, int prevCurr, int prevLookAheadIndex) {
-        if (points == null || points.isEmpty()) return null;
+    return closest;
+  }
 
-        PathPoint closest = null;
-        float minSqrDist = Float.MAX_VALUE;
+  /**
+   * Finds the closest PathPoint given a list of PathPoints.
+   *
+   * @param curentPose
+   * @param points
+   */
+  public static PathPoint findClosestPoint(
+      Pose2d curentPose, List<PathPoint> points, int prevCurr, int prevLookAheadIndex) {
+    if (points == null || points.isEmpty()) return null;
 
-        float currX = (float) curentPose.getX();
-        float currY = (float) curentPose.getY();
+    PathPoint closest = null;
+    float minSqrDist = Float.MAX_VALUE;
 
-        List<PathPoint> searchablePts = points.subList(prevCurr, prevLookAheadIndex + 1);
+    float currX = (float) curentPose.getX();
+    float currY = (float) curentPose.getY();
 
-        for (PathPoint p : searchablePts) {
-        float dx = (float) p.point().getX() - currX;
-        float dy = (float) p.point().getY() - currY;
-        float squaredDist = dx * dx + dy * dy; 
+    List<PathPoint> searchablePts = points.subList(prevCurr, prevLookAheadIndex + 1);
 
-            if (squaredDist < minSqrDist) {
-                minSqrDist = squaredDist;
-                closest = p;
-            }
-        }
+    for (PathPoint p : searchablePts) {
+      float dx = (float) p.point().getX() - currX;
+      float dy = (float) p.point().getY() - currY;
+      float squaredDist = dx * dx + dy * dy;
 
-        return closest;
+      if (squaredDist < minSqrDist) {
+        minSqrDist = squaredDist;
+        closest = p;
+      }
     }
+
+    return closest;
+  }
 }

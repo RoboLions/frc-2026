@@ -7,17 +7,17 @@ package frc.robot.subsystems.statemachines.scoring;
 import frc.robot.lib.statemachine.StateMachine;
 
 /** Add your docs here. */
-public class ScoringStateMachine extends StateMachine{
+public class ScoringStateMachine extends StateMachine {
 
-    public static IdleState idleState = new IdleState();
-    public static IntakeState intakeState = new IntakeState();
-    public static OuttakeState outtakeState = new OuttakeState();
-    public static CycleState cycleState = new CycleState();
+  public static IdleState idleState = new IdleState();
+  public static IntakeState intakeState = new IntakeState();
+  public static OuttakeState outtakeState = new OuttakeState();
+  public static CycleState cycleState = new CycleState();
 
-    public ScoringStateMachine() {
-        intakeState.build();
-        idleState.build();
-        cycleState.build();
-        outtakeState.build();
-    }
+  public ScoringStateMachine() {
+    intakeState.build();
+    idleState.build();
+    cycleState.build();
+    outtakeState.build();
+  }
 }

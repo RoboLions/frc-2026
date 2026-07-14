@@ -1,9 +1,5 @@
 package frc.robot.subsystems.interfaces;
 
-import java.util.ArrayList;
-
-import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
@@ -13,24 +9,26 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants;
+import java.util.ArrayList;
+import org.littletonrobotics.junction.Logger;
 
 public class Shooter {
 
   private static final TalonFX mMasterFlywheelMotor =
       new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_MASTER, "CANexternal");
   private static final TalonFX mFollowerFlywheelMotor1 =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_UPPER_RIGHT, "CANexternal");    
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_UPPER_RIGHT, "CANexternal");
   private static final TalonFX mFollowerFlywheelMotor2 =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_LOWER_LEFT, "CANexternal");  
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_LOWER_LEFT, "CANexternal");
   private static final TalonFX mFollowerFlywheelMotor3 =
-      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_LOWER_RIGHT, "CANexternal");  
+      new TalonFX(Constants.CAN_IDS.FLYWHEEL_MOTOR_FOLLOWER_LOWER_RIGHT, "CANexternal");
 
   private static ArrayList<ShotPoint> VELOCITY_LOOKUP_TABLE = new ArrayList<>();
   private static ArrayList<ShotPoint> PASSING_LOOKUP_TABLE = new ArrayList<>();
 
   private static class ShotPoint {
-    double distance; //meters
-    double velocity; //mps
+    double distance; // meters
+    double velocity; // mps
 
     public ShotPoint(double dist, double vel) {
       this.distance = dist;
@@ -44,9 +42,9 @@ public class Shooter {
     VELOCITY_LOOKUP_TABLE.add(new ShotPoint(2.51, 45.0));
     VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.0, 47.0));
     VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.5, 52.0));
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.81, 54)); //B
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.2, 57.0)); //B
-    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.5, 59.0)); //B
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(3.81, 54)); // B
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.2, 57.0)); // B
+    VELOCITY_LOOKUP_TABLE.add(new ShotPoint(4.5, 59.0)); // B
 
     PASSING_LOOKUP_TABLE.add(new ShotPoint(4.0, 40));
     PASSING_LOOKUP_TABLE.add(new ShotPoint(8.5, 70));
@@ -86,11 +84,11 @@ public class Shooter {
     mFollowerFlywheelMotor1.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
             .withUpdateFreqHz(100));
-    
+
     mFollowerFlywheelMotor2.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Aligned)
             .withUpdateFreqHz(100));
-    
+
     mFollowerFlywheelMotor3.setControl(
         new Follower(mMasterFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed)
             .withUpdateFreqHz(100));
@@ -111,58 +109,55 @@ public class Shooter {
     Logger.recordOutput("Shooter/ Passing-Speed (RPS)", velocity);
     Logger.recordOutput("Shooter/ Dist-To-PassTarget (M)", currentDistance);
   }
-  
+
   private static double getInterpolatedVelocity(double currentDistance) {
-      if (VELOCITY_LOOKUP_TABLE.isEmpty()) return 0.0;
+    if (VELOCITY_LOOKUP_TABLE.isEmpty()) return 0.0;
 
-      if (currentDistance <= VELOCITY_LOOKUP_TABLE.get(0).distance) {
-          return VELOCITY_LOOKUP_TABLE.get(0).velocity;
+    if (currentDistance <= VELOCITY_LOOKUP_TABLE.get(0).distance) {
+      return VELOCITY_LOOKUP_TABLE.get(0).velocity;
+    }
+
+    for (int i = 0; i < VELOCITY_LOOKUP_TABLE.size() - 1; i++) {
+      ShotPoint p1 = VELOCITY_LOOKUP_TABLE.get(i);
+      ShotPoint p2 = VELOCITY_LOOKUP_TABLE.get(i + 1);
+
+      if (currentDistance <= p2.distance) {
+        // linear Interpolation formula: y = y1 + ((x - x1) / (x2 - x1)) * (y2 - y1)
+        double t = (currentDistance - p1.distance) / (p2.distance - p1.distance);
+        return p1.velocity + t * (p2.velocity - p1.velocity);
       }
+    }
 
-      for (int i = 0; i < VELOCITY_LOOKUP_TABLE.size() - 1; i++) {
-          ShotPoint p1 = VELOCITY_LOOKUP_TABLE.get(i);
-          ShotPoint p2 = VELOCITY_LOOKUP_TABLE.get(i + 1);
-
-          if (currentDistance <= p2.distance) {
-              //linear Interpolation formula: y = y1 + ((x - x1) / (x2 - x1)) * (y2 - y1)
-              double t = (currentDistance - p1.distance) / (p2.distance - p1.distance);
-              return p1.velocity + t * (p2.velocity - p1.velocity);
-          }
-      }
-
-      return VELOCITY_LOOKUP_TABLE.get(VELOCITY_LOOKUP_TABLE.size() - 1).velocity;
+    return VELOCITY_LOOKUP_TABLE.get(VELOCITY_LOOKUP_TABLE.size() - 1).velocity;
   }
 
   private static double getPassingVelocity(double currentDistance) {
-      if (PASSING_LOOKUP_TABLE.isEmpty()) return 0.0;
+    if (PASSING_LOOKUP_TABLE.isEmpty()) return 0.0;
 
-      if (currentDistance <= PASSING_LOOKUP_TABLE.get(0).distance) {
-          return PASSING_LOOKUP_TABLE.get(0).velocity;
+    if (currentDistance <= PASSING_LOOKUP_TABLE.get(0).distance) {
+      return PASSING_LOOKUP_TABLE.get(0).velocity;
+    }
+
+    for (int i = 0; i < PASSING_LOOKUP_TABLE.size() - 1; i++) {
+      ShotPoint p1 = PASSING_LOOKUP_TABLE.get(i);
+      ShotPoint p2 = PASSING_LOOKUP_TABLE.get(i + 1);
+
+      if (currentDistance <= p2.distance) {
+        // linear Interpolation formula: y = y1 + ((x - x1) / (x2 - x1)) * (y2 - y1)
+        double t = (currentDistance - p1.distance) / (p2.distance - p1.distance);
+        return p1.velocity + t * (p2.velocity - p1.velocity);
       }
+    }
 
-      for (int i = 0; i < PASSING_LOOKUP_TABLE.size() - 1; i++) {
-          ShotPoint p1 = PASSING_LOOKUP_TABLE.get(i);
-          ShotPoint p2 = PASSING_LOOKUP_TABLE.get(i + 1);
-
-          if (currentDistance <= p2.distance) {
-              //linear Interpolation formula: y = y1 + ((x - x1) / (x2 - x1)) * (y2 - y1)
-              double t = (currentDistance - p1.distance) / (p2.distance - p1.distance);
-              return p1.velocity + t * (p2.velocity - p1.velocity);
-          }
-      }
-
-      return PASSING_LOOKUP_TABLE.get(PASSING_LOOKUP_TABLE.size() - 1).velocity;
+    return PASSING_LOOKUP_TABLE.get(PASSING_LOOKUP_TABLE.size() - 1).velocity;
   }
 
   // speed in meters per second
   private static void setShootSpeed(double setSpeed) {
-    mMasterFlywheelMotor.setControl(
-        new VelocityTorqueCurrentFOC(setSpeed)
-            .withUpdateFreqHz(100));
+    mMasterFlywheelMotor.setControl(new VelocityTorqueCurrentFOC(setSpeed).withUpdateFreqHz(100));
   }
 
   public static void idlerShooter() {
-    mMasterFlywheelMotor.setControl(
-        new VoltageOut(0.0).withUpdateFreqHz(20));
+    mMasterFlywheelMotor.setControl(new VoltageOut(0.0).withUpdateFreqHz(20));
   }
 }

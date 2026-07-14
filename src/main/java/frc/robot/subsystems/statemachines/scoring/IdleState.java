@@ -17,27 +17,27 @@ public class IdleState extends State {
   @Override
   public void build() {
     addTransition(
-            new Transition(
-                () -> {
-                return RobotMap.driverController.getBButtonPressed();
-                },
-                ScoringStateMachine.idleState));
+        new Transition(
+            () -> {
+              return RobotMap.driverController.getBButtonPressed();
+            },
+            ScoringStateMachine.idleState));
     addTransition(
         new Transition(
             () -> {
               return RobotMap.driverController.getLeftTriggerAxis() > 0.25;
             },
-              ScoringStateMachine.cycleState));
-    addTransition(
-            new Transition(
-                () -> {
-                return RobotMap.driverController.getRightBumper();
-                },
-                ScoringStateMachine.intakeState));
+            ScoringStateMachine.cycleState));
     addTransition(
         new Transition(
             () -> {
-            return RobotMap.driverController.getLeftBumper();
+              return RobotMap.driverController.getRightBumper();
+            },
+            ScoringStateMachine.intakeState));
+    addTransition(
+        new Transition(
+            () -> {
+              return RobotMap.driverController.getLeftBumper();
             },
             ScoringStateMachine.outtakeState));
   }
@@ -51,12 +51,14 @@ public class IdleState extends State {
 
   @Override
   public void execute() {
-    if (RobotMap.driverController.getYButtonPressed() || RobotMap.manipulatorController.getLeftBumperButtonPressed()) {
+    if (RobotMap.driverController.getYButtonPressed()
+        || RobotMap.manipulatorController.getLeftBumperButtonPressed()) {
       Intake.intakeUp();
       Intake.intakeSlow();
     }
 
-    if (RobotMap.driverController.getYButtonReleased() || RobotMap.manipulatorController.getLeftBumperButtonReleased()) {
+    if (RobotMap.driverController.getYButtonReleased()
+        || RobotMap.manipulatorController.getLeftBumperButtonReleased()) {
       Intake.stopIntake();
     }
 

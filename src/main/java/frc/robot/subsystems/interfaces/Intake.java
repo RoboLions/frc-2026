@@ -9,32 +9,31 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import frc.robot.Constants;
 
 public class Intake {
 
   private static final TalonFX mIntakeRollerMotorMaster =
-    new TalonFX(Constants.CAN_IDS.INTAKE_ROLLER_MASTER, "CANexternal");  
-  private static final TalonFX mIntakeRollerMotorFollow = 
-    new TalonFX(Constants.CAN_IDS.INTAKE_FOLLOWER_ROLLER, "CANexternal");
+      new TalonFX(Constants.CAN_IDS.INTAKE_ROLLER_MASTER, "CANexternal");
+  private static final TalonFX mIntakeRollerMotorFollow =
+      new TalonFX(Constants.CAN_IDS.INTAKE_FOLLOWER_ROLLER, "CANexternal");
 
-  private static final TalonFX mIndexMotorMaster = 
-    new TalonFX(Constants.CAN_IDS.INDEX_MOTOR_MASTER, "CANexternal");
-  private static final TalonFX mIndexMotorFollower = 
-    new TalonFX(Constants.CAN_IDS.INDEX_MOTOR_FOLLOWER, "CANexternal");
+  private static final TalonFX mIndexMotorMaster =
+      new TalonFX(Constants.CAN_IDS.INDEX_MOTOR_MASTER, "CANexternal");
+  private static final TalonFX mIndexMotorFollower =
+      new TalonFX(Constants.CAN_IDS.INDEX_MOTOR_FOLLOWER, "CANexternal");
 
-  private static final TalonFX mFeedMotor = 
-    new TalonFX(Constants.CAN_IDS.FEEDER_MOTOR, "CANexternal");
+  private static final TalonFX mFeedMotor =
+      new TalonFX(Constants.CAN_IDS.FEEDER_MOTOR, "CANexternal");
 
-  private static final TalonFX mRackMotor = 
-    new TalonFX(Constants.CAN_IDS.RACK_MOTOR, "CANexternal");
+  private static final TalonFX mRackMotor =
+      new TalonFX(Constants.CAN_IDS.RACK_MOTOR, "CANexternal");
 
   private static final double STOW_POS = 0.85;
   private static final double MIDDLE_POS = 2.0;
   private static final double DOWN_POS = 12.25;
 
-  public static void init() {    
+  public static void init() {
     TalonFXConfiguration masterIntakeMotorConfiguration = new TalonFXConfiguration();
 
     masterIntakeMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
@@ -103,7 +102,7 @@ public class Intake {
     mFeedMotor.getConfigurator().apply(feedMotorConfiguration);
 
     TalonFXConfiguration rackMotorConfiguration = new TalonFXConfiguration();
-    
+
     rackMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     rackMotorConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -117,7 +116,7 @@ public class Intake {
     rackMotorConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = DOWN_POS;
     rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
     rackMotorConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = STOW_POS;
-    
+
     rackMotorConfiguration.Slot0.kP = 2.0;
     rackMotorConfiguration.Slot0.kI = 0.0;
     rackMotorConfiguration.Slot0.kD = 0.0;
@@ -129,12 +128,16 @@ public class Intake {
     rackMotorConfiguration.ClosedLoopGeneral.ContinuousWrap = false;
     rackMotorConfiguration.MotionMagic.MotionMagicAcceleration = 300.0;
     rackMotorConfiguration.MotionMagic.MotionMagicCruiseVelocity = 180.0;
-    
+
     mRackMotor.getConfigurator().apply(rackMotorConfiguration);
     mRackMotor.setPosition(0.0);
 
-    mIntakeRollerMotorFollow.setControl(new Follower(mIntakeRollerMotorMaster.getDeviceID(), MotorAlignmentValue.Opposed).withUpdateFreqHz(20));
-    mIndexMotorFollower.setControl(new Follower(mIndexMotorMaster.getDeviceID(), MotorAlignmentValue.Opposed).withUpdateFreqHz(20));
+    mIntakeRollerMotorFollow.setControl(
+        new Follower(mIntakeRollerMotorMaster.getDeviceID(), MotorAlignmentValue.Opposed)
+            .withUpdateFreqHz(20));
+    mIndexMotorFollower.setControl(
+        new Follower(mIndexMotorMaster.getDeviceID(), MotorAlignmentValue.Opposed)
+            .withUpdateFreqHz(20));
   }
 
   public static void set(double speed) {

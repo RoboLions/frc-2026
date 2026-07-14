@@ -1,13 +1,13 @@
 package frc.robot.subsystems.statemachines.scoring;
 
-import frc.robot.RobotMap;
 import frc.robot.Constants;
+import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Intake;
+import frc.robot.subsystems.interfaces.LED;
 import frc.robot.subsystems.interfaces.Shooter;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
-import frc.robot.subsystems.interfaces.LED;
 
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
@@ -47,24 +47,34 @@ public class CycleState extends State {
       LED.setFlashGreen();
     }
 
-    if (RobotMap.driverController.getLeftBumperButtonPressed() || RobotMap.manipulatorController.getLeftBumperButtonPressed()) {
+    if (RobotMap.driverController.getLeftBumperButtonPressed()
+        || RobotMap.manipulatorController.getLeftBumperButtonPressed()) {
       Intake.intakeMid();
       Intake.intakeSlow();
-    } else if (RobotMap.driverController.getRightBumperButtonPressed() || RobotMap.driverController.getAButtonPressed() || RobotMap.manipulatorController.getRightBumperButtonPressed()) {
+    } else if (RobotMap.driverController.getRightBumperButtonPressed()
+        || RobotMap.driverController.getAButtonPressed()
+        || RobotMap.manipulatorController.getRightBumperButtonPressed()) {
       Intake.intakeDown();
     }
 
     if (Swerve.getPose().getX() >= 4.75 && Swerve.getPose().getX() <= 11.75) { // PASS LOGIC VS HUB
-      
+
       if (Swerve.getPose().getY() > 4) {
-       Shooter.interpoleateAndPass(Swerve.getPose().getTranslation().getDistance(Constants.FIELD.PASS_UPPER.toTranslation2d()));
+        Shooter.interpoleateAndPass(
+            Swerve.getPose()
+                .getTranslation()
+                .getDistance(Constants.FIELD.PASS_UPPER.toTranslation2d()));
       } else {
-       Shooter.interpoleateAndPass(Swerve.getPose().getTranslation().getDistance(Constants.FIELD.PASS_LOWER.toTranslation2d()));
+        Shooter.interpoleateAndPass(
+            Swerve.getPose()
+                .getTranslation()
+                .getDistance(Constants.FIELD.PASS_LOWER.toTranslation2d()));
       }
-      
+
       isPass = true;
     } else {
-      Shooter.interpolateAndShoot(Swerve.getPose().getTranslation().getDistance(Constants.FIELD.HUB_POSE));
+      Shooter.interpolateAndShoot(
+          Swerve.getPose().getTranslation().getDistance(Constants.FIELD.HUB_POSE));
       isPass = false;
     }
   }

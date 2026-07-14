@@ -35,6 +35,7 @@ public class IntakeState extends State {
             },
             ScoringStateMachine.cycleState));
   }
+
   @Override
   public void init(State prevState) {
     Intake.intake();
@@ -50,7 +51,7 @@ public class IntakeState extends State {
     } else if (RobotMap.manipulatorController.getBButtonReleased()) {
       Intake.intake();
     }
-  } 
+  }
 
   @Override
   public void exit(State nextState) {}

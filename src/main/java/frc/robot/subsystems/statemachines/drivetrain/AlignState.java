@@ -8,38 +8,38 @@ import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 import frc.robot.subsystems.statemachines.scoring.CycleState;
 
-
 public class AlignState extends State {
-    @Override
-    public void build() {
-        addTransition(
-            new Transition(
-                () -> {
-                  return RobotMap.driverController.getBButtonPressed() 
-                    || RobotMap.driverController.getRightBumperButtonPressed();
-                },
-                DrivetrainStateMachine.teleopState));    
+  @Override
+  public void build() {
+    addTransition(
+        new Transition(
+            () -> {
+              return RobotMap.driverController.getBButtonPressed()
+                  || RobotMap.driverController.getRightBumperButtonPressed();
+            },
+            DrivetrainStateMachine.teleopState));
+  }
+
+  @Override
+  public void init(State prevState) {}
+
+  @Override
+  public void execute() {
+    if (CycleState.isPass) {
+      if (Swerve.getPose().getY() > 4.0) {
+        Swerve.facePose(
+            Constants.FIELD.PASS_UPPER.toTranslation2d(), Rotation2d.fromDegrees(180.0));
+      } else {
+        Swerve.facePose(
+            Constants.FIELD.PASS_LOWER.toTranslation2d(), Rotation2d.fromDegrees(180.0));
+      }
+
+      return;
     }
 
-    @Override
-    public void init(State prevState) {}  
+    Swerve.facePose(Constants.FIELD.HUB_POSE, Rotation2d.fromDegrees(180.0));
+  }
 
-    @Override
-    public void execute() {
-        if (CycleState.isPass) {
-            if (Swerve.getPose().getY() > 4.0) {
-                Swerve.facePose(Constants.FIELD.PASS_UPPER.toTranslation2d(), Rotation2d.fromDegrees(180.0));
-            } else {
-                Swerve.facePose(Constants.FIELD.PASS_LOWER.toTranslation2d(), Rotation2d.fromDegrees(180.0));
-            }
-
-            return;
-        }
-
-        Swerve.facePose(Constants.FIELD.HUB_POSE, Rotation2d.fromDegrees(180.0));
-    }   
-    
-    @Override
-        public void exit(State nextState) { 
-    }
+  @Override
+  public void exit(State nextState) {}
 }

@@ -7,15 +7,15 @@ package frc.robot.subsystems.statemachines.drivetrain;
 import frc.robot.lib.statemachine.StateMachine;
 
 /** Add your docs here. */
-public class DrivetrainStateMachine extends StateMachine{
+public class DrivetrainStateMachine extends StateMachine {
 
-    public static TeleopState teleopState = new TeleopState();
-    public static AlignState alignState = new AlignState();
-    public static BrakeState brakeState = new BrakeState();
+  public static TeleopState teleopState = new TeleopState();
+  public static AlignState alignState = new AlignState();
+  public static BrakeState brakeState = new BrakeState();
 
-    public DrivetrainStateMachine() {
-        teleopState.build();
-        alignState.build();
-        brakeState.build();
-    }
+  public DrivetrainStateMachine() {
+    teleopState.build();
+    alignState.build();
+    brakeState.build();
+  }
 }

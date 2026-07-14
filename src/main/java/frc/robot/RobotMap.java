@@ -1,7 +1,5 @@
 package frc.robot;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.lib.auto.AutoSubsystem;
@@ -11,6 +9,7 @@ import frc.robot.subsystems.interfaces.Shooter;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 import frc.robot.subsystems.statemachines.drivetrain.DrivetrainStateMachine;
 import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
+import org.littletonrobotics.junction.Logger;
 
 public class RobotMap {
 
@@ -26,15 +25,14 @@ public class RobotMap {
 
   /* Auto objects */
 
-
   public static void init() {
-    //FIRST SUBSYSTEMS
+    // FIRST SUBSYSTEMS
     Swerve.init();
     Limelight.init();
     Shooter.init();
     Intake.init();
 
-    //THEN STATEMACHINES
+    // THEN STATEMACHINES
     drivetrainStateMachine.enable();
     scoringStateMachine.enable();
 

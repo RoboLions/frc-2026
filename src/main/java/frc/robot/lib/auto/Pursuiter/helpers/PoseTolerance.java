@@ -1,7 +1,7 @@
 package frc.robot.lib.auto.Pursuiter.helpers;
 
-import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -11,32 +11,33 @@ import frc.robot.lib.auto.Pursuiter.util.PathPoint;
 
 public record PoseTolerance(Distance metersTolerance, Angle degTolerance) { // lol thanks 1678
 
-    public PoseTolerance(Distance metersTolerance, Angle degTolerance) {
-        this.metersTolerance = metersTolerance;
-        this.degTolerance = degTolerance;
-    }
-    
-    public boolean inError(Pose2d targetPose, Pose2d currentPose) {
-        double currError = currentPose.getTranslation().getDistance(targetPose.getTranslation());
+  public PoseTolerance(Distance metersTolerance, Angle degTolerance) {
+    this.metersTolerance = metersTolerance;
+    this.degTolerance = degTolerance;
+  }
 
-        return MathUtil.isNear(0, currError, metersTolerance.in(Meters)) 
-                &&
-                MathUtil.isNear(targetPose.getRotation().getDegrees(), 
-                    currentPose.getRotation().getDegrees(), 
-                    degTolerance.in(Degrees),
-                    -180,
-                    180);
-    }
+  public boolean inError(Pose2d targetPose, Pose2d currentPose) {
+    double currError = currentPose.getTranslation().getDistance(targetPose.getTranslation());
 
-    public boolean inError(PathPoint targetPoint, Pose2d currentPose) {
-        double currError = currentPose.getTranslation().getDistance(targetPoint.point().getTranslation());
+    return MathUtil.isNear(0, currError, metersTolerance.in(Meters))
+        && MathUtil.isNear(
+            targetPose.getRotation().getDegrees(),
+            currentPose.getRotation().getDegrees(),
+            degTolerance.in(Degrees),
+            -180,
+            180);
+  }
 
-        return MathUtil.isNear(0, currError, metersTolerance.in(Meters)) 
-                &&
-                MathUtil.isNear(targetPoint.point().getRotation().getDegrees(), 
-                    currentPose.getRotation().getDegrees(), 
-                    degTolerance.in(Degrees),
-                    -180,
-                    180);
-    }
+  public boolean inError(PathPoint targetPoint, Pose2d currentPose) {
+    double currError =
+        currentPose.getTranslation().getDistance(targetPoint.point().getTranslation());
+
+    return MathUtil.isNear(0, currError, metersTolerance.in(Meters))
+        && MathUtil.isNear(
+            targetPoint.point().getRotation().getDegrees(),
+            currentPose.getRotation().getDegrees(),
+            degTolerance.in(Degrees),
+            -180,
+            180);
+  }
 }
