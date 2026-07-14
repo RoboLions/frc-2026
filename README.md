@@ -22,7 +22,7 @@ PursuitProfile is used to inform the PursuitAutoFactory of constraints and PIDs.
 
 ## Quick Start
 ### 1. Define your Profile
-'''java
+```java
 PursuitProfile highPrecisionProfile = new PursuitProfile(
     0.05,                         // 5 cm translation tolerance
     2.0,                          // 2 degrees rotation tolerance
@@ -32,4 +32,4 @@ PursuitProfile highPrecisionProfile = new PursuitProfile(
     new PIDController(1.5, 0, 0), // Heading PID
     true                          // Enable telemetry logging
 );
-'''
+```
