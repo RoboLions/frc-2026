@@ -19,6 +19,8 @@ import frc.robot.lib.auto.Pursuiter.helpers.PoseTolerance;
 import frc.robot.lib.auto.Pursuiter.util.PathPoint;
 import frc.robot.lib.auto.Pursuiter.util.PointConstraints;
 import frc.robot.lib.auto.Pursuiter.util.PursuitEventMarker;
+import frc.robot.lib.auto.Pursuiter.util.Stopwatch;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -39,6 +41,7 @@ public class PursuitPath {
   private final String trajectoryName;
   private PursuitPath nextPath;
   private boolean logToggle = true;
+  private Stopwatch stopWatch = new Stopwatch();
 
   /**
    * @param metersTolerance
@@ -110,8 +113,8 @@ public class PursuitPath {
       return;
     }
 
+    stopWatch.startIfNotRunning();
     Pose2d robotPose2d = poseSupplier.get();
-
     this.currentPoint =
         FastMath.findClosestPoint(
             robotPose2d, pathPoints, currentPoint.pointIndex(), lookAheadPoint.pointIndex());
@@ -126,7 +129,10 @@ public class PursuitPath {
             "Scheduled Binded-Command "
                 + removed.eventMarker().getName()
                 + " on path: "
-                + trajectoryName);
+                + trajectoryName
+                + ", whilst "
+                + (float) stopWatch.getTimeAsDouble()
+                + " seconds into the path.");
         CommandScheduler.getInstance().schedule(event.eventMarker().getCommand());
       }
     }
@@ -138,7 +144,12 @@ public class PursuitPath {
     if (lookAheadPoint.pointIndex() >= pathPoints.get(pathPoints.size() - 1).pointIndex()
         && poseTolerance.inError(currentPoint, robotPose2d)) {
       this.isFinished = true;
-      System.out.println("Concluded pursuit-path: " + trajectoryName);
+      System.out.println(
+          "Concluded pursuit-path: " 
+          + trajectoryName
+          + ", in: "
+          + (float) stopWatch.getTimeAsDouble()
+          + " seconds.");
       return;
     }
 

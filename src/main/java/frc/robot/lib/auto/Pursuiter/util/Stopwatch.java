@@ -4,7 +4,7 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.Timer;
 
-public class Stopwatch {
+public class Stopwatch { //thanks 1678 lollll
 
   private double startTime = Double.POSITIVE_INFINITY;
 
