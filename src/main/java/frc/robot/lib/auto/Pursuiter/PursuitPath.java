@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -295,8 +296,8 @@ public class PursuitPath {
 
   public void exampleLog() {
     Logger.recordOutput("Pursuiter/ exampleLog/ current-trajectory", getVisualizedPath(7));
-    Logger.recordOutput("Pursuiter/ exampleLog/ current-point", this.currentPoint);
-    Logger.recordOutput("Pursuiter/ exampleLog/ current-lookahead", this.lookAheadPoint);
+    Logger.recordOutput("Pursuiter/ exampleLog/ current-point", currentPoint.point());
+    Logger.recordOutput("Pursuiter/ exampleLog/ current-lookahead", this.lookAheadPoint.point());
   }
 
   public String getName() {
@@ -335,10 +336,19 @@ public class PursuitPath {
   }
 
   public void bindCommand(String commandName, Command command) {
+    int s = 0;
     for (int i = 0; i < eventPoints.size(); i++) {
       if (commandName.equals(eventPoints.get(i).eventMarker().getName())) {
         eventPoints.get(i).eventMarker().bindCommand(command);
+        s++;
       }
+    }
+
+    if (s == 0) {
+      DriverStation.reportWarning(
+        "Command not found with name " + commandName + 
+        " for path of name " + trajectoryName +
+        ". Ignore this if this is intentional.", false);
     }
   }
 

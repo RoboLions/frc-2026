@@ -25,7 +25,7 @@ public class AutoSubsystem {
       new PursuitAutoFactory(Swerve::getPose, Swerve::setFieldChassisSpeeds, profile);
 
   public static void init() {
-    autoFactory.addEvent("INTAKE", Commands.runOnce(() -> System.out.println("INTAKE!!!!!!!!!")));
+    autoFactory.addEvent("INTAKE", Commands.runOnce(() -> autoFactory.killCurrentPath()));
     autoFactory.addEvent(
         "INTAKE_STOP", Commands.runOnce(() -> System.out.println("INTAKE STOPPP!!!!!!!!!")));
     autoFactory.addEvent(
@@ -41,8 +41,8 @@ public class AutoSubsystem {
 
   private static Command testCommand() {
     return autoFactory
-        .followPath("L1.traj", true, true, FieldMap.center)
-        .andThen(autoFactory.followPath("L2.traj", true, true, FieldMap.center))
-        .andThen(autoFactory.followPath("L3.traj", true, true, FieldMap.center));
+        .followPath("L1.traj", false, true, FieldMap.center)
+        .andThen(autoFactory.followPath("L2.traj", false, true, FieldMap.center))
+        .andThen(autoFactory.followPath("L3.traj", false, true, FieldMap.center));
   }
 }

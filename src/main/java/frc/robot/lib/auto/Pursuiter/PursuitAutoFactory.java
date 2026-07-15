@@ -19,6 +19,8 @@ public class PursuitAutoFactory {
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   private final Map<String, Command> eventMap = new HashMap<>(); //TODO: bind booleanSuppliers
+  private PursuitPath currentPath;
+  private boolean pathInterrupted; 
 
   public PursuitAutoFactory(
       Supplier<Pose2d> poseSupplier,
@@ -51,26 +53,37 @@ public class PursuitAutoFactory {
         });
   }
 
+  private Command wrapWithKillSwitch(Command command) {
+    return command
+      .beforeStarting(() -> pathInterrupted = false)
+      .until(() -> pathInterrupted)
+      .finallyDo(interrupted -> {
+        if (pathInterrupted) {
+          outputConsumer.accept(new ChassisSpeeds());
+        }
+      });
+  }
+
   /** Generates a drive command from a trajectory name using the default profile. */
   public Command followPath(String trajectoryName) {
-    PursuitPath path = new PursuitPath(pursuitProfile, trajectoryName);
-    bindFactoryCommands(path);
-    return path.toCommand(poseSupplier, outputConsumer);
+    currentPath = new PursuitPath(pursuitProfile, trajectoryName);
+    bindFactoryCommands(currentPath);
+    return wrapWithKillSwitch(currentPath.toCommand(poseSupplier, outputConsumer));
   }
 
   /** Generates a drive command with a custom profile overriding the default. */
   public Command followPath(String trajectoryName, PursuitProfile customProfile) {
-    PursuitPath path = new PursuitPath(customProfile, trajectoryName);
-    bindFactoryCommands(path);
-    return path.toCommand(poseSupplier, outputConsumer);
+    currentPath = new PursuitPath(customProfile, trajectoryName);
+    bindFactoryCommands(currentPath);
+    return wrapWithKillSwitch(currentPath.toCommand(poseSupplier, outputConsumer));
   }
 
   public Command followPath(
       String trajectoryName, boolean flipX, boolean flipY, Translation2d centerPoint) {
-    PursuitPath path = new PursuitPath(pursuitProfile, trajectoryName);
-    path.flipPath(flipX, flipY, centerPoint);
-    bindFactoryCommands(path);
-    return path.toCommand(poseSupplier, outputConsumer);
+    currentPath = new PursuitPath(pursuitProfile, trajectoryName);
+    currentPath.flipPath(flipX, flipY, centerPoint);
+    bindFactoryCommands(currentPath);
+    return wrapWithKillSwitch(currentPath.toCommand(poseSupplier, outputConsumer));
   }
 
   public Command followPath(
@@ -79,15 +92,19 @@ public class PursuitAutoFactory {
       boolean flipY,
       Translation2d centerPoint,
       PursuitProfile profile) {
-    PursuitPath path = new PursuitPath(profile, trajectoryName);
-    path.flipPath(flipX, flipY, centerPoint);
-    bindFactoryCommands(path);
-    return path.toCommand(poseSupplier, outputConsumer);
+    currentPath = new PursuitPath(profile, trajectoryName);
+    currentPath.flipPath(flipX, flipY, centerPoint);
+    bindFactoryCommands(currentPath);
+    return wrapWithKillSwitch(currentPath.toCommand(poseSupplier, outputConsumer));
   }
 
   /** Triggers a registered event command by its string identifier. */
   public Command getEvent(String name) {
     return eventMap.getOrDefault(name, Commands.none());
+  }
+
+  public void killCurrentPath() {
+    this.pathInterrupted = true;
   }
 
   public SendableChooser<Command> getAutoChooser() {
