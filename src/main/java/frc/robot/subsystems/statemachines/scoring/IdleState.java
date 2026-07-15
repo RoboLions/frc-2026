@@ -53,7 +53,7 @@ public class IdleState extends State {
   public void init(State prevState) {
     Intake.allRollersStop();
     Shooter.idlerShooter();
-    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {LED.setSolidRed();} else {LED.setSolidRed();};
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {LED.setSolidBlue();} else {LED.setSolidRed();};
   }
 
   @Override
