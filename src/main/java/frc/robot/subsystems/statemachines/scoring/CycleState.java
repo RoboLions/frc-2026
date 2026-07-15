@@ -72,5 +72,7 @@ public class CycleState extends State {
   @Override
   public void exit(State nextState) {
     isPass = false;
+        LED.turnOff();
+
   }
 }

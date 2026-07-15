@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.statemachines.scoring;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
@@ -52,7 +53,7 @@ public class IdleState extends State {
   public void init(State prevState) {
     Intake.allRollersStop();
     Shooter.idlerShooter();
-    LED.setRainBow();
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {LED.setSolidRed();} else {LED.setSolidRed();};
   }
 
   @Override
@@ -72,5 +73,8 @@ public class IdleState extends State {
   }
 
   @Override
-  public void exit(State nextState) {}
+  public void exit(State nextState) {
+        LED.turnOff();
+
+  }
 }

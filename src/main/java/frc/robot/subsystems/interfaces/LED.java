@@ -40,8 +40,8 @@ public class LED {
     }
 
     public static void setSolidRed() {
-        mRGB_Candle.setControl(new SolidColor(0, MAX_LED_INDEX)
-            .withColor(new RGBWColor(255, 0, 0)));
+       mRGB_Candle.setControl(new SolidColor(0, MAX_LED_INDEX)
+            .withColor(new RGBWColor(0, 255, 0)));
     }
 
     public static void setFlashGreen() {
