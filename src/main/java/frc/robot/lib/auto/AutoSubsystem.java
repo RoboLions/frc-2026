@@ -19,13 +19,13 @@ public class AutoSubsystem {
           Units.Meters.of(0.3),
           new PIDController(1.0, 0, 0),
           new PIDController(2.0, 0, 0),
-          new PIDController(5.0, 0, 0),
+          new PIDController(2.0, 0, 0),
           true);
   private static PursuitAutoFactory autoFactory =
       new PursuitAutoFactory(Swerve::getPose, Swerve::setFieldChassisSpeeds, profile);
 
   public static void init() {
-    autoFactory.addEvent("INTAKE", Commands.runOnce(() -> autoFactory.killCurrentPath()));
+    autoFactory.addEvent("INTAKE", Commands.runOnce(() -> System.out.println("Intake!")));
     autoFactory.addEvent("INTAKE_STOP", Commands.runOnce(() -> System.out.println("INTAKE STOPPP!!!!!!!!!")));
     autoFactory.addEvent("REV_SHOT", Commands.runOnce(() -> System.out.println("REV SHOT!!!!!!!!!")));
 

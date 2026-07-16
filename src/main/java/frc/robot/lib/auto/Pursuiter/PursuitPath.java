@@ -174,7 +174,8 @@ public class PursuitPath {
     double omega =
         headingController.calculate(
             robotPose2d.getRotation().getRadians(),
-            currentPoint.point().getRotation().getRadians());
+            currentPoint.point().getRotation().getRadians())
+        + currentPoint.constraints().omega().magnitude(); // is this corrent? idk
 
     double fx = (velocity + pidAdjust) * heading.getCos();
     double fy = (velocity + pidAdjust) * heading.getSin();
