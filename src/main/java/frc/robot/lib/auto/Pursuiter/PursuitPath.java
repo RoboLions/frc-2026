@@ -32,9 +32,9 @@ public class PursuitPath {
   private final PoseTolerance poseTolerance;
   private final Distance lookAhead;
   private List<PathPoint> pathPoints;
-  private PIDController translationController = new PIDController(0.5, 0, 0);
-  private PIDController endPointController = new PIDController(3.0, 0, 0);
-  private PIDController headingController = new PIDController(1.0, 0, 0);
+  private PIDController translationController = new PIDController(0, 0, 0);
+  private PIDController endPointController = new PIDController(0, 0, 0);
+  private PIDController headingController = new PIDController(0, 0, 0);
   private PathPoint currentPoint;
   private List<PathPoint> eventPoints;
   private PathPoint lookAheadPoint;
@@ -92,7 +92,7 @@ public class PursuitPath {
   public PursuitPath(PursuitProfile profile, String trajectoryName) {
     this.poseTolerance =
         new PoseTolerance(
-            profile.metersTolerance(), Degrees.of(profile.degreesTolerance()));
+            profile.metersTolerance(), profile.degreesTolerance());
     this.lookAhead = profile.lookAheadDistance();
     this.translationController = profile.translationController();
     this.endPointController = profile.endPointController();

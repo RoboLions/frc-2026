@@ -1,11 +1,12 @@
 package frc.robot.lib.auto.Pursuiter;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 
 public final record PursuitProfile(
     Distance metersTolerance,
-    double degreesTolerance,
+    Angle degreesTolerance,
     Distance lookAheadDistance,
     PIDController translationController,
     PIDController endPointController,

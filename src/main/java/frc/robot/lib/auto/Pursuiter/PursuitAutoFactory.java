@@ -18,7 +18,7 @@ public class PursuitAutoFactory {
   private final PursuitProfile pursuitProfile;
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-  private final Map<String, Command> eventMap = new HashMap<>(); //TODO: bind booleanSuppliers
+  private final Map<String, Command> eventMap = new HashMap<>();
   private PursuitPath currentPath;
   private boolean pathInterrupted; 
 
@@ -71,7 +71,6 @@ public class PursuitAutoFactory {
     return wrapWithKillSwitch(currentPath.toCommand(poseSupplier, outputConsumer));
   }
 
-  /** Generates a drive command with a custom profile overriding the default. */
   public Command followPath(String trajectoryName, PursuitProfile customProfile) {
     currentPath = new PursuitPath(customProfile, trajectoryName);
     bindFactoryCommands(currentPath);

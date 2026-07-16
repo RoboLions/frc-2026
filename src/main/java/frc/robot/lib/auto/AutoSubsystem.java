@@ -15,7 +15,7 @@ public class AutoSubsystem {
   private static PursuitProfile profile =
       new PursuitProfile(
           Units.Meters.of(0.1),
-          360,
+          Units.Degrees.of(5),
           Units.Meters.of(0.3),
           new PIDController(1.0, 0, 0),
           new PIDController(2.0, 0, 0),
@@ -26,10 +26,8 @@ public class AutoSubsystem {
 
   public static void init() {
     autoFactory.addEvent("INTAKE", Commands.runOnce(() -> autoFactory.killCurrentPath()));
-    autoFactory.addEvent(
-        "INTAKE_STOP", Commands.runOnce(() -> System.out.println("INTAKE STOPPP!!!!!!!!!")));
-    autoFactory.addEvent(
-        "REV_SHOT", Commands.runOnce(() -> System.out.println("REV SHOT!!!!!!!!!")));
+    autoFactory.addEvent("INTAKE_STOP", Commands.runOnce(() -> System.out.println("INTAKE STOPPP!!!!!!!!!")));
+    autoFactory.addEvent("REV_SHOT", Commands.runOnce(() -> System.out.println("REV SHOT!!!!!!!!!")));
 
     autoFactory.registerAutoCommand("test 1", testCommand());
     autoFactory.registerAutoCommand("nothing", new Command() {});
