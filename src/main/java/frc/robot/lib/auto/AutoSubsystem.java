@@ -32,6 +32,8 @@ public class AutoSubsystem {
 
         autoChooser.addRoutine("leftBump2Tripdelay",leftBump2Tripdelay());
 
+        autoChooser.addRoutine("HubPullBack" , Hub_PullBack());
+
         SmartDashboard.putData("AutoChooser", autoChooser);
     }
 
@@ -494,6 +496,57 @@ public class AutoSubsystem {
                         .withTimeout(0.0025),
                         
                     L3.cmd()));
+
+            return routine;
+        };
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    private Supplier<AutoRoutine> Hub_PullBack() {
+        AutoRoutine routine = autoFactory.newRoutine("HUB PULL BACK");
+        AutoTrajectory L1 = routine.trajectory("L1_Hub");
+            
+            L1.atTime("REV_SHOT")
+                .onTrue(AutoCommands.setShooter()
+                .withTimeout(0.0025));
+
+        return () -> {
+            routine.active().onTrue(
+                Commands.sequence(
+        
+                    
+                    L1.cmd()));
+                    AutoCommands.shootSequenceWithRamp()
+                        .withTimeout(SHOOT_TIMEOUT_1);  
 
             return routine;
         };
