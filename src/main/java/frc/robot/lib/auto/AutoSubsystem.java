@@ -512,6 +512,9 @@ public class AutoSubsystem {
             L1.atTime("REV_SHOT")
                 .onTrue(AutoCommands.setShooter()
                 .withTimeout(0.0025));
+            L1.atTime("INTAKE_OUT")
+                .onTrue(AutoCommands.intakeOutOnly()
+                .withTimeout(0.0025));
 
         return () -> {
             routine.active().onTrue(
@@ -541,6 +544,9 @@ public class AutoSubsystem {
             L1.atTime("REV_SHOT")
                 .onTrue(AutoCommands.setShooter()
                 .withTimeout(0.0025));
+            L1.atTime("INTAKE_OUT")
+                .onTrue(AutoCommands.intakeOutOnly()
+                .withTimeout(0.0025));
 
         return () -> {
             routine.active().onTrue(
@@ -563,6 +569,9 @@ public class AutoSubsystem {
             
             L1.atTime("REV_SHOT")
                 .onTrue(AutoCommands.setShooter()
+                .withTimeout(0.0025));
+            L1.atTime("INTAKE_OUT")
+                .onTrue(AutoCommands.intakeOutOnly()
                 .withTimeout(0.0025));
 
         return () -> {
