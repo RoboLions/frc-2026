@@ -34,6 +34,9 @@ public class AutoSubsystem {
 
         autoChooser.addRoutine("HubPullBack" , Hub_PullBack());
 
+        autoChooser.addRoutine("LeftBumpHub" , Left_Bump_Hub());
+        autoChooser.addRoutine("RightBumpHub", Right_Bump_Hub());
+
         SmartDashboard.putData("AutoChooser", autoChooser);
     }
 
@@ -502,35 +505,6 @@ public class AutoSubsystem {
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     private Supplier<AutoRoutine> Hub_PullBack() {
         AutoRoutine routine = autoFactory.newRoutine("HUB PULL BACK");
         AutoTrajectory L1 = routine.trajectory("L1_Hub");
@@ -544,12 +518,70 @@ public class AutoSubsystem {
                 Commands.sequence(
         
                     
-                    L1.cmd()));
+                    L1.cmd(),
                     AutoCommands.shootSequenceWithRamp()
-                        .withTimeout(SHOOT_TIMEOUT_1);  
+                        .withTimeout(20)));
+                        
+                    
+
+            return routine;
+        };
+
+    }
+
+
+
+
+
+
+    private Supplier<AutoRoutine> Left_Bump_Hub() {
+        AutoRoutine routine = autoFactory.newRoutine(":LEFT HUB PULL BUMP");
+        AutoTrajectory L1 = routine.trajectory("L1_BumpHub");
+            
+            L1.atTime("REV_SHOT")
+                .onTrue(AutoCommands.setShooter()
+                .withTimeout(0.0025));
+
+        return () -> {
+            routine.active().onTrue(
+                Commands.sequence(
+        
+                    
+                    L1.cmd(),
+                    AutoCommands.shootSequenceWithRamp()
+                        .withTimeout(20)));
+                        
+                    
+
+            return routine;
+        };
+
+    }
+    private Supplier<AutoRoutine> Right_Bump_Hub() {
+        AutoRoutine routine = autoFactory.newRoutine(":RIGHT HUB PULL BUMP");
+        AutoTrajectory L1 = routine.trajectory("L1_BumpHub").mirrorY();
+            
+            L1.atTime("REV_SHOT")
+                .onTrue(AutoCommands.setShooter()
+                .withTimeout(0.0025));
+
+        return () -> {
+            routine.active().onTrue(
+                Commands.sequence(
+        
+                    
+                    L1.cmd(),
+                    AutoCommands.shootSequenceWithRamp()
+                        .withTimeout(20)));
+                        
+                    
 
             return routine;
         };
 
     }
 }
+
+
+
+
