@@ -36,36 +36,16 @@ public class PursuitPath {
   private PIDController endPointController = new PIDController(0, 0, 0);
   private PIDController headingController = new PIDController(0, 0, 0);
   private PathPoint currentPoint;
-  private List<PathPoint> eventPoints;
   private PathPoint lookAheadPoint;
-  private boolean isFinished = false;
+  private List<PathPoint> eventPoints;
+  private PathPoint endPoint;
   private final String trajectoryName;
-  private PursuitPath nextPath;
-  private boolean logToggle = true;
-  private Stopwatch stopWatch = new Stopwatch();
 
-  /**
-   * @param metersTolerance
-   * @param degreesTolerance
-   * @param lookAheadDistance
-   * @param trajectoryName Should include the .traj suffix. Ex: "leave.traj" for a Choreo path
-   *     called leave.
-   */
-  public PursuitPath(
-      Distance metersTolerance,
-      double degreesTolerance,
-      Distance lookAheadDistance,
-      String trajectoryName) {
-    this.poseTolerance =
-        new PoseTolerance(metersTolerance, Degrees.of(degreesTolerance));
-    this.lookAhead = lookAheadDistance;
-    this.pathPoints = PathLoader.loadSample(trajectoryName);
-    this.currentPoint = pathPoints.get(0);
-    this.lookAheadPoint = pathPoints.get(0);
-    headingController.enableContinuousInput(-Math.PI, Math.PI);
-    this.trajectoryName = trajectoryName;
-    this.eventPoints = this.getEventPoints();
-  }
+  private PursuitPath nextPath;
+
+  private Stopwatch stopWatch = new Stopwatch();
+  private boolean isFinished = false;
+  private boolean logToggle = true;
 
   public PursuitPath(
       Distance metersTolerance,
@@ -87,6 +67,7 @@ public class PursuitPath {
     headingController.enableContinuousInput(-Math.PI, Math.PI);
     this.trajectoryName = trajectoryName;
     this.eventPoints = this.getEventPoints();
+    this.endPoint = pathPoints.get(pathPoints.size() - 1);
   }
 
   public PursuitPath(PursuitProfile profile, String trajectoryName) {
@@ -103,6 +84,7 @@ public class PursuitPath {
     headingController.enableContinuousInput(-Math.PI, Math.PI);
     this.trajectoryName = trajectoryName;
     this.eventPoints = this.getEventPoints();
+    this.endPoint = pathPoints.get(pathPoints.size() - 1);
 
     if (logToggle) {
       exampleLog();
@@ -142,8 +124,8 @@ public class PursuitPath {
         FastMath.closestPointWithThreshold(
             ((float) lookAhead.magnitude()), currentPoint, remainingPoints);
 
-    if (lookAheadPoint.pointIndex() >= pathPoints.get(pathPoints.size() - 1).pointIndex()
-        && poseTolerance.inError(currentPoint, robotPose2d)) {
+    if (lookAheadPoint.pointIndex() >= endPoint.pointIndex()
+        && poseTolerance.inError(endPoint.point(), robotPose2d)) {
       this.isFinished = true;
       System.out.println(
           "Concluded pursuit-path: " 
@@ -153,8 +135,6 @@ public class PursuitPath {
           + " seconds.");
       return;
     }
-
-    headingController.reset();
 
     double vx = lookAheadPoint.constraints().vx();
     double vy = lookAheadPoint.constraints().vy();
@@ -175,7 +155,7 @@ public class PursuitPath {
         headingController.calculate(
             robotPose2d.getRotation().getRadians(),
             currentPoint.point().getRotation().getRadians())
-        + currentPoint.constraints().omega().magnitude(); // is this corrent? idk
+        + currentPoint.constraints().omega().magnitude();
 
     double fx = (velocity + pidAdjust) * heading.getCos();
     double fy = (velocity + pidAdjust) * heading.getSin();
@@ -236,12 +216,17 @@ public class PursuitPath {
 
   public void resetPathState() {
     this.isFinished = false;
+    this.headingController.reset();
+    this.translationController.reset();
+    this.endPointController.reset();
+    
     if (this.pathPoints == null || pathPoints.isEmpty()) {
       return;
     }
     this.currentPoint = pathPoints.get(0);
     this.lookAheadPoint = pathPoints.get(0);
     this.eventPoints = this.getEventPoints();
+    this.endPoint = pathPoints.get(pathPoints.size() - 1);
   }
 
   /**

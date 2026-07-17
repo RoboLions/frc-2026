@@ -7,7 +7,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
-import frc.robot.lib.auto.Pursuiter.util.PathPoint;
 
 public record PoseTolerance(Distance metersTolerance, Angle degTolerance) { // lol thanks 1678
 
@@ -22,19 +21,6 @@ public record PoseTolerance(Distance metersTolerance, Angle degTolerance) { // l
     return MathUtil.isNear(0, currError, metersTolerance.in(Meters))
         && MathUtil.isNear(
             targetPose.getRotation().getDegrees(),
-            currentPose.getRotation().getDegrees(),
-            degTolerance.in(Degrees),
-            -180,
-            180);
-  }
-
-  public boolean inError(PathPoint targetPoint, Pose2d currentPose) {
-    double currError =
-        currentPose.getTranslation().getDistance(targetPoint.point().getTranslation());
-
-    return MathUtil.isNear(0, currError, metersTolerance.in(Meters))
-        && MathUtil.isNear(
-            targetPoint.point().getRotation().getDegrees(),
             currentPose.getRotation().getDegrees(),
             degTolerance.in(Degrees),
             -180,
