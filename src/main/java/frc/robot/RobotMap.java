@@ -2,7 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.lib.auto.AutoSubsystem;
+import frc.lib.auto.AutoSubsystem;
 import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Limelight;
 import frc.robot.subsystems.interfaces.Shooter;

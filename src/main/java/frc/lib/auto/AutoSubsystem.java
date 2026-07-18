@@ -1,4 +1,4 @@
-package frc.robot.lib.auto;
+package frc.lib.auto;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -10,10 +10,10 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.lib.auto.Pursuiter.PursuitAutoFactory;
-import frc.robot.lib.auto.Pursuiter.PursuitPath;
-import frc.robot.lib.auto.Pursuiter.PursuitProfile;
-import frc.robot.lib.auto.Pursuiter.helpers.FieldMap;
+import frc.lib.Pursuiter.PursuitAutoFactory;
+import frc.lib.Pursuiter.PursuitPath;
+import frc.lib.Pursuiter.PursuitProfile;
+import frc.lib.Pursuiter.helpers.FieldMap;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 
 public class AutoSubsystem {

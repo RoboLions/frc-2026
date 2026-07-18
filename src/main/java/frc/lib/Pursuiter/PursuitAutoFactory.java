@@ -1,4 +1,4 @@
-package frc.robot.lib.auto.Pursuiter;
+package frc.lib.Pursuiter;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;

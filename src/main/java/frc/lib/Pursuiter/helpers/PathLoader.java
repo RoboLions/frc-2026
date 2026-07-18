@@ -1,4 +1,4 @@
-package frc.robot.lib.auto.Pursuiter.helpers;
+package frc.lib.Pursuiter.helpers;
 
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
@@ -8,9 +8,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import frc.robot.lib.auto.Pursuiter.util.PathPoint;
-import frc.robot.lib.auto.Pursuiter.util.PointConstraints;
-import frc.robot.lib.auto.Pursuiter.util.PursuitEventMarker;
+import frc.lib.Pursuiter.util.PathPoint;
+import frc.lib.Pursuiter.util.PointConstraints;
+import frc.lib.Pursuiter.util.PursuitEventMarker;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

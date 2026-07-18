@@ -1,4 +1,4 @@
-package frc.robot.lib.auto.Pursuiter.util;
+package frc.lib.Pursuiter.util;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Time;

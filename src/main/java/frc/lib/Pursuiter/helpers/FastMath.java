@@ -1,7 +1,8 @@
-package frc.robot.lib.auto.Pursuiter.helpers;
+package frc.lib.Pursuiter.helpers;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.lib.auto.Pursuiter.util.PathPoint;
+import frc.lib.Pursuiter.util.PathPoint;
+
 import java.util.List;
 
 public class FastMath {

@@ -1,4 +1,4 @@
-package frc.robot.lib.auto.Pursuiter.util;
+package frc.lib.Pursuiter.util;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;

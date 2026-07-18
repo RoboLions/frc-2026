@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems.statemachines.drivetrain;
 
-import frc.robot.lib.statemachine.StateMachine;
+import frc.lib.statemachine.StateMachine;
 
 /** Add your docs here. */
 public class DrivetrainStateMachine extends StateMachine {

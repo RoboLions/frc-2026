@@ -1,10 +1,10 @@
 package frc.robot.subsystems.statemachines.drivetrain;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.lib.statemachine.State;
+import frc.lib.statemachine.Transition;
 import frc.robot.Constants;
 import frc.robot.RobotMap;
-import frc.robot.lib.statemachine.State;
-import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 import frc.robot.subsystems.statemachines.scoring.CycleState;
 
