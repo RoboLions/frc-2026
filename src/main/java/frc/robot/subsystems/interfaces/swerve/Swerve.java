@@ -9,7 +9,6 @@ import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -22,15 +21,11 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotMap;
@@ -41,7 +36,6 @@ public class Swerve {
   public class SwerveConstants {
     public static final double ODOMETRY_FREQUENCY = 150.0;
 
-    private static final double SLIP_ERROR_THRESHOLD = 7.5; // needs to be tuned against wall
     private static final double MaxSpeed =
         GeneratedConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private static final double MaxAngularRate =
@@ -52,7 +46,6 @@ public class Swerve {
   private class SwerveObjects {
     public static final CommandSwerveDrivetrain Swerve = GeneratedConstants.createDrivetrain();
 
-    private static SwerveDriveState lastReadState = new SwerveDriveState();
     private static double loopLatencySec;
 
     private static final SwerveRequest.FieldCentric teleopDrive =
@@ -78,36 +71,12 @@ public class Swerve {
         new SwerveRequest.SwerveDriveBrake();
   }
 
-  private class TelemetryObjects {
-    private static Matrix<N3, N1> odometryMatrix = VecBuilder.fill(0.1, 0.1, 0.1);
-    ;
-
-    private static final TalonFX mDRIVE0 = getModuleStates()[0].getDriveMotor();
-    private static final TalonFX mDRIVE1 = getModuleStates()[1].getDriveMotor();
-    private static final TalonFX mDRIVE2 = getModuleStates()[2].getDriveMotor();
-    private static final TalonFX mDRIVE3 = getModuleStates()[3].getDriveMotor();
-
-    private static final GeneratedTelemetry telemetryLogger =
-        new GeneratedTelemetry(SwerveConstants.MaxSpeed);
-
-    private static StructPublisher<Pose3d> mechanismPublisher =
-        NetworkTableInstance.getDefault()
-            .getStructTopic("Mechanisms/Drivetrain", Pose3d.struct)
-            .publish();
-
-    private static final Field2d elasticPose = new Field2d();
-  }
-
   public static void init() {
     SwerveObjects.headingController.enableContinuousInput(-Math.PI, Math.PI);
     SwerveObjects.pointDriveController.setTolerance(0.001);
-
-    SwerveObjects.Swerve.registerTelemetry(TelemetryObjects.telemetryLogger::telemeterize);
   }
 
   public static void periodic() {
-    setModuleDeviations(); // this is actually one the first methods to be run
-
     Logger.recordOutput("Swerve/ 2D CTRE Pose-Estimate", getPose());
     Logger.recordOutput("Swerve/ FieldSpeeds", getFieldSpeeds());
   }
@@ -125,45 +94,6 @@ public class Swerve {
 
   public static CommandSwerveDrivetrain getGeneratedDrive() {
     return SwerveObjects.Swerve;
-  }
-
-  public static void setModuleDeviations() {
-    // all velocities are in RPS
-    double mod0Velocity = Math.abs(TelemetryObjects.mDRIVE0.getVelocity().getValueAsDouble());
-    double mod0Error = Math.abs(TelemetryObjects.mDRIVE0.getClosedLoopError().getValueAsDouble());
-
-    double mod1Velocity = Math.abs(TelemetryObjects.mDRIVE1.getVelocity().getValueAsDouble());
-    double mod1Error = Math.abs(TelemetryObjects.mDRIVE1.getClosedLoopError().getValueAsDouble());
-
-    double mod2Velocity = Math.abs(TelemetryObjects.mDRIVE2.getVelocity().getValueAsDouble());
-    double mod2Error = Math.abs(TelemetryObjects.mDRIVE2.getClosedLoopError().getValueAsDouble());
-
-    double mod3Velocity = Math.abs(TelemetryObjects.mDRIVE3.getVelocity().getValueAsDouble());
-    double mod3Error = Math.abs(TelemetryObjects.mDRIVE3.getClosedLoopError().getValueAsDouble());
-
-    double maxError = Math.max(Math.max(mod0Error, mod1Error), Math.max(mod2Error, mod3Error));
-    Logger.recordOutput("Swerve/ Velocity-Error/ MaxError", maxError);
-
-    if (maxError > SwerveConstants.SLIP_ERROR_THRESHOLD) {
-      TelemetryObjects.odometryMatrix =
-          VecBuilder.fill(5.0 + (2 * maxError), 5.0 + (2 * maxError), 0.1);
-      Logger.recordOutput("Swerve/ Velocity-Error/ Tripped?", true);
-    } else {
-      TelemetryObjects.odometryMatrix = VecBuilder.fill(0.1, 0.1, 0.1);
-      Logger.recordOutput("Swerve/ Velocity-Error/ Tripped?", false);
-    }
-
-    SwerveObjects.Swerve.setStateStdDevs(TelemetryObjects.odometryMatrix);
-
-    Logger.recordOutput("Swerve/ Motor-Velocities/ Mod0", mod0Velocity);
-    Logger.recordOutput("Swerve/ Motor-Velocities/ Mod1", mod1Velocity);
-    Logger.recordOutput("Swerve/ Motor-Velocities/ Mod2", mod2Velocity);
-    Logger.recordOutput("Swerve/ Motor-Velocities/ Mod3", mod3Velocity);
-
-    Logger.recordOutput("Swerve/ Velocity-Error/ Mod0", mod0Error);
-    Logger.recordOutput("Swerve/ Velocity-Error/ Mod1", mod1Error);
-    Logger.recordOutput("Swerve/ Velocity-Error/ Mod2", mod2Error);
-    Logger.recordOutput("Swerve/ Velocity-Error/ Mod3", mod3Error);
   }
 
   public static SwerveModule<TalonFX, TalonFX, CANcoder>[] getModuleStates() {
@@ -220,7 +150,7 @@ public class Swerve {
     SwerveObjects.Swerve.resetPose(pose);
   }
 
-  public static void resetOdometry() {
+  public static void resetHeading() {
     if (DriverStation.getAlliance().get() == Alliance.Red) {
       resetPose(new Pose2d(getPose().getTranslation(), new Rotation2d(0)));
     } else {
@@ -360,13 +290,6 @@ public class Swerve {
 
   public static Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return SwerveObjects.Swerve.sysIdDynamic(direction);
-  }
-
-  public void outputTelemetry() {
-    TelemetryObjects.mechanismPublisher.set(new Pose3d(getPose()));
-    TelemetryObjects.telemetryLogger.telemeterize(SwerveObjects.lastReadState);
-    TelemetryObjects.elasticPose.setRobotPose(getPose());
-    SmartDashboard.putData("Elastic Field 2D", TelemetryObjects.elasticPose);
   }
 
   public static void addLimelightMeasurement(
