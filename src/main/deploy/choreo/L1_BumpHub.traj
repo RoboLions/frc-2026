@@ -110,5 +110,5 @@
  },
  "events":[
    {"name":"REV_SHOT", "from":{"target":0, "targetTimestamp":0.0, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
-   {"name":"INTAKE_OUT", "from":{"target":0, "targetTimestamp":0.0, "offset":{"exp":"0.2 s", "val":0.2}}, "event":null}]
+   {"name":"INTAKE_OUT", "from":{"target":0, "targetTimestamp":0.0, "offset":{"exp":"0.02 s", "val":0.02}}, "event":null}]
 }

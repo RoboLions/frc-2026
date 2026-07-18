@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.statemachines.scoring;
 
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotMap;
 import frc.robot.lib.statemachine.State;
@@ -30,7 +31,7 @@ public class IdleState extends State {
             },
               ScoringStateMachine.cycleState));
     addTransition(
-            new Transition(
+            new Transition( 
                 () -> {
                 return RobotMap.driverController.getRightBumper();
                 },
@@ -47,13 +48,21 @@ public class IdleState extends State {
             return RobotMap.manipulatorController.getAButton();
             },
             ScoringStateMachine.outtakeState));
+        new Transition(
+            () -> {
+            return RobotMap.manipulatorController.getYButton();
+            },
+            ScoringStateMachine.intakeState);
   }
 
   @Override
   public void init(State prevState) {
     Intake.allRollersStop();
     Shooter.idlerShooter();
-    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {LED.setSolidBlue();} else {LED.setSolidRed();};
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ){ LED.setSolidBlue();}
+     else {LED.setSolidRed();};
+
+
   }
 
   @Override
