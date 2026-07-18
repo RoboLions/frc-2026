@@ -211,7 +211,7 @@ public class AutoSubsystem {
         return () -> {
             routine.active().onTrue(
                 Commands.sequence(
-                    Commands.waitSeconds(1.0),
+                    Commands.waitSeconds(2.5),
 
                     AutoCommands.intakeZeroPosition()
                         .withTimeout(0.001),
@@ -266,7 +266,7 @@ public class AutoSubsystem {
         return () -> {
             routine.active().onTrue(
                 Commands.sequence(
-                    Commands.waitSeconds(10.0),
+                    Commands.waitSeconds(2.5),
 
                     AutoCommands.intakeZeroPosition()
                         .withTimeout(0.001),
@@ -467,7 +467,7 @@ public class AutoSubsystem {
         return () -> {
             routine.active().onTrue(
                 Commands.sequence(
-                    Commands.waitSeconds(5.0),
+                    Commands.waitSeconds(2.5),
 
 
                     AutoCommands.intakeZeroPosition()
@@ -625,7 +625,7 @@ public class AutoSubsystem {
         return () -> {
             routine.active().onTrue(
                 Commands.sequence(
-                    Commands.waitSeconds(2.0),
+                    Commands.waitSeconds(2.5),
                     AutoCommands.intakeZeroPosition()
                         .withTimeout(0.001),
 
@@ -697,7 +697,7 @@ public class AutoSubsystem {
         return () -> {
             routine.active().onTrue(
                 Commands.sequence(
-                    Commands.waitSeconds(2.0),
+                    Commands.waitSeconds(2.5),
                     AutoCommands.intakeZeroPosition()
                         .withTimeout(0.001),
 
