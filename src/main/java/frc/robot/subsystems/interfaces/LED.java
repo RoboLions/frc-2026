@@ -1,5 +1,6 @@
 package frc.robot.subsystems.interfaces;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANdleConfiguration;
 import com.ctre.phoenix6.controls.LarsonAnimation;
 import com.ctre.phoenix6.controls.RainbowAnimation;
@@ -11,7 +12,7 @@ import com.ctre.phoenix6.signals.StripTypeValue;
 
 public class LED {
     
-    private static final CANdle mRGB_Candle = new CANdle(49, "CANivore");
+    private static final CANdle mRGB_Candle = new CANdle(49, new CANBus("CANivore"));
     private static final int MAX_LED_INDEX = 68;
 
     public static void init() {

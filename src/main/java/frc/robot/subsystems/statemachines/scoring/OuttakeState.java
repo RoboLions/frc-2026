@@ -24,7 +24,7 @@ public class OuttakeState extends State {
     addTransition(
         new Transition(
             () -> {
-              return RobotMap.driverController.getRightBumper();
+              return RobotMap.driverController.getRightBumperButton();
             },
             ScoringStateMachine.intakeState));
   }
