@@ -354,6 +354,24 @@ public class Swerve {
 
         automaticDrive(0, new Rotation2d(0), omega);
     }
+    public static void TeleopDriveFacePose(Translation2d targetPose, Rotation2d offset) {
+        Pose2d currPose = getPose();
+        double dy = targetPose.getY() - currPose.getY();
+        double dx = targetPose.getX() - currPose.getX();
+        Rotation2d target = new Rotation2d(Math.atan2(dy, dx));
+
+        double vy = -RobotMap.driverController.getLeftX();
+        double vx = -RobotMap.driverController.getLeftY();
+
+        SwerveObjects.headingController.setSetpoint(target.getRadians() + offset.getRadians());
+        double omega = SwerveObjects.headingController.calculate(currPose.getRotation().getRadians());
+
+        SwerveObjects.Swerve.setControl(
+            SwerveObjects.teleopDrive
+                .withVelocityX(vx * SwerveConstants.MaxSpeed)
+                .withVelocityY(vy * SwerveConstants.MaxSpeed)
+                .withRotationalRate(omega * SwerveConstants.MaxAngularRate));
+    }
 
     public static Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
         return SwerveObjects.Swerve.sysIdQuasistatic(direction);
