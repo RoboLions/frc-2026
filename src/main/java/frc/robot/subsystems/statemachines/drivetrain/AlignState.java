@@ -7,6 +7,7 @@ import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 import frc.robot.subsystems.statemachines.scoring.CycleState;
+import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
 
 
 public class AlignState extends State {
@@ -23,7 +24,7 @@ public class AlignState extends State {
             () -> {
               return RobotMap.driverController.getLeftBumperButtonPressed();
             },
-            ScoringStateMachine.shootmoveState));  
+            DrivetrainStateMachine.shootmoveState));  
     }
 
     @Override

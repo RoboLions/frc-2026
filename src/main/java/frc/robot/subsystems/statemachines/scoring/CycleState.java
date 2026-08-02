@@ -30,14 +30,7 @@ public class CycleState extends State {
             () -> {
               return RobotMap.driverController.getRightBumperButtonPressed();
             },
-            ScoringStateMachine.intakeState));
-    addTransition(
-        new Transition(
-            () -> {
-              return RobotMap.driverController.getLeftBumperButtonPressed();
-            },
-            ScoringStateMachine.cyclemoveState));
-  }
+            ScoringStateMachine.intakeState));}
 
   @Override
   public void init(State prevState) {

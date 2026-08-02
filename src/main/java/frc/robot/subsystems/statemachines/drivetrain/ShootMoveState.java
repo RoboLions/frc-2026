@@ -1,4 +1,13 @@
+package frc.robot.subsystems.statemachines.drivetrain;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Constants;
+import frc.robot.RobotMap;
+import frc.robot.lib.statemachine.State;
+import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.Sotm;
+import frc.robot.subsystems.interfaces.swerve.Swerve;
+import frc.robot.subsystems.statemachines.scoring.CycleState;
 public class ShootMoveState extends State {
     @Override
     public void build() {
@@ -13,7 +22,7 @@ public class ShootMoveState extends State {
                 () -> {
                 return RobotMap.driverController.getLeftTriggerAxis() > 0.25;
                 },
-                ScoringStateMachine.alignState));
+                DrivetrainStateMachine.alignState));
          
     }
 
