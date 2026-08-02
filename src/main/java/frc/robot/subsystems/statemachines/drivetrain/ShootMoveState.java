@@ -1,3 +1,4 @@
+import frc.robot.subsystems.interfaces.Sotm;
 public class ShootMoveState extends State {
     @Override
     public void build() {
@@ -7,6 +8,12 @@ public class ShootMoveState extends State {
                   return RobotMap.driverController.getBButtonPressed();
                 },
                 DrivetrainStateMachine.teleopState));  
+        addTransition(
+            new Transition(
+                () -> {
+                return RobotMap.driverController.getLeftTriggerAxis() > 0.25;
+                },
+                ScoringStateMachine.alignState));
          
     }
 
@@ -17,15 +24,15 @@ public class ShootMoveState extends State {
     public void execute() {
         if (CycleState.isPass) {
             if (Swerve.getPose().getY() > 4.0) {
-                Swerve.TeleopDriveFacePose(Constants.FIELD.PASS_UPPER.toTranslation2d(), Rotation2d.fromDegrees(180.0));
+                Swerve.TeleopDriveFacePose(Constants.FIELD.PASS_UPPER.toTranslation2d(), Rotation2d.fromDegrees(180.0), 1.5);
             } else {
-                Swerve.TeleopDriveFacePose(Constants.FIELD.PASS_LOWER.toTranslation2d(), Rotation2d.fromDegrees(180.0));
+                Swerve.TeleopDriveFacePose(Constants.FIELD.PASS_LOWER.toTranslation2d(), Rotation2d.fromDegrees(180.0), 1.5);
             }
 
             return;
         }
 
-        Swerve.TeleopDriveFacePose(Constants.FIELD.HUB_POSE, Rotation2d.fromDegrees(180.0));
+        Swerve.TeleopDriveFacePose(Sotm.getLeadTarget(Constants.FIELD.HUB_POSE),Rotation2d.fromDegrees(180.0), 1.5); 
     }   
     
     @Override

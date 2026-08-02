@@ -13,11 +13,13 @@ public class ScoringStateMachine extends StateMachine{
     public static IntakeState intakeState = new IntakeState();
     public static OuttakeState outtakeState = new OuttakeState();
     public static CycleState cycleState = new CycleState();
+    public static CycleMoveState cyclemoveState = new CyclemoveState();
 
     public ScoringStateMachine() {
         intakeState.build();
         idleState.build();
         cycleState.build();
         outtakeState.build();
+        cyclemoveState.build();
     }
 }

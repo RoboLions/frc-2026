@@ -354,7 +354,7 @@ public class Swerve {
 
         automaticDrive(0, new Rotation2d(0), omega);
     }
-    public static void TeleopDriveFacePose(Translation2d targetPose, Rotation2d offset) {
+    public static void TeleopDriveFacePose(Translation2d targetPose, Rotation2d offset, double maxDriveSpeed) {
         Pose2d currPose = getPose();
         double dy = targetPose.getY() - currPose.getY();
         double dx = targetPose.getX() - currPose.getX();
@@ -368,8 +368,8 @@ public class Swerve {
 
         SwerveObjects.Swerve.setControl(
             SwerveObjects.teleopDrive
-                .withVelocityX(vx * SwerveConstants.MaxSpeed)
-                .withVelocityY(vy * SwerveConstants.MaxSpeed)
+            .withVelocityX(vx * maxDriveSpeed)
+            .withVelocityY(vy * maxDriveSpeed)
                 .withRotationalRate(omega * SwerveConstants.MaxAngularRate));
     }
 

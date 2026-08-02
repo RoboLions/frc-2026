@@ -8,12 +8,13 @@ import frc.robot.subsystems.interfaces.Intake;
 import frc.robot.subsystems.interfaces.Shooter;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 import frc.robot.subsystems.interfaces.LED;
+import frc.robot.subsystems.interfaces.Sotm;
 
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-public class CycleState extends State {
+public class CycleMoveState extends State {
 
   public static boolean isPass = false;
 
@@ -31,18 +32,12 @@ public class CycleState extends State {
               return RobotMap.driverController.getRightBumperButtonPressed();
             },
             ScoringStateMachine.intakeState));
-    addTransition(
-        new Transition(
-            () -> {
-              return RobotMap.driverController.getLeftBumperButtonPressed();
-            },
-            ScoringStateMachine.cyclemoveState));
   }
 
   @Override
   public void init(State prevState) {
     Intake.intakeDown();
-    LED.setFlashRed();
+    LED.setSolidGreen();
   }
 
   @Override
@@ -52,7 +47,7 @@ public class CycleState extends State {
       Intake.IndexIn();
       LED.setFlashGreen();
     }
-
+    
     if (RobotMap.driverController.getLeftBumperButtonPressed() || RobotMap.manipulatorController.getLeftBumperButtonPressed()) {
       Intake.intakeMid();
       Intake.intakeSlow();
@@ -70,7 +65,7 @@ public class CycleState extends State {
       
       isPass = true;
     } else {
-      Shooter.interpolateAndShoot(Swerve.getPose().getTranslation().getDistance(Constants.FIELD.HUB_POSE));
+      Shooter.interpolateAndShoot(Swerve.getPose().getTranslation()(.getDistance(Constants.FIELD.HUB_POSE)));
       isPass = false;
     }
   }

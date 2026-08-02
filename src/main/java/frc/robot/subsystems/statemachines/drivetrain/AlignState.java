@@ -13,12 +13,17 @@ public class AlignState extends State {
     @Override
     public void build() {
         addTransition(
-            new Transition(
-                () -> {
-                  return RobotMap.driverController.getBButtonPressed() 
-                    || RobotMap.driverController.getRightBumperButtonPressed();
-                },
-                DrivetrainStateMachine.teleopState));    
+        new Transition(
+            () -> {
+              return RobotMap.driverController.getRightBumperButtonPressed();
+            },
+            ScoringStateMachine.intakeState));
+        addTransition(
+        new Transition(
+            () -> {
+              return RobotMap.driverController.getLeftBumperButtonPressed();
+            },
+            ScoringStateMachine.shootmoveState));  
     }
 
     @Override
