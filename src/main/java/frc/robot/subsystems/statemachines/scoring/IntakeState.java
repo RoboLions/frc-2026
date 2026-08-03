@@ -53,5 +53,7 @@ public class IntakeState extends State {
   } 
 
   @Override
-  public void exit(State nextState) {}
+  public void exit(State nextState) {
+    LED.turnOff();
+  }
 }

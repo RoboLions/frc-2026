@@ -30,9 +30,9 @@ public class Intake {
   private static final TalonFX mRackMotor = 
     new TalonFX(Constants.CAN_IDS.RACK_MOTOR, "CANexternal");
 
-  private static final double STOW_POS = 0.85;
-  private static final double MIDDLE_POS = 2.0;
-  private static final double DOWN_POS = 12.25;
+  private static final double STOW_POS = 1.00;
+  private static final double MIDDLE_POS = 2.65;
+  private static final double DOWN_POS = 10.4;
 
   public static void init() {    
     TalonFXConfiguration masterIntakeMotorConfiguration = new TalonFXConfiguration();

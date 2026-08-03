@@ -93,6 +93,7 @@ public class AutoCommands {
                         .alongWith(AutoCommands.setShooter())
                         .withTimeout(0.5));
     }
+    
 
     public static Command shootSequenceNoRamp() {
         return Commands.sequence(AutoCommands.SwerveStop()
