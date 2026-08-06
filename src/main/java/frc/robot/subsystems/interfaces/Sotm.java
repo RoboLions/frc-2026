@@ -26,14 +26,14 @@ private static class TimeOfFlightPoint {
 
 static {
     // Starting estimates replace when get the robot
-    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(1.70, 0.1939));
-    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(2.09, 0.2096));
-    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(2.51, 0.2348));
-    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(3.00, 0.2686));
-    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(3.50, 0.2829));
-    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(3.81, 0.3021));
-    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(4.20, 0.3094));
-    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(4.50, 0.3202));
+    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(1.70, 0.8939));
+    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(2.09, 1.0096));
+    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(2.51, 1.0348));
+    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(3.00, 1.0686));
+    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(3.50, 1.0829));
+    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(3.81, 1.1021));
+    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(4.20, 1.1094));
+    TIME_OF_FLIGHT_LOOKUP_TABLE.add(new TimeOfFlightPoint(4.50, 1.1202));
 }
 
 public static double getTimeOfFlight(double currentDistance) {
