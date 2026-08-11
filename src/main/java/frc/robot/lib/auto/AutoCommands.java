@@ -32,6 +32,9 @@ public class AutoCommands {
     public static Command SwerveFaceHUB() {
         return Commands.run(() -> Swerve.facePose(Constants.FIELD.HUB_POSE, Rotation2d.fromDegrees(180)));
     }
+    public static Command SwerveFaceHUBSOTM() {
+        return Commands.run(() -> Swerve.TeleopDriveFacePose(Constants.FIELD.HUB_POSE, Rotation2d.fromDegrees(180), 1.5));
+    }
 
     public static Command PrintItem(String string) {
         return Commands.runOnce(() -> System.out.println(string));
@@ -56,6 +59,54 @@ public class AutoCommands {
                         .withTimeout(0.35),
 
                     AutoCommands.SwerveFaceHUB()
+                        .alongWith(AutoCommands.setShooter())
+                        .alongWith(AutoCommands.intakeSlow())
+                        .alongWith(AutoCommands.intakeZeroPosition())
+                        .withTimeout(0.35),
+                        
+                    AutoCommands.intakeOutOnly()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.5),
+                        
+                    AutoCommands.intakeZeroPosition()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.5),
+                    
+                    AutoCommands.intakeOutOnly()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.5),
+                        
+                    AutoCommands.intakeZeroPosition()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.5),
+
+                    AutoCommands.intakeOutOnly()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.5),
+                        
+                    AutoCommands.intakeZeroPosition()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.5),
+
+                    AutoCommands.intakeOutOnly()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.5),
+                        
+                    AutoCommands.intakeZeroPosition()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.5));
+    }
+    public static Command shootSequenceWithRampSOTM() {
+        return Commands.sequence(AutoCommands.SwerveFaceHUBSOTM()
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.1),
+                
+                    AutoCommands.feedIn()
+                        .alongWith(AutoCommands.SwerveFaceHUBSOTM())
+                        .alongWith(AutoCommands.setShooter())
+                        .withTimeout(0.35),
+
+                    AutoCommands.SwerveFaceHUBSOTM()
                         .alongWith(AutoCommands.setShooter())
                         .alongWith(AutoCommands.intakeSlow())
                         .alongWith(AutoCommands.intakeZeroPosition())
