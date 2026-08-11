@@ -7,18 +7,24 @@ import frc.robot.lib.statemachine.State;
 import frc.robot.lib.statemachine.Transition;
 import frc.robot.subsystems.interfaces.swerve.Swerve;
 import frc.robot.subsystems.statemachines.scoring.CycleState;
+import frc.robot.subsystems.statemachines.scoring.ScoringStateMachine;
 
 
 public class AlignState extends State {
     @Override
     public void build() {
         addTransition(
-            new Transition(
-                () -> {
-                  return RobotMap.driverController.getBButtonPressed() 
-                    || RobotMap.driverController.getRightBumperButtonPressed();
-                },
-                DrivetrainStateMachine.teleopState));    
+        new Transition(
+            () -> {
+              return RobotMap.driverController.getRightBumperButtonPressed();
+            },
+                DrivetrainStateMachine.teleopState));   
+        addTransition(
+        new Transition(
+            () -> {
+              return RobotMap.driverController.getLeftBumperButtonPressed();
+            },
+            DrivetrainStateMachine.shootmoveState));  
     }
 
     @Override
