@@ -962,8 +962,8 @@ public class AutoSubsystem {
             L1.atTime("REV_SHOT")
                 .onTrue(AutoCommands.setShooter()
                 .withTimeout(0.001));
-            L1.atTime("SHOOT")
-                .onTrue(AutoCommands.shootSequenceWithRamp()
+            L1.atTime("SHOOT_START")
+                .onTrue(AutoCommands.shootSequenceWithRampSOTM()
                 .withTimeout(SHOOT_TIMEOUT_1));
 
         AutoTrajectory L2 = routine.trajectory("L2_TBSM");
@@ -976,8 +976,8 @@ public class AutoSubsystem {
             L2.atTime("REV_SHOT")
                 .onTrue(AutoCommands.setShooter()
                 .withTimeout(0.001));
-            L2.atTime("SHOOT")
-                .onTrue(AutoCommands.shootSequenceWithRamp()
+            L2.atTime("SHOOT_START")
+                .onTrue(AutoCommands.shootSequenceWithRampSOTM()
                 .withTimeout(SHOOT_TIMEOUT_2));
             
 
@@ -1037,8 +1037,8 @@ public class AutoSubsystem {
             R1.atTime("REV_SHOT")
                 .onTrue(AutoCommands.setShooter()
                 .withTimeout(0.001));
-            R1.atTime("SHOOT")
-            .onTrue(AutoCommands.shootSequenceWithRamp()
+            R1.atTime("SHOOT_START")
+            .onTrue(AutoCommands.shootSequenceWithRampSOTM()
             .withTimeout(SHOOT_TIMEOUT_1));
 
         AutoTrajectory R2 = routine.trajectory("L2_TBSM").mirrorY();
@@ -1051,8 +1051,8 @@ public class AutoSubsystem {
             R2.atTime("REV_SHOT")
                 .onTrue(AutoCommands.setShooter()
                 .withTimeout(0.001));
-            R2.atTime("SHOOT")
-            .onTrue(AutoCommands.shootSequenceWithRamp()
+            R2.atTime("SHOOT_START")
+            .onTrue(AutoCommands.shootSequenceWithRampSOTM()
             .withTimeout(SHOOT_TIMEOUT_2));
             
 
